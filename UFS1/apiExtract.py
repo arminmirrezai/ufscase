@@ -8,7 +8,18 @@ from datetime import date
 
 
 countries = ['NL', 'DE', 'ES']
-years = range(2010, 2021)
+years = range(2015, 2021)
+
+
+def extractKeyWords():
+    """
+    Extract the key word data
+    :return: pandas data frame
+    """
+    data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data/case_study_trends_data_20210107.csv"
+    df = pd.read_csv(filepath_or_buffer=data_path, sep=',', header=0)
+    df = df.astype({'date': 'datetime64', 'startDate': 'datetime64', 'endDate': 'datetime64'})
+    return df
 
 
 def yearToDates(year: int):
