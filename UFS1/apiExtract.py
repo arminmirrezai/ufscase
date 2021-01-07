@@ -54,7 +54,7 @@ def saveResult(df, file_name, folder_name=''):
     folder_name = folder_name + '___' + date.today().strftime('%d_%m_%Y')
     folder_path = data_path + "/" + folder_name
     if os.path.exists(folder_path):
-        df.to_csv(folder_path + "/" + file_name + ".txt", header=None, index=None, sep = ', ', mode='a')
+        df.to_csv(folder_path + "/" + file_name + ".txt", header=None, index=None, sep=',', mode='a')
     else:
         try:
             os.mkdir(folder_path)
