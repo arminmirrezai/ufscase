@@ -14,7 +14,7 @@ sns.set_style('darkgrid')
 plt.rc('figure',figsize=(16,12))
 plt.rc('font',size=13)
 
-df = pd.read_csv(r'C:\Users\Naam\Desktop\seminar case study\ufscode\case_study_trends_data_20210107.csv')
+df = pd.read_csv(r'Data\case_study_trends_data_20210107.csv')
 ackerbohne = df.iloc[0:210, 1].tolist()
 
 ackerbohne = pd.Series(ackerbohne, index = pd.date_range('1-1-2017', periods=len(ackerbohne), freq='W'), name = 'Ackerbohne')
