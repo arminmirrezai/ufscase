@@ -83,3 +83,4 @@ class GSData:
         else:
             translations = [ts.google(text, from_language='en', to_language=lang)]
         return translations
+

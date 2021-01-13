@@ -1,7 +1,7 @@
 import ApiExtract
-import SearchData
 
-countries = ['NL', 'DE', 'ES']
+countries = ['NL', 'DE']
 years = range(2017, 2021)
 
-data = ApiExtract.extract(years, countries[0])
+for country in countries:
+    data = ApiExtract.extract(years, country)
