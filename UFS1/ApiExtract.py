@@ -10,6 +10,13 @@ from SearchData import GSData
 
 
 def extract(years, country, extended=True):
+    """
+    Extract the data from google trends given the time interval and country
+    :param years: number of years
+    :param country: country of choice
+    :param extended: True if you also want to include native language and native
+    :return: array with data frames of searched data
+    """
     start_time = time.time()
     gd = GSData()
     key_words = gd.load_key_words(country, translated=extended)
@@ -29,18 +36,21 @@ def extract(years, country, extended=True):
                 pytrend.build_payload(kw_list, cat='71', geo=country, timeframe=time_interval)
                 df_time = pytrend.interest_over_time()
                 saveResult(df_time, file_name=file_name, folder_name=folder_name)
+                frames.append(df_time)
             except ResponseError:
                 missed += 1
                 print("Time out because of response error")
                 time.sleep(5)
         else:
             df_time = pd.read_csv(getPath(file_name, folder_name))
-        frames.append(df_time)
+            frames.append(df_time)
         print(f"Number of words {i + 1} done")
-    print(f"Runtime: {time.time() - start_time} for country {country}")
     if missed == 0:
+        print(f"Runtime: {time.time() - start_time} for country {country} completed")
         return frames
     else:
+        print(f"Runtime: {time.time() - start_time} for country {country}, still missed {missed} "
+              f"words and has to run again")
         return extract(years, country)
 
 
@@ -61,16 +71,25 @@ def saveResult(df, file_name, folder_name):
 
 
 def isSaved(file_name, folder_name):
+    """
+    Check if file is saved in Data
+    """
     data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data"
     return os.path.exists(data_path + "/" + folder_name + "/" + file_name + ".txt")
 
 
 def getPath(file_name, folder_name):
+    """
+    Give path to data
+    """
     data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data"
     return data_path + "/" + folder_name + "/" + file_name + ".txt"
 
 
 def createDir(path):
+    """
+    Create directory of multiple folders
+    """
     folders = []
     curr_path = path
     while not os.path.exists(curr_path):

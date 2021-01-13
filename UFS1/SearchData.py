@@ -61,6 +61,10 @@ class GSData:
 
     @staticmethod
     def _create_folder(path):
+        """
+        Create folder if it is does not already exists
+        :param path: path to folder
+        """
         if not os.path.exists(path):
             try:
                 os.mkdir(path)
