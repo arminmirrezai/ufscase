@@ -3,7 +3,6 @@ from pytrends.exceptions import ResponseError
 import pandas as pd
 from pandas.errors import EmptyDataError
 import time
-
 from pathlib import Path
 import os
 from datetime import datetime, timedelta
@@ -83,7 +82,7 @@ def adjustDataframe(df: pd.DataFrame, path: str):
         df_new = df.drop(df.columns[1], axis=1)
         df_new.columns = ['interest']
     df_new['keyword'] = keyword
-    df_new['category'] = gd.getCategory(keyword)
+    df_new['category'] = gd.getCategory(keyword, country)
     df_new['startDate'] = pd.Series(start_dates)
     df_new['endDate'] = pd.Series(end_dates)
     df_new['country'] = country

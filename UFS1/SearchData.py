@@ -48,9 +48,9 @@ class GSData:
             self.df_kws.to_csv(file_path, sep=',', mode='w')
         return self.df_kws
 
-    def getCategory(self, keyword):
+    def getCategory(self, keyword, country):
         self.load_data_UF()
-        return self.df[self.df['keyword'] == keyword]['keywordCategory'].iloc[0]
+        return self.df[(self.df['keyword'] == keyword) & (self.df['countryCode'] == country)]['keywordCategory'].iloc[0]
 
     def _key_words_UF(self, country=''):
         """

@@ -8,3 +8,6 @@ for country in countries:
     frames += ApiExtract.extract(years, country)
 
 df = pd.concat(frames)
+groups = df.groupby('category')['keyword'].agg('unique')
+
+
