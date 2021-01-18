@@ -1,12 +1,15 @@
 from pytrends.request import TrendReq
 from pytrends.exceptions import ResponseError
 import pandas as pd
+from pandas.errors import EmptyDataError
 import time
 
 from pathlib import Path
 import os
-from datetime import date
+from datetime import datetime, timedelta
 from SearchData import GSData
+
+gd = GSData()
 
 
 def extract(years, country, extended=True):
@@ -18,11 +21,10 @@ def extract(years, country, extended=True):
     :return: array with data frames of searched data
     """
     start_time = time.time()
-    gd = GSData()
     key_words = gd.load_key_words(country, translated=extended)
     time_interval = f"{years[0]}-01-01 {years[-1]}-12-31"
 
-    folder_name = ('Extended' if extended else 'Simple') + f"/{time_interval}/{country}/"
+    folder_name = ('Extended' if extended else 'Simple') + f"/{time_interval}/{country}"
     pytrend = TrendReq(hl='en-US', timeout=(10, 25))
     frames = []
     missed = 0
@@ -36,15 +38,19 @@ def extract(years, country, extended=True):
                 pytrend.build_payload(kw_list, cat='71', geo=country, timeframe=time_interval)
                 df_time = pytrend.interest_over_time()
                 saveResult(df_time, file_name=file_name, folder_name=folder_name)
-                frames.append(df_time)
+                if not df_time.empty:
+                    frames.append(adjustDataframe(df_time, getPath(file_name, folder_name)))
             except ResponseError:
                 missed += 1
                 print("Time out because of response error")
                 time.sleep(5)
+            print(f"Number of words {i + 1 - missed} done")
         else:
-            df_time = pd.read_csv(getPath(file_name, folder_name))
-            frames.append(df_time)
-        print(f"Number of words {i + 1} done")
+            try:
+                df_time = pd.read_csv(getPath(file_name, folder_name), header=None)
+                frames.append(adjustDataframe(df_time, getPath(file_name, folder_name)))
+            except EmptyDataError:
+                print(f"The file for {key_word[country]} is empty")
     if missed == 0:
         print(f"Runtime: {time.time() - start_time} for country {country} completed")
         return frames
@@ -52,6 +58,36 @@ def extract(years, country, extended=True):
         print(f"Runtime: {time.time() - start_time} for country {country}, still missed {missed} "
               f"words and has to run again")
         return extract(years, country)
+
+
+def adjustDataframe(df: pd.DataFrame, path: str):
+    """
+    Adjust dataframe to also get information
+    :param df: datafram of just interest
+    :param path: path to dataframe
+    :return: new extended dataframe
+    """
+    dir_names = path.split(sep='/')
+    keyword = dir_names[-1][:-4]
+    country = dir_names[-2]
+    time_interval = dir_names[-3].split()
+    t0 = datetime.strptime(time_interval[0], '%Y-%m-%d')
+    start_dates = [t0 + timedelta(weeks=i) for i in range(len(df.index))]  # TODO filter for 5 year interval
+    end_dates = [start_dates[i] + timedelta(weeks=1) for i in range(len(df.index))]
+
+    # Merge country language and english into one
+    if len(df.columns) == 3:
+        df_new = pd.DataFrame(df.iloc[:, 0] + df.iloc[:, 1], columns=['interest'])
+        df_new['interest'] = df_new['interest'].div(df_new['interest'].max() / 100)
+    else:
+        df_new = df.drop(df.columns[1], axis=1)
+        df_new.columns = ['interest']
+    df_new['keyword'] = keyword
+    df_new['category'] = gd.getCategory(keyword)
+    df_new['startDate'] = pd.Series(start_dates)
+    df_new['endDate'] = pd.Series(end_dates)
+    df_new['country'] = country
+    return df_new
 
 
 def saveResult(df, file_name, folder_name):
@@ -97,7 +133,7 @@ def createDir(path):
             break
         curr_path, folder = os.path.split(curr_path)
         folders.append(folder)
-    for i in range(len(folders)-1, -1, -1):
+    for i in range(len(folders) - 1, -1, -1):
         curr_path += '/' + folders[i]
         try:
             os.mkdir(curr_path)

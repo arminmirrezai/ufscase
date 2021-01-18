@@ -15,9 +15,10 @@ class GSData:
         Extract the key word data
         :return: pandas data frame
         """
-        data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data/case_study_trends_data_20210107.csv"
-        self.df = pd.read_csv(filepath_or_buffer=data_path, sep=',', header=0)
-        self.df = self.df.astype({'date': 'datetime64', 'startDate': 'datetime64', 'endDate': 'datetime64'})
+        if self.df is None:
+            data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data/data_UFS.csv"
+            self.df = pd.read_csv(filepath_or_buffer=data_path, sep=',', header=0)
+            self.df = self.df.astype({'date': 'datetime64', 'startDate': 'datetime64', 'endDate': 'datetime64'})
         return self.df
 
     def load_key_words(self, country, translated=True):
@@ -47,17 +48,22 @@ class GSData:
             self.df_kws.to_csv(file_path, sep=',', mode='w')
         return self.df_kws
 
+    def getCategory(self, keyword):
+        self.load_data_UF()
+        return self.df[self.df['keyword'] == keyword]['keywordCategory'].iloc[0]
+
     def _key_words_UF(self, country=''):
         """
         Extract the keywords given by unilever food
         :param country: country of set {NL, DE, ES}
         :return: key words countries
         """
-        if self.df is None: self.load_data_UF()
+        self.load_data_UF()
         if country != '':
             return self.df[self.df['countryCode'] == country]['keyword'].unique()
         else:
             return self.df.groupby('countryCode')['keyword'].unique()
+
 
     @staticmethod
     def _create_folder(path):
