@@ -1,0 +1,302 @@
+,NL,EN
+0,aardappelpuree,mashed potatoes
+1,aardappelsalade,Potato salad
+2,aardbeiensoep,Strawberry Soup
+3,aardpeerpuree,Jerusalem artichoke puree
+4,abrikozencompote,apricot compote
+5,acai bowl,acai bowl
+6,aioli,Aioli
+7,andijviesoep,Endive soup
+8,appelcompote,mashed potatoes
+9,appeltaart,Apple pie
+10,asperges,asparagus
+11,aspergesoep,asparagus soup
+12,avocado salade,Avocado Salad
+13,avocado toast,avocado toast
+14,baba ganoush,Baba Ganoush
+15,basilicummayonaise,Basil Mayonnaise
+16,bbq saus,bbq sauce
+17,bearnaisesaus,bearnaise Sauce
+18,bechamelsaus,bechamel
+19,beurre blanc,beurre blanc
+20,bieten carpaccio,beetroot Carpaccio
+21,bietenhummus,beet hummus
+22,bietenlasagne,beet lasagna
+23,bitterballen,bitterballen
+24,blini,blini
+25,bloemkool wings,cauliflower wings
+26,bloemkoolsoep,cauliflower soup
+27,bloemkoolsteak,cauliflower steak
+28,boeuf bourguignon,beef bourguignon
+29,bolognesesaus,Bolognese sauce
+30,bonenburger,bean burger
+31,bonensoep,bean soup
+32,bordelaisesaus,Bordelais Sauce
+33,bospaddenstoelensoep,Forest mushroom soup
+34,bramensaus,blackberry sauce
+35,brioche,brioche
+36,briwat,briwat
+37,broccolisoep,Broccolisoup
+38,broodpudding,bread Pudding
+39,bruschetta,bruschetta
+40,caesar salade,Caesar salad
+41,canape,settee
+42,cassave,cassava
+43,cassoulet,cassoulet
+44,ceviche,ceviche
+45,champignonroomsaus,Mushroom cream sauce
+46,champignonsaus,mushroom sauce
+47,champignonsoep,mushroomsoup
+48,cheesecake,Cheesecake
+49,chia pudding,chia pudding
+50,chilisaus,chili sauce
+51,chimichurri,chimichurri
+52,clafoutis,clafoutis
+53,cocktailsaus,cocktail sauce
+54,coq au vin,coq au vin
+55,coquilles,scallops
+56,courgettesoep,courgette soup
+57,couscous salade,couscous salad
+58,cranberrycompote,cranberry compote
+59,cranberrysaus,Cranberrysauce
+60,crostini,crostini
+61,cupcakes,cupcakes
+62,currysoep,currysoup
+63,demi glace,demi glace
+64,dimsum,dimsum
+65,dorade,sea bream
+66,drumstick,drumstick
+67,eendenborst,duck breast
+68,empanada,empanada
+69,entrecote,sirloin steak
+70,erwtensoep,split pea soup
+71,falafel,Falafel
+72,fazant,pheasant
+73,focaccia,Focaccia
+74,fonio,fonio
+75,forel,trout
+76,frittata,frittata
+77,galette,galette
+78,gamba salade,prawn salad
+79,garnalen,shrimps
+80,gazpacho,Gazpacho
+81,gefermenteerde thee,fermented tea
+82,gegrilde groenten,grilled vegetables
+83,gehaktschotel,meat dish
+84,gekonfijte eend,duck confit
+85,gembersaus,Ginger sauce
+86,gemengde salade,mixed salad
+87,gepofte aardappel,jacket potato
+88,gerookte zalm,smoked salmon
+89,gevulde eieren,filled eggs
+90,gevulde portobello,Stuffed Portobello
+91,gnocchi,Gnocchi
+92,goulash,Goulash
+93,goulashsoep,goulash soup
+94,guacamole,guacamole
+95,gyros,Gyros
+96,hachee,hash
+97,hamburger,Hamburger
+98,hangop,curd
+99,harira soep,harira soup
+100,hartige muffin,savory muffin
+101,hazenbout,hare leg
+102,hazenrugfilet,hare fillet
+103,hertenbiefstuk,venison steak
+104,hertencarpaccio,deer carpaccio
+105,hertengoulash,deergoulash
+106,hertenrack,deer rack
+107,hete bliksem,hot lightning
+108,hollandaise saus,hollandaise sauce
+109,hollandaisesaus,hollandaise sauce
+110,hummus,Hummus
+111,huzarensalade,Russian salad
+112,injera,injera
+113,jachtschotel,hotpot
+114,jamon serrano,jamon serrano
+115,jollof,jollof
+116,kaassaus,Cheese sauce
+117,kaassoep,cheesesoup
+118,kabeljauwfilet,cod fillet
+119,kalfssoep,veal soup
+120,kalfswangen,veal cheeks
+121,karamel appel,caramel apple
+122,kastanjesoep,Chestnut soup
+123,katsu sando,katsu sando
+124,kerriesaus,Curry sauce
+125,kersensaus,cherry sauce
+126,ketchup,Ketchup
+127,kimchi,Kimchi
+128,kipkerriesalade,chicken-curry salad
+129,kippensoep,Chicken soup
+130,kippenvleugels,chicken wings
+131,kipsalade,Chicken Salad
+132,knoflooksaus,garlic sauce
+133,knolselderij soep,celeriac soup
+134,kombucha,kombucha
+135,komkommersoep,cucumber Soup
+136,konijnenbout,rabbit leg
+137,konijnenstoof,rabbit stew
+138,koolrabisoep,kohlrabi soup
+139,koriandersaus,coriander sauce
+140,krab,crab
+141,kwarteleitjes,quail eggs
+142,lamskoteletten,lamb chops
+143,lasagne,lasagna
+144,linzen dahl,lentil dahl
+145,linzensalade,lentil salad
+146,linzensoep,lentil soup
+147,maaltijdsalade,Meal Salad
+148,maissalade,corn salad
+149,maissoep,corn Soup
+150,mangochutney,Mango Chutney
+151,mayonaise,mayonnaise
+152,meloensoep,melon soup
+153,minestronesoep,minestrone soup
+154,moringa,moringa
+155,mosselen,Mussels
+156,mosterdsaus,Mustard Sauce
+157,mosterdsoep,mustard soup
+158,muhammara,muhammara
+159,nduja,nduja
+160,noedelsoep,Noodle soup
+161,notenboter,nut butter
+162,oesters,oysters
+163,oeufs mayo,oeufs mayo
+164,okra,okra
+165,olijventapenade,olive tapenade
+166,ossenstaartsoep,oxtailsoup
+167,pad thai,pad Thai
+168,paddenstoelen,mushrooms
+169,paddenstoelensoep,Mushroom soup
+170,paella,Paella
+171,panna cotta,panna cotta
+172,panzanella,Panzanella
+173,paprikasaus,paprika sauce
+174,paprikasoep,pepper soup
+175,pastasalade,Pasta salad
+176,pastei,pie
+177,pasteitje,patty
+178,pastinaak,parsnip
+179,pastinaakpuree,Parsnip Puree
+180,pastinaaksoep,parsnip Soup
+181,pavlova,Pavlova
+182,peperroomsaus,pepper cream sauce
+183,pepersaus,pepper sauce
+184,perenchutney,pearchutney
+185,piccalilly,Piccalilly
+186,pindasaus,Peanut Sauce
+187,pindasoep,peanutsoup
+188,piri piri,piri piri
+189,plaattaart,plate cake
+190,poke bowl,poke bowl
+191,pomodorisoep,pomodori soup
+192,pompoencake,pumpkin cake
+193,pompoensoep,pumpkinsoup
+194,pompoenstoof,pumpkin stew
+195,ponzu,ponzu
+196,portobello,portobello
+197,portsaus,port sauce
+198,pot au feu,Pot Au Feu
+199,preisoep,leek soup
+200,pruimencompote,Plum compote
+201,puddingtaart,pudding pie
+202,pulled oat,pulled oat
+203,quesadilla,quesadilla
+204,quiche,Quiche
+205,quinoa salade,Quinoa Salad
+206,rabarber compote,rhubarb Compote
+207,rabarber taart,rhubarb pie
+208,rabarberchutney,rhubarb Chutney
+209,ravioli,ravioli
+210,reerugfilet,venison fillet
+211,ribeye,rib eye
+212,rijstsalade,rice salad
+213,rode bietensoep,beetroot soup
+214,rode wijnsaus,Red wine sauce
+215,romesco,romesco
+216,rucolasoep,Argula Soup
+217,rundersoep,beef soup
+218,rundvleessalade,beef salad
+219,rundvleessoep,beef soup
+220,sabich,sabich
+221,salade caprese,Caprese salad
+222,salade nicoise,salad nicoise
+223,salsa verde,salsa Verde
+224,samosa,Samosa
+225,sate,satay
+226,satesaus,satay sauce
+227,schol,plaice
+228,scones,Scones
+229,seitan,seitan
+230,selderij sap,celery juice
+231,shiitake,shiitake
+232,slakken,snails
+233,snijbonensoep,string bean soup
+234,soto,soto
+235,souffle pancakes,souffle pancakes
+236,souvlaki,souvlaki
+237,spareribs,spare ribs
+238,spianata romana,spianata romana
+239,spinaziesoep,spinach soup
+240,spruitensoep,Brussel's sproutssoup
+241,steak tartare,steak tartare
+242,stoba,stoba
+243,stoofpeertjes,stewed pears
+244,stoofpot,Stew
+245,stroganoff,stroganoff
+246,stroganoffsaus,Stroganoff sauce
+247,strudel,strudel
+248,surinaamse bojo,Surinamese bojo
+249,sushi,Sushi
+250,sushimi,sushimi
+251,tabouleh,tabouleh
+252,teriyaki,teriyaki
+253,tibs,tibs
+254,tikka massala,tikka Masala
+255,tom kha kai,Tom Kha Kai
+256,tomatenchutney,tomato chutney
+257,tomatensalsa,Tomato Salsa
+258,tomatensoep,Tomato soup
+259,tonijn,tuna
+260,tonijnsalade,tuna salad
+261,tosti,Grilled cheese sandwich
+262,tournedos,tournedos
+263,truffelmayonaise,truffle mayonnaise
+264,turkse pizza,Turkish pizza
+265,tzatziki,tzatziki
+266,uiensoep,onion soup
+267,varkensfricandeau,pork fricandeau
+268,varkenshaas,tenderloin
+269,veenbessensaus,cranberry sauce
+270,veloute,veloute
+271,venkelsoep,fennel Soup
+272,verloren brood,lost bread
+273,vijgenjam,Fig jam
+274,vissoep,Fishsoup
+275,visstoof,fish stew
+276,vitello tonnato,vitello tonnato
+277,wakame,wakame
+278,wentelteefjes,French toast
+279,wildsaus,game sauce
+280,wildstoof,game stew
+281,wildterrine,game terrine
+282,wildzwijn,wild boar
+283,witlof salade,chicory salad
+284,witlofsoep,chicory soup
+285,witte wijnsaus,White wine sauce
+286,wortelsoep,Carrotsoup
+287,worteltaart,carrotcake
+288,yoghurtsaus,yogurt sauce
+289,zaalouk,zaalouk
+290,zalm rolletjes,Salmon rolls
+291,zalm salade,Salmon Salad
+292,zalmfilet,salmon fillet
+293,zalmforel,salmon trout
+294,zeebaars,sea bass
+295,zoete aardappel,sweet potato
+296,zoete aardappelsoep,Sweet potato soup
+297,zoetzure saus,Sweet-sour sauce
+298,zure haring,sour herring
+299,zwaardvis,swordfish
+300,zwezerik,sweetbread
