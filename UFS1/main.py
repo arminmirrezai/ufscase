@@ -9,3 +9,5 @@ dmp = Decompose(df)
 # Example trend
 dmp.decompose_ma('tosti')
 print(f"Strenght of seasonality {dmp.seasonality_F()}, Strenght of trend {dmp.trend_F()}")
+
+# main changed
