@@ -3,6 +3,7 @@ from pathlib import Path
 from ApiExtract import createDir
 import numpy as np
 from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.stattools import kpss
 
 
 class Data:
@@ -49,14 +50,30 @@ class Data:
         def sparsity(self, keyword):
             return 1 - np.count_nonzero(self.df[self.df.keyword == keyword]['interest']) / self.df.startDate.nunique()
 
-        def stationary(self, keyword):
-            p_bic = adfuller(self.df[self.df.keyword == keyword]['interest'], autolag='BIC')[1]
-            p_aic = adfuller(self.df[self.df.keyword == keyword]['interest'], autolag='AIC')[1]
-            min_p = min(p_bic, p_aic)
-            return min_p < 0.025, min_p
+        def stationary(self, keyword, first_difference=False, significance='5%'):
+            if significance not in {'1%', '5%', '10%'}:
+                raise ValueError("Significance leven can only be 1,5 or 10 %")
+            ts = self.df[self.df.keyword == keyword]['interest']
+            if first_difference:
+                ts = (ts - ts.shift()).dropna()
+            adf_test = adfuller(ts, autolag='AIC')
+            kpss_test = kpss(ts, regression='c', nlags='auto')
+            h0_adf = abs(adf_test[0]) < abs(adf_test[4][significance])
+            h0_kpss = abs(kpss_test[0]) > abs(kpss_test[3][significance])
+            if h0_kpss and not h0_adf:  # stationary
+                return True
+            elif not h0_kpss and h0_adf:  # non stationary
+                return False
+            elif h0_kpss and h0_adf:  # de trend series
+                return False
+            elif not h0_kpss and not h0_adf:  # difference series
+                return False
 
 
-        
+
+
+
+
 
 
 

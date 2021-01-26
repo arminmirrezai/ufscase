@@ -1,12 +1,11 @@
 from ApiExtract import extract
-import pandas as pd
+from Decompositions import Decompose
+import Description
 
-countries = ['NL', 'DE']
-years = range(2016, 2021)
-df = {}
-for country in countries:
-    df[country] = extract(years, country)
+df = extract(range(2015, 2021), 'NL')
+dd = Description.Data(df)
+dmp = Decompose(df)
 
-
-
-
+# Example trend
+dmp.decompose_ma('tosti')
+print(f"Strenght of seasonality {dmp.seasonality_F()}, Strenght of trend {dmp.trend_F()}")
