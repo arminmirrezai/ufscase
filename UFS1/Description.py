@@ -2,8 +2,11 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from ApiExtract import createDir
 import numpy as np
+from scipy.stats import ttest_1samp
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.stattools import kpss
+import warnings
+warnings.filterwarnings("ignore")
 
 
 class Data:
@@ -51,25 +54,33 @@ class Data:
             return 1 - np.count_nonzero(self.df[self.df.keyword == keyword]['interest']) / self.df.startDate.nunique()
 
         def stationary(self, keyword, first_difference=False, significance='5%'):
+            """
+            Stationarity test strategy implemented
+            :param keyword: keyword
+            :param first_difference: True if you want to take first difference
+            :param significance: could be 1, 5 or 10 %
+            :return: Stationary or not
+            """
             if significance not in {'1%', '5%', '10%'}:
-                raise ValueError("Significance leven can only be 1,5 or 10 %")
+                raise ValueError("Significance level can only be 1,5 or 10 %")
             ts = self.df[self.df.keyword == keyword]['interest']
-            if first_difference:
-                ts = (ts - ts.shift()).dropna()
-            adf_test = adfuller(ts, autolag='AIC')
-            kpss_test = kpss(ts, regression='c', nlags='auto')
-            h0_adf = abs(adf_test[0]) < abs(adf_test[4][significance])
-            h0_kpss = abs(kpss_test[0]) > abs(kpss_test[3][significance])
-            if h0_kpss and not h0_adf:  # stationary
-                return True
-            elif not h0_kpss and h0_adf:  # non stationary
-                return False
-            elif h0_kpss and h0_adf:  # de trend series
-                return False
-            elif not h0_kpss and not h0_adf:  # difference series
-                return False
+            if first_difference: ts = ts.diff(1).dropna()
 
+            adf_test = adfuller(ts, regression='ct', autolag='AIC', regresults=True)
+            has_unit_root = adf_test[0] > adf_test[2][significance]  # negative one sided
+            if has_unit_root:
+                has_intercept = ttest_1samp(ts.diff(1).dropna(), 0).pvalue < int(significance[:-1]) / 100
+                if not has_intercept:
+                    adf_test = adfuller(ts, regression='c', autolag='AIC', regresults=True)
+                    has_unit_root = adf_test[0] > adf_test[2][significance]  # negative one sided
+                return has_unit_root
+            else:
+                reg = adf_test[3].resols
+                r = np.append(np.zeros_like(reg.params[:-1]), 1)
+                has_trend = reg.t_test(r).pvalue.item(0) < int(significance[:-1]) / 100
 
+                kpss_test = kpss(ts, regression='ct') if has_trend else kpss(ts, regression='c')
+                return kpss_test[0] < kpss_test[3][significance]
 
 
 
