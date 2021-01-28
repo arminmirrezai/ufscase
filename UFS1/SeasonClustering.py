@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 # df = pd.read_csv(r'C:\Users\Naam\Desktop\seminar case study\ufscode\Data\data_UFS.csv')
 
 years = range(2016,2021)
-df = pd.concat(ApiExtract.extract(years,'NL'))
+df = ApiExtract.extract(years,'NL')
  
 seasonal_series = []
 for keyword in df.keyword.unique():
@@ -43,12 +43,12 @@ for keyword in df.keyword.unique():
     seasonal = stl.seasonal
     seasonal_series.append(seasonal)
 
-
 for i in range(len(seasonal_series)):
     length = len(seasonal_series[i])
     seasonal_series[i] = seasonal_series[i].values.reshape((length, 1))
 
 from sktime.distances.elastic_cython import dtw_distance
+#from dtaidistance.dtw import distance
 
 n_series = len(seasonal_series)
 distance_matrix = np.zeros(shape=(n_series, n_series))
@@ -60,7 +60,9 @@ for i in range(n_series):
         if i != j:
             dist = dtw_distance(x, y)
             distance_matrix[i, j] = dist
-
+            print("True")
+        print(j)
+print("klaar")
 from scipy.cluster.hierarchy import single, complete, average, ward, dendrogram
 
 def hierarchical_clustering(dist_mat, method='complete'):
@@ -75,7 +77,7 @@ def hierarchical_clustering(dist_mat, method='complete'):
     
     fig = plt.figure(figsize=(16, 8))
     dn = dendrogram(Z)
-    plt.title(f"Dendrogram for {method}-linkage with dtw distance")
+    plt.title("Dendrogram for {method}-linkage with dtw distance")
     plt.show()
     
     return Z
@@ -139,13 +141,6 @@ for j in range(cluster[0].size):
     axs[j].plot(seasonal_series[cluster[0][j]])
 
 plt.show()
-
-
-
-
-
-
-
 
 
 # knn = NearestNeighbors(n_neighbors=3, metric=DTW)

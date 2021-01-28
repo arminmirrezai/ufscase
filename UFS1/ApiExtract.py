@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 import os
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from SearchData import GSData
 
 gd = GSData()
@@ -52,7 +53,7 @@ def extract(years, country, extended=True):
                 print(f"The file for {key_word[country]} is empty")
     if missed == 0:
         print(f"Runtime: {time.time() - start_time} for country {country} completed")
-        return frames
+        return pd.concat(frames)
     else:
         print(f"Runtime: {time.time() - start_time} for country {country}, still missed {missed} "
               f"words and has to run again")
@@ -71,8 +72,13 @@ def adjustDataframe(df: pd.DataFrame, path: str):
     country = dir_names[-2]
     time_interval = dir_names[-3].split()
     t0 = datetime.strptime(time_interval[0], '%Y-%m-%d')
-    start_dates = [t0 + timedelta(weeks=i) for i in range(len(df.index))]  # TODO filter for 5 year interval
-    end_dates = [start_dates[i] + timedelta(days=6) for i in range(len(df.index))]
+    T = datetime.strptime(time_interval[1], '%Y-%m-%d')
+    if (T - t0).days > (4 * 365 + 366):
+        start_dates = [t0 + relativedelta(months=+i) for i in range(len(df.index))]
+        end_dates = [start_dates[i] + relativedelta(months=+1) - timedelta(days=1) for i in range(len(df.index))]
+    else:
+        start_dates = [t0 + timedelta(weeks=i) for i in range(len(df.index))]
+        end_dates = [start_dates[i] + timedelta(days=6) for i in range(len(df.index))]
 
     # Merge country language and english into one
     if len(df.columns) == 3:
