@@ -1,7 +1,10 @@
 import statsmodels.api as sm
 from statsmodels.tsa import seasonal
 from Description import Data
+from scipy.stats import jarque_bera
 import numpy as np
+import warnings
+warnings.filterwarnings("ignore")
 
 
 class Decompose:
@@ -30,13 +33,7 @@ class Decompose:
         """
         ts = self.df[self.df.keyword == keyword]['interest']
         ts.index = self.df.startDate.unique()
-
-        if self.stats.stationary(keyword):
-            self.ts_decomp = sm.tsa.seasonal_decompose(ts, model='additive')
-        elif self.stats.stationary(keyword, first_difference=True):
-            self.ts_decomp = sm.tsa.seasonal_decompose(ts, model='multiplicative')
-        else:
-            print(f"No decomposition possible for {keyword}")
+        self.ts_decomp = sm.tsa.seasonal_decompose(ts, model='additive')
 
     def decompose_stl(self, keyword):
         """
