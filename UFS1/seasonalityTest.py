@@ -25,22 +25,20 @@ def testSeasonality(df, keywords):
         product.index = pd.to_datetime(product.index)
         product = pd.Series(product, index = pd.date_range(product.index[0], periods=len(product), freq='W'), name = keyword)
         
-        
-        #seasonalComponent = STL(product, seasonal=13).fit().seasonal
+        seasonalComponent = STL(product, seasonal=13).fit().seasonal
         """it is advisable to isolate the trend before embarking on test for 
         presence of seasonal effect in a series."""
         
-        
-        pValue = wilcoxon(product, zero_method='wilcox')[1]
+        pValue = wilcoxon(seasonalComponent[104:156], seasonalComponent[156:208], zero_method='zsplit')[1]
         """https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wilcoxon.html
         The Wilcoxon signed-rank test tests the null hypothesis that two 
         related paired samples come from the same distribution. In particular, 
         it tests whether the distribution of the differences x - y is symmetric 
         about zero. It is a non-parametric version of the paired T-test."""
         
-        if pValue > 0.01:
+        if pValue < 0.01:
             plt.figure(figsize = (15,1))
-            plt.plot(product, color = 'red')
+            plt.plot(seasonalComponent, color = 'red')
             plt.title(keyword)
             plt.show()
             print("No seasonality for", keyword, pValue)
