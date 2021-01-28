@@ -1,0 +1,290 @@
+,DE,EN
+0,ackerbohne,broad bean
+1,adzukibohne,adzuki bean
+2,alfalfa sprossen,alfalfa sprouts
+3,amaranth,amaranth
+4,apfelmus,applesauce
+5,apfelstrudel,Apple strudel
+6,arabischer linsensalat,arabic lentil salad
+7,asia bowl,asia bowl
+8,asiapfanne,Asia Pan
+9,asiatische sauce,asian sauce
+10,augenbohne,coarse bean
+11,avocado bowl,avocado bowl
+12,avocado-salat,avocado salad
+13,bacon burger,bacon burger
+14,bauernsalat,farmer's salad
+15,bbq burger,bbq burger
+16,bbq-sauce,Bbq sauce
+17,bearnaise sauce,bearnaise sauce
+18,black bean burger,black bean burger
+19,blattspinat,spinach leaves
+20,blumenkohl,cauliflower
+21,blumenkohlcremesuppe,Cauliflower soup
+22,bockwurst,bockwurst
+23,bohnen,beans
+24,bohnensalat,bean salad
+25,bohnensuppe,bean soup
+26,borek,Börek
+27,bratensauce,Bratensauce
+28,bratkartoffeln,fried potatoes
+29,bratwurst,bratwurst
+30,braune sauce,brown sauce
+31,broccolicremesuppe,creamy Broccoli Soup
+32,brokkoli,broccoli
+33,brot,loaf
+34,brotchen,bun
+35,brotsalat,breadsalad
+36,brunnenkresse,watercress
+37,buchweizen,buckwheat
+38,buddha bowl,buddha bowl
+39,burger,burger
+40,burrito,burrito
+41,burrito bowl,burrito bowl
+42,calamaris,calamaris
+43,cevapcici,Cevapcici
+44,champignoncremesuppe,Mushroom cream soup
+45,champignonrahmsauce,mushroom cream sauce
+46,chicken bowl,chicken bowl
+47,chicken burger,Chicken Burger
+48,chicken nuggets,chicken nuggets
+49,chicken wings,chicken wings
+50,chili con carne,chili con carne
+51,chinapfanne,china pan
+52,cordon bleu,cordon Bleu
+53,couscous-salat,Couscous Salad
+54,curry,curry
+55,currysauce,currysauce
+56,currywurst,Currywurst
+57,dampfnudel,steamed noodle
+58,dinkel,Spelt
+59,doner kebap,Döner kebap
+60,edamame bowl,edamame bowl
+61,edel-reizker,edel-Reizker
+62,eisbein,Eisbein
+63,entenbrust,duck breast
+64,erbsen,peas
+65,erbseneintopf,pea stew
+66,erbsensuppe,Pea soup
+67,feta bowl,feta bowl
+68,fingerhirse,finger millet
+69,fischfilet,fish fillet
+70,flammkuchen,Tarte
+71,fleischkase,meat cheese
+72,forelle,Trout
+73,frikadelle,meatball
+74,fruhlingsrollen,spring rolls
+75,funghi,funghi
+76,gaisburger marsch,gaisburger march
+77,gebackene kartoffel,backed potato
+78,gebackener camembert,baked Camembert
+79,gebratene nudeln,fried noodles
+80,gefullte paprika,stuffed peppers
+81,gemuseauflauf,vegetable casserole
+82,gemusepfanne,vegetable pan
+83,germknodel,germknodel
+84,gnocchi,gnocchi
+85,griechischer salat,Greek salad
+86,grillteller,grill plate
+87,grunkohl,Kale
+88,gulasch,goulash
+89,gulasch rind,goulash beef
+90,gulasch schwein,goulash pig
+91,gulasch wild,goulash wild
+92,gulaschsuppe,Gulash soup
+93,gyros,Gyros
+94,hackballchen,meatballs
+95,hackbraten,meatloaf
+96,hacksteak,mince steak
+97,hahnchenbrust,chicken breast
+98,hahnchenkeule,rooster leg
+99,hahnchenschenkel,chicken legs
+100,halloumi burger,halloumi burger
+101,hanfsamen,hemp seeds
+102,hartgekochtes ei,hard boiled egg
+103,hirschbraten,roast deer
+104,hollandaise sauce,hollandaise sauce
+105,hot dog,hot dog
+106,huhnerfrikassee,Hühnerfrikassee
+107,indische sauce,indian sauce
+108,kaiserschmarrn,Kaiserschmarrn
+109,kalbsleber,calf liver
+110,kalbsragout,veal ragout
+111,karotten,carrots
+112,karottencremesuppe,carrot cream soup
+113,kartoffelauflauf,potato casserole
+114,kartoffeleintopf,Potato Stew
+115,kartoffelgratin,potato gratin
+116,kartoffelpuffer,potato pancakes
+117,kartoffelpuree,Mashed potatoes
+118,kartoffelsalat,potato salad
+119,kartoffelsuppe,Potato soup
+120,kasesauce,cheesesauce
+121,kasespatzle,cheese noodles
+122,kassler,Kassler
+123,ketchup,Ketchup
+124,kichererbsen sprossen,chickpea sprouts
+125,kichererbsen-salat,Chickpea salad
+126,klapperschwamm,rattle sponge
+127,kloe,kloe
+128,knoblauchcremesuppe,garlic-creamsoup
+129,knodel,knodel
+130,kohlroulade,cabbage roll
+131,konigsberger klopse,Meatballs
+132,kottbullar,kottbullar
+133,krakauer,krakauer
+134,krautsalat,coleslaw
+135,kroketten,croquettes
+136,kuchen,cake
+137,kurbis,pumpkin
+138,kurbiscremesuppe,pumpkin cream soup
+139,lachs,salmon
+140,lachs bowl,salmon bowl
+141,lahmacun,lahmacun
+142,lammkeule,Lamb shank
+143,lammragout,lamb ragout
+144,lammrucken,lamb print
+145,lasagne,lasagne
+146,lasagne vegetarisch,lasagne vegetarian
+147,lauchcremesuppe,leek cream soup
+148,leberkase,meatloaf
+149,leinsamen,linseed
+150,linsen,lenses
+151,linseneintopf,lentil stew
+152,linsensalat,lentil salad
+153,linsensuppe,lentil soup
+154,lotuswurzel,lotus root
+155,maultaschen gebraten,fried mouthpockets
+156,maultaschen geschmelzt,Maultaschen melted
+157,mayonnaise,mayonnaise
+158,mediterraner salat,mediterranean salad
+159,meeresfruchte,seafood
+160,mexican burger,mexican burger
+161,mexican salad,mexican salad
+162,milchreis,rice pudding
+163,mungobohne,mung bean
+164,natursaft,natural juice
+165,nudeleintopf,Noodlestew
+166,nudeln,noodles
+167,nudeln aglio e olio,pasta aglio e olio
+168,nudeln al forno,pasta al forno
+169,nudeln asiatisch,noodles asian
+170,nudeln mit pesto,pasta with pesto
+171,nudelsalat,Pasta salad
+172,okraschote,okra pod
+173,omelett,omelet
+174,orange tomate,orange tomato
+175,paella,Paella
+176,pak choi,Pak choi
+177,pangasius,pangasius
+178,panierter fisch,breaded fish
+179,pasta al forno,pasta al forno
+180,pasta mit pesto,pasta with pesto
+181,petersilienwurzel,parsley root
+182,pfannkuchen,pancakes
+183,pfeffersauce,peppersauce
+184,picata milanese,Piccata Milanese
+185,pilzcremesuppe,mushroomcreamsoup
+186,pilze,mushrooms
+187,pilzrahmsauce,mushroom cream sauce
+188,poke bowl,poke bowl
+189,polenta,polenta
+190,pommes,fries
+191,pommes frites,French fries
+192,portobello burger,portobello burger
+193,pulled pork burger,pulled pork burger
+194,putenbrust,turkey breast
+195,putengeschnetzeltes,sliced turkey
+196,putenschnitzel,turkey schnitzel
+197,putensteak,turkey steak
+198,quinoa,quinoa
+199,quinoa bowl,quinoa bowl
+200,quinoa burger,quinoa burger
+201,quinoa salat,Quinoa salad
+202,rahmsauce,cream sauce
+203,ratatouille,Ratatouille
+204,ravioli,ravioli
+205,reibekuchen,Reibekuchen
+206,reis,rice
+207,remoulade,remoulade
+208,rind,beef
+209,rinderbraten,roast beef
+210,rinderfilet,beef fillet
+211,rindergeschnetzeltes,sliced beef
+212,rinderleber,beef liver
+213,rinderroulade,beef Roulade
+214,rindersteak,beef steak
+215,risotto,Risotto
+216,rosenkohl,Brussels sprouts
+217,rosti,rosti
+218,rote wurst,Red sausage
+219,rotkohl,Red cabbage
+220,rotkraut,Red cabbage
+221,rotweinsauce,Red wine sauce
+222,rucola-salat,arugula salad
+223,ruhrei,scrambled eggs
+224,rumpsteak,Rumpsteak
+225,sahne,cream
+226,salat,salad
+227,salzkartoffeln,Salt potatoes
+228,sauerbraten,sauerbraten
+229,sauerkraut,sauerkraut
+230,schinkennudeln,Ham noodles
+231,schnitzel natur,natural schnitzel
+232,schnitzel wiener art,Wiener Schnitzel
+233,scholle,plaice
+234,schupfnudeln,schupfnudeln
+235,schwarze bohne,black bean
+236,schwarzwurzel,black salsify
+237,schweinebraten,roast pork
+238,schweinefilet,pork tenderloin
+239,schweinegeschnetzeltes,Pork strips
+240,schweinehaxe,pork
+241,schweinelende,pork loin
+242,schweinemedaillons,pork filets
+243,schweineroulade,pork roulade
+244,seelachsfilet,salmon fillet
+245,senf,mustard
+246,sesam,sesame
+247,smoothie bowl,smoothie bowl
+248,sojabohne,Soybean
+249,sommersalat,summer salad
+250,sour cream,sour cream
+251,spare ribs,spare ribs
+252,spargel,asparagus
+253,spargelcremesuppe,Asparagus Cream Soup
+254,spatzle,spaetzle
+255,spiegelei,fried egg
+256,spinat,spinach
+257,suppe mit einlage,soup with a filler
+258,sushi,sushi
+259,sushi bowl,sushi bowl
+260,taboule,tabbouleh
+261,tafelspitz,Tafelspitz
+262,teff,teff
+263,thunfisch bowl,tuna bowl
+264,tofu bowl,tofu bowl
+265,tomatensauce,Tomato sauce
+266,tomatensuppe,tomatosoup
+267,turkey burger,turkey burger
+268,tzatziki,tzatziki
+269,vanillesauce,Vanilla sauce
+270,vegan burrito,vegan burrito
+271,veganer salat,vegan salad
+272,veggie bowl,veggie bowl
+273,veggie burger,veggie burger
+274,wakame,wakame
+275,walnuss,walnut
+276,wildbraten,game roast
+277,wilder brokkoli,wild broccoli
+278,wildreis,wild rice
+279,winterrettich,winter radish
+280,wirsing,savoy
+281,wrap,wrap
+282,yufka,yufka
+283,zander,zander
+284,zigeunersauce,gypsy sauce
+285,zitronensauce,lemon sauce
+286,zucchini,zucchini
+287,zwiebelrostbraten,Roast beef with onions
+288,zwiebelsauce,onion sauce

@@ -72,7 +72,7 @@ def adjustDataframe(df: pd.DataFrame, path: str):
     time_interval = dir_names[-3].split()
     t0 = datetime.strptime(time_interval[0], '%Y-%m-%d')
     start_dates = [t0 + timedelta(weeks=i) for i in range(len(df.index))]  # TODO filter for 5 year interval
-    end_dates = [start_dates[i] + timedelta(weeks=1) for i in range(len(df.index))]
+    end_dates = [start_dates[i] + timedelta(days=6) for i in range(len(df.index))]
 
     # Merge country language and english into one
     if len(df.columns) == 3:
