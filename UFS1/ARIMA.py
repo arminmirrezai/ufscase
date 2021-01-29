@@ -12,7 +12,7 @@ def multiPlot(trainSets, testSets, forecasts):
     for i in range(len(testSets.columns)):
         ax[i].plot(trainSets[trainSets.columns[i]], color = 'black')
         ax[i].plot(testSets[testSets.columns[i]], color = 'green')
-        ax[i].plot(forecasts[forecasts.columns[i]], color = 'red')
+        ax[i].plot(forecasts[forecasts.columns[i]], 'r--')
 
     plt.show()
 
@@ -30,10 +30,12 @@ def runKeywords(df, keywords):
 
 def singlePlot(trainData, testData, arimaForecast, SARIMA):
 
+    print("the lowest value is", min(arimaForecast))
+
     plt.figure()
     plt.plot(trainData, color = 'black', label = "Training data")
     plt.plot(testData, color = 'green', label = "Testing data")
-    plt.plot(arimaForecast, color = 'red', label = "Prediction")
+    plt.plot(arimaForecast, 'r-.', label = "Prediction")
     plt.legend(loc = 'upper left')
     plt.show()
 
@@ -41,17 +43,17 @@ def singlePlot(trainData, testData, arimaForecast, SARIMA):
     plt.show()
 
 def manualArima(trainData, testData, order, seasonal_order):
-
-    SARIMA = ARIMA(trainData ,order=order, seasonal_order=seasonal_order, trend='ct').fit()
-    forecast = SARIMA.predict(start=testData.index[0], end=testData.index[len(testData.index)-1])
+    
+    SARIMAestimation = ARIMA(trainData ,order=order, seasonal_order=seasonal_order).fit()
+    forecast = SARIMAestimation.predict(start=testData.index[0], end=testData.index[len(testData.index)-1])
     arimaForecast = pd.Series(forecast, index = testData.index)
 
-    return SARIMA, arimaForecast
+    return SARIMAestimation, arimaForecast
 
 def autoArima(trainData, testData):
     
     SARIMA = pm.auto_arima(trainData, start_p=1, start_q=1,test='adf',max_p=3, max_q=3, m=len(testData) ,start_P=0, seasonal=True,d=None, D=1, trace=True,
-                         error_action='ignore',  suppress_warnings=True, stepwise=True)
+                         error_action='ignore',  suppress_warnings=True, stepwise=True, trend = 'ct')
     forecast = SARIMA.predict(n_periods = len(testData))
     arimaForecast = pd.Series(forecast, index = testData.index)
 
@@ -72,27 +74,28 @@ def readData(df, keyword):
 def main():
 
     ################ VARIABLES:
-    country = 'DE'
+    country = 'NL'
     startYear = 2016
     endYear = 2021
-    keyword = 'apfelstrudel'
-    keywords = pd.read_csv(r'/Users/safouane/Desktop/Data/KeyWords/NL_EN.txt').NL    
+    keyword = 'aioli'
     
     ################ MAIN CODE:
     df = ApiExtract.extract(range(startYear, endYear), country)
-    
+    keywords = df.keyword.unique()
+
     (trainData, testData) = readData(df, keyword)
-    (SARIMA, autoForecastData) = autoArima(trainData, testData)
+    #(SARIMA, autoForecastData) = autoArima(trainData, testData)
+
+    (SARIMAestimation, manualForecacastData) = manualArima(trainData, testData, (0,0,0), (1,1,0,52))
 
     #(trainSets, testSets, arimaModels) = runKeywords(df, keywords[:10])
-    #(SARIMA, manualForecacastData) = manualArima(trainData, testData, (0,1,2), (1,1,0,52))
 
     ################ OUTPUT AND PLOTTING:
     #multiPlot(trainSets, testSets, arimaModels)
     
-    singlePlot(trainData, testData, autoForecastData, SARIMA)
+    #singlePlot(trainData, testData, autoForecastData, SARIMA)
     
-    #singlePlot(trainData, testData, manualForecacastData, SARIMA)
+    singlePlot(trainData, testData, manualForecacastData, SARIMAestimation)
 
 if __name__ == "__main__":
     main()
