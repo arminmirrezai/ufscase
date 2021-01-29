@@ -1,0 +1,205 @@
+,ZA,EN
+0,alfredo pasta,alfredo pasta
+1,apple crumble,apple crumble
+2,avocado toast,avocado toast
+3,baby carrots,baby carrots
+4,baby chicken,baby chicken
+5,baked cheesecake,baked cheesecake
+6,baked mushrooms,baked mushrooms
+7,bangers and mash,bangers and mash
+8,basting sauce,basting sauce
+9,bean soup,bean soup
+10,beans curry,beans curry
+11,beef burger,beef burger
+12,beef casserole,beef casserole
+13,beef curry,beef curry
+14,beef lasagne,beef lasagne
+15,beef stew,beef stew
+16,beef stroganoff,beef stroganoff
+17,beef tripe,beef tripe
+18,beetroot,beetroot
+19,beetroot salad,beetroot salad
+20,berry compote,berry compote
+21,biltong,biltong
+22,bistro burger,bistro burger
+23,bobotie,bobotie
+24,boiled chicken,boiled chicken
+25,bolognese,Bolognese
+26,braised cabbage,braised cabbage
+27,braised lamb,braised lamb
+28,breaded chicken,breaded chicken
+29,breyani,breyani
+30,broccoli salad,broccoli salad
+31,broccoli soup,broccoli soup
+32,brownie,brownie
+33,bunny chow,bunny chow
+34,butter chicken,butter chicken
+35,butternut,butternut
+36,butternut salad,butternut salad
+37,butternut soup,butternut soup
+38,cabbage,cabbage
+39,caesar salad,caesar salad
+40,calamari,calamari
+41,carrot cake,carrot cake
+42,carrot soup,carrot soup
+43,cauliflower salad,cauliflower salad
+44,cauliflower soup,cauliflower soup
+45,chakalaka,waited
+46,cheeseburger,cheeseburger
+47,cheesecake,cheesecake
+48,chicken biryani,chicken biryani
+49,chicken burger,chicken burger
+50,chicken casserole,chicken casserole
+51,chicken chow mein,chicken chow mein
+52,chicken feet,chicken feet
+53,chicken fillets,chicken fillets
+54,chicken gizzards,chicken gizzards
+55,chicken grilled,chicken grilled
+56,chicken liver,chicken liver
+57,chicken necks,chicken necks
+58,chicken pie,chicken pie
+59,chicken pizza,chicken pizza
+60,chicken salad,chicken salad
+61,chicken schnitzel,chicken schnitzel
+62,chicken shawarma,chicken shawarma
+63,chicken skewers,chicken skewers
+64,chicken soup,chicken soup
+65,chicken stew,chicken stew
+66,chicken stir fry,chicken stir fry
+67,chicken strips,chicken strips
+68,chicken wings,chicken wings
+69,chickpea salad,chickpea salad
+70,chimichurri sauce,chimichurri sauce
+71,chips,chips
+72,choc mousse,foam shock
+73,chocolate cake,chocolate cake
+74,chocolate fondant,fondant chocolate
+75,chocolate lava,chocolate lava
+76,chocolate mousse,chocolate mousse
+77,chocolate pudding,chocolate pudding
+78,coleslaw,coleslaw
+79,corn soup,corn soup
+80,cottage pie,cottage pie
+81,cow heels,cow heels
+82,crab,crab
+83,cream spinach,cream spinach
+84,creme brulee,creme brulee
+85,creme caramel,caramel creams
+86,crispy pork belly,crispy pork belly
+87,crocodile meat,crocodile meat
+88,crumbed chicken,crumbed chicken
+89,crumbed fish,crumbed fish
+90,crumbed pork,crumbed pork
+91,custard,custard
+92,dorado,Golden
+93,dumpling,dumpling
+94,egg benedict,egg benedict
+95,fillet of beef,fillet of beef
+96,fish cake,fish cake
+97,fish platter,fish platter
+98,fish stew,fish stew
+99,flapjacks,flapjacks
+100,fondant potatoes,fondant potatoes
+101,french onion soup,french onion soup
+102,fried beef,fried beef
+103,fried cabbage,fried cabbage
+104,fried chicken,fried chicken
+105,fried hake,fried hake
+106,fried tomato,fried tomato
+107,gammon glaze,gammon glaze
+108,garlic cream,garlic cream
+109,goulash soup,goulash soup
+110,gourmet burger,gourmet burger
+111,gravy,gravy
+112,green beans,green beans
+113,green salad,green salad
+114,grilled beef,grilled beef
+115,grilled chicken,grilled chicken
+116,grilled fish,grilled fish
+117,grilled pork chops,grilled pork chops
+118,grilled vegetables,grilled vegetables
+119,grilled wings,grilled wings
+120,hake fillet,hake fillet
+121,halloumi salad,halloumi salad
+122,hollandaise sauce,Hollandaise sauce
+123,jelly,jelly
+124,lamb chops,lamb chops
+125,lamb curry,lamb curry
+126,lamb shank,lamb shank
+127,lava cake,lava cake
+128,leek pie,seemed like pie
+129,lentil curry,lentil curry
+130,lentil soup,lentil soup
+131,mac n cheese,mac n cheese
+132,malva pudding,Pudding to meet
+133,mango salad,mango salad
+134,mash potato,mash potato
+135,mayonnaise,mayonnaise
+136,meat platter,meat platter
+137,meatball,meatball
+138,mediterranean salad,mediterranean salad
+139,mince pie,mince pie
+140,minestrone soup,minestrone soup
+141,mushroom soup,mushroom soup
+142,mussels,mussels
+143,noodle salad,noodle salad
+144,noodle stir fry,noodle stir fry
+145,omelet,omelet
+146,ox liver,ox liver
+147,oxtail,oxtail
+148,panna cotta,panna cotta
+149,pasta salad,pasta salad
+150,pea salad,B Salad
+151,pea soup,pea soup
+152,peri peri,about
+153,pizza,pizza
+154,pork chops,pork chops
+155,pork stew,pork stew
+156,pork trotters,pork trotters
+157,portuguese rice,portuguese rice
+158,portuguese steak,portuguese steak
+159,potato mash,potato mash
+160,potato salad,potato salad
+161,potato soup,potato soup
+162,potato wedges,potato wedges
+163,prawn,prawn
+164,pulled pork,pulled pork
+165,pumpkin mash,pumpkin mash
+166,quinoa salad,quinoa salad
+167,red thai curry,red thai curry
+168,ribs,ribs
+169,roast chicken,roast chicken
+170,roast chicken pie,roast chicken pie
+171,roast chicken pieces,roast chicken pieces
+172,roast vegetables,roast vegetables
+173,roasted beef,roasted beef
+174,roasted butternut,roasted butternut
+175,roasted chicken,roasted chicken
+176,rocket salad,rocket salad
+177,rump steak,rump steak
+178,rye bread,rye bread
+179,salted caramel,salted caramel
+180,savoury mince,savoury mince
+181,scrambled egg,scrambled egg
+182,seafood basket,seafood basket
+183,seafood platter,seafood platter
+184,seared salmon,seared salmon
+185,sirloin steak,sirloin steak
+186,smoked salmon,smoked salmon
+187,snails,snails
+188,snoek fish,pike fish
+189,spicy wings,spicy wings
+190,spinach soup,spinach soup
+191,squid,squid
+192,sweet potato,sweet potato
+193,tabbouleh salad,tabbouleh salad
+194,tartar sauce,tartar sauce
+195,tea,tea
+196,trifle,trifle
+197,tuna salad,tuna salad
+198,veggie burger,veggie burger
+199,waldorf salad,waldorf salad
+200,wings,wings
+201,wrap,wrap
+202,yellow salad,yellow salad
+203,zucchini fritters,zucchini fritters
