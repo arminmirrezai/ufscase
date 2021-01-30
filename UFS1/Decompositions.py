@@ -1,7 +1,7 @@
 import statsmodels.api as sm
 from statsmodels.tsa import seasonal
 from Description import Data
-from scipy.stats import jarque_bera
+from scipy import stats
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
@@ -26,23 +26,31 @@ class Decompose:
     def remainder(self):
         return self.ts_decomp.resid
 
+    def time_series(self, keyword):
+        ts = self.df[self.df.keyword == keyword]['interest']
+        ts.index = self.df.startDate.unique()
+        return ts
+
     def decompose_ma(self, keyword):
         """
         Decomposition by moving average design
         :param keyword: keyword to be used
         """
-        ts = self.df[self.df.keyword == keyword]['interest']
-        ts.index = self.df.startDate.unique()
-        self.ts_decomp = sm.tsa.seasonal_decompose(ts, model='additive')
+        self.ts_decomp = sm.tsa.seasonal_decompose(self.time_series(keyword), model='additive')
 
     def decompose_stl(self, keyword):
         """
         Decomposition by STL LOESS
         :param keyword: keyword to be used
         """
-        ts = self.df[self.df.keyword == keyword]['interest']
-        ts.index = self.df.startDate.unique()
-        self.ts_decomp = seasonal.STL(ts)
+        ts = self.time_series(keyword)
+        ts_bc, _ = stats.boxcox(ts)
+        decomp_add = seasonal.STL(ts).fit()
+        decomp_mult = seasonal.STL(ts_bc).fit()
+        if stats.jarque_bera(decomp_add.resid).pvalue > stats.jarque_bera(decomp_mult.resid).pvalue:
+            self.ts_decomp = decomp_add
+        else:
+            self.ts_decomp = decomp_mult
 
     def trend_F(self):
         """"
