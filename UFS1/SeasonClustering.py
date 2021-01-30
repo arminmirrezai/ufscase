@@ -3,66 +3,61 @@ import numpy as np
 import seaborn as sbn
 import ApiExtract
 from statsmodels.tsa.seasonal import STL
-from croston import croston
-
+import matplotlib.pyplot as plt
 
 # from trendypy.trendy import Trendy
-
-# from sklearn.cluster import AgglomerativeClustering
-
-# from tslearn.clustering import TimeSeriesKMeans
-
 
 # from scipy.spatial import distance
 # from sklearn.neighbors import NearestNeighbors
 # from fastdtw import fastdtw
 
-# Configuring Matplotlib
-# from pandas.plotting import register_matplotlib_converters
-import matplotlib.pyplot as plt
-# register_matplotlib_converters()
-# mpl.rcParams['figure.dpi'] = 300
-# savefig_options = dict(format="png", dpi=300, bbox_inches="tight")
 
-
-# def DTW(a, b):   
-#     dtw_distance, warp_path = fastdtw(a, b, dist=euclidean)
-#     return dtw_distance
-
-# keywords = pd.read_csv(r'C:\Users\Naam\Desktop\seminar case study\ufscode\Data\KeyWords\NL_EN.txt')
-# df = pd.read_csv(r'C:\Users\Naam\Desktop\seminar case study\ufscode\Data\data_UFS.csv')
 
 years = range(2016,2021)
 df = ApiExtract.extract(years,'NL')
  
-seasonal_series = []
+all_series = []
+# stl_series = []
 for keyword in df.keyword.unique():
     product = df[df.keyword == keyword]['interest']
     time_series = pd.Series(product.tolist(), index = pd.date_range('1-1-2017', periods=len(product), freq='W'), name = keyword)
-    stl = STL(time_series, seasonal=13).fit()
+    stl = STL(time_series).fit()
+    # stl_series.append(stl)
     seasonal = stl.seasonal
-    seasonal_series.append(seasonal)
+    all_series.append(seasonal)
+    # all_series.append(time_series.tolist())
 
-for i in range(len(seasonal_series)):
-    length = len(seasonal_series[i])
-    seasonal_series[i] = seasonal_series[i].values.reshape((length, 1))
+
+# Hierarchical clustering_____________________________________________________________________________________________
+
+for i in range(len(series)):
+    length = len(series[i])
+    # series[i] = series[i].values.reshape((length, 1))
+    series[i] = series[i].reshape((length, 1))
 
 from sktime.distances.elastic_cython import dtw_distance
-#from dtaidistance.dtw import distance
 
-n_series = len(seasonal_series)
+n_series = len(series)
 distance_matrix = np.zeros(shape=(n_series, n_series))
 
 for i in range(n_series):
     for j in range(n_series):
-        x = seasonal_series[i]
-        y = seasonal_series[j]
+        x = series[i]
+        y = series[j]
         if i != j:
             dist = dtw_distance(x, y)
             distance_matrix[i, j] = dist
-            print("True")
-        print(j)
-print("klaar")
+
+# for i in range(n_series):
+#     for j in range(n_series):
+#         x1 = stl_series[i].seasonal.values.reshape((len(stl_series[i].seasonal), 1))
+#         y1 = stl_series[j].seasonal.values.reshape((len(stl_series[j].seasonal), 1))
+#         x2 = stl_series[i].trend.values.reshape((len(stl_series[i].trend), 1))
+#         y2 = stl_series[j].trend.values.reshape((len(stl_series[j].trend), 1))
+#         if i != j:
+#             dist = dtw_distance(x1, y1) + dtw_distance(x2, y2)
+#             distance_matrix[i, j] = dist
+
 from scipy.cluster.hierarchy import single, complete, average, ward, dendrogram
 
 def hierarchical_clustering(dist_mat, method='complete'):
@@ -87,78 +82,73 @@ linkage_matrix = hierarchical_clustering(distance_matrix)
 from scipy.cluster.hierarchy import fcluster
 
 # select maximum number of clusters
-# cluster_labels = fcluster(linkage_matrix, 4, criterion='maxclust')
-# print(np.unique(cluster_labels))
-#>> 4 unique clusters
-cluster_labels = fcluster(linkage_matrix, 10, criterion='maxclust')
+cluster_labels = fcluster(linkage_matrix, 3, criterion='maxclust')
 print(np.unique(cluster_labels))
-# >> 10 unique clusters
-
-# hand-select an appropriate cut-off on the dendrogram
-# cluster_labels = fcluster(linkage_matrix, 207000, criterion='distance')
-# print(np.unique(cluster_labels))
 
 
-
-
-
-
-
-# model = TimeSeriesKMeans(n_clusters=4, metric="dtw", max_iter=5, max_iter_barycenter=5).fit(seasonal_series[:25])
-
-# km = TimeSeriesKMeans(n_clusters=4, metric="dtw")
-# labels = km.fit_predict(seasonal_series)
-# print(model.cluster_centers_.shape)
+# kNN_____________________________________________________________________________________________
 
 # nbrs = NearestNeighbors(n_neighbors=2, radius=0.4)
+# knn = NearestNeighbors(n_neighbors=3, metric=DTW)
+# knn.fit(seasonal_series)
 
-# clustering = AgglomerativeClustering(affinity=DTW, linkage='average').fit(seasonal_series[:25])
-# print(clustering.labels_)
 
+# Agglomerative___________________________________________________________________________________
+
+from sklearn.cluster import AgglomerativeClustering
+
+clustering = AgglomerativeClustering(n_clusters=10, affinity='precomputed', linkage='average').fit(distance_matrix)
+cluster_labels = clustering.labels_
+print(clustering.labels_)
+
+
+# Trendy package___________________________________________________________________________________
 
 # trendy = Trendy(n_clusters=4)
 # trendy.fit(seasonal_series[:10])
 # print(trendy.labels_)
 
-# fig, axs = plt.subplots(15)
-# for i in range(15):
-#     axs[i].plot(seasonal_series[i])
 
-# no_clusters = np.unique(cluster_labels).size
+# plot_____________________________________________________________________________________________
 
-# for i in range(no_clusters):
-#     cluster = np.where(cluster_labels == i+1)
-#     fig, axs = plt.subplots(cluster[0].size)
-#     for j in range(cluster[0].size):
-#         axs[j].plot(seasonal_series[cluster[0][j]])
-#     plt.show()
+for i in range(3):
+    cluster = np.where(cluster_labels == i)
+    fig, axs = plt.subplots(cluster[0].size)
+    if cluster[0].size == 1:
+        axs.plot(all_series[cluster[0][0]])
+    else:
+        for j in range(cluster[0].size):
+            axs[j].plot(all_series[cluster[0][j]]) 
+    plt.show()
 
-# plt.plot(seasonal_series[i])
+# F-measure_____________________________________________________________________________________________
 
-cluster = np.where(cluster_labels == 1)
-fig, axs = plt.subplots(cluster[0].size)
-for j in range(cluster[0].size):
-    axs[j].plot(seasonal_series[cluster[0][j]])
+from Decompositions import Decompose
+dd = Decompose(df)
+low_seasonal = []
+mid_seasonal = []
+high_seasonal =[]
 
-plt.show()
+for word in df.keyword.unique():
+    dd.decompose_ma(word)
+    # print(f"{word}: seasonal F-measure = {dd.seasonality_F()}")
+    if dd.seasonality_F() < 0.3:
+        low_seasonal.append(word)
+    elif dd.seasonality_F() < 0.6:
+        mid_seasonal.append(word)
+    else:
+        high_seasonal.append(word)
+
+print(low_seasonal)
+print(mid_seasonal)
+print(high_seasonal)
+
+series = []
+for keyword in high_seasonal:
+    product = df[df.keyword == keyword]['interest']
+    time_series = pd.Series(product.tolist(), index = pd.date_range('1-1-2017', periods=len(product), freq='W'), name = keyword)
+    series.append(time_series.to_numpy())
 
 
-# knn = NearestNeighbors(n_neighbors=3, metric=DTW)
-# knn.fit(seasonal_series)
 
-# sc = SpectralClustering(3, affinity='precomputed', n_init=100, assign_labels='discretize')
-# sc.fit_predict(adjacency_matrix)
 
-# for keyword in keywords["NL"]:
-#     product = data.loc[(data["keyword"] == keyword)]["interest"]
-#     time_series = pd.Series(product.tolist(), index = pd.date_range('1-1-2017', periods=len(product), freq='W'), name = keyword)
-
-# trendy = Trendy(n_clusters=4)
-# trendy.fit(seasonal_series)
-# print(trendy.labels_)
-
-# ackerbohne = pd.Series(ackerbohne, index = pd.date_range('1-1-2017', periods=len(ackerbohne), freq='W'), name = 'Ackerbohne')
-# stl = STL(ackerbohne, seasonal=13).fit()
-# seasonal = stl.seasonal
-# fig = seasonal.plot()
-# plt.show()
