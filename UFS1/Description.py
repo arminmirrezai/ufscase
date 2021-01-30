@@ -59,7 +59,7 @@ class Data:
             :param keyword: keyword
             :param first_difference: True if you want to take first difference
             :param significance: could be 1, 5 or 10 %
-            :return: Stationary or not
+            :return: Stationary or not, with deterministic trend or not
             """
             if significance not in {'1%', '5%', '10%'}:
                 raise ValueError("Significance level can only be 1,5 or 10 %")
@@ -69,18 +69,22 @@ class Data:
             adf_test = adfuller(ts, regression='ct', autolag='AIC', regresults=True)
             has_unit_root = adf_test[0] > adf_test[2][significance]  # negative one sided
             if has_unit_root:
-                has_intercept = ttest_1samp(ts.diff(1).dropna(), 0).pvalue < int(significance[:-1]) / 100
-                if not has_intercept:
+                has_det_trend = ttest_1samp(ts.diff(1).dropna(), 0).pvalue < int(significance[:-1]) / 100
+                if not has_det_trend:
                     adf_test = adfuller(ts, regression='c', autolag='AIC', regresults=True)
                     has_unit_root = adf_test[0] > adf_test[2][significance]  # negative one sided
-                return has_unit_root
+                return has_unit_root, has_det_trend
             else:
                 reg = adf_test[3].resols
                 r = np.append(np.zeros_like(reg.params[:-1]), 1)
-                has_trend = reg.t_test(r).pvalue.item(0) < int(significance[:-1]) / 100
+                has_det_trend = reg.t_test(r).pvalue.item(0) < int(significance[:-1]) / 100
 
-                kpss_test = kpss(ts, regression='ct') if has_trend else kpss(ts, regression='c')
-                return kpss_test[0] < kpss_test[3][significance]
+                kpss_test = kpss(ts, regression=('ct' if has_det_trend else 'c'))
+                return kpss_test[0] < kpss_test[3][significance], has_det_trend
+
+
+
+
 
 
 
