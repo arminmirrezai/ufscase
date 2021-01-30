@@ -1,0 +1,218 @@
+,ES,EN
+0,aceite de oliva,olive oil
+1,aceite para cocinar,cooking oil
+2,aceite vegetal,vegetable oil
+3,ajo,Garlic
+4,ajoarriero,Ajoarriero
+5,ajoblanco,White garlic
+6,albondigas,meatloaf
+7,albondigas en salsa,Meatballs in sauce
+8,alitas de pollo,chicken wings
+9,almejas,clams
+10,almendrados,nutty
+11,arroz,rice
+12,arroz con conejo,Rice With Rabbit
+13,arroz con leche,rice pudding
+14,arroz con pollo,chicken rice
+15,arroz marinero,seafood rice
+16,arroz negro,black rice
+17,azafran,saffron
+18,bacalao,cod
+19,bacalao pil pil,cod pil pil
+20,beef brisket,beef brisket
+21,bisque de gambas,prawn bisque
+22,bizcocho,Biscuit
+23,bocadillo,snack
+24,bocadillo de queso,Cheese snack
+25,bocadillo serranito,serranito sandwich
+26,bombas de patatas,potato bombs
+27,boquerones,anchovies
+28,boquerones en vinagre,anchovies in vinegar
+29,botifarra,botifarra
+30,brownie de chocolate,Chocolate brownie
+31,burger,burger
+32,cachopo,cachopo
+33,calamares,squid
+34,callos,calluses
+35,carne,meat
+36,carne picada,mince
+37,carrillada,cheeks
+38,cecina,dried meat
+39,cheesecake,cheesecake
+40,chistorra,chistorra
+41,chorizo,chorizo
+42,chorizo riojano,Riojan chorizo
+43,churros,Churros
+44,coca,Coke
+45,cochinillo,pig
+46,cocido,Cooked
+47,cocido de pelotas,boiled balls
+48,cocido maragato,cooked Maragato
+49,conejo con tomate,rabbit with tomato
+50,cordero asado,roast lamb
+51,crema catalana,Catalan cream
+52,crema de calabaza,pumpkin cream
+53,crema de chocolate,chocolate cream
+54,crema de coliflor,Cauliflower cream
+55,crema de esparragos,asparagus cream
+56,crema de frambuesa,raspberry cream
+57,crema de hongos,mushroom cream
+58,crema de marisco,seafood cream
+59,crema de naranja,orange cream
+60,crema de puerros,cream of leeks
+61,crema inglesa,English cream
+62,crema yogur,yogurt cream
+63,croquetas,croquettes
+64,cuajada,Curd
+65,cuscus,couscous
+66,dorada,golden
+67,empanada,Patty
+68,empanada gallega,Galician pie
+69,ensaimada,ensaimada
+70,ensalada,salad
+71,ensalada de pasta,pasta salad
+72,ensaladilla rusa,Russian salad
+73,esparragos,asparagus
+74,espeto,I blurt
+75,espinacas con garbanzos,Chickpeas With Spinach
+76,fabada,Fabada
+77,fabada asturiana,Asturian bean stew
+78,fideua,Fideua
+79,filete de salmon,salmon fillet
+80,filloas,filloas
+81,flan,flan
+82,flores de hojaldre,puff pastry flowers
+83,fuet,fuet
+84,fumet de marisco,seafood stock
+85,gachas,gruel
+86,gambas,prawns
+87,gambas al ajillo,Shrimp Scampi
+88,gambas maceradas,marinated prawns
+89,garbanzos con especias,chickpeas with spices
+90,garrotxa,garrotxa
+91,gazpacho,Gazpacho
+92,gelatinas,jellies
+93,goxua,Goxua
+94,guarnicion,Garrison
+95,guiso de pasta,pasta stew
+96,hamburguesa,Burger
+97,harina,flour
+98,herbal tea,herbal tea
+99,hornazo,hornazo
+100,hueso de santo,saint bone
+101,huevos rotos,broken eggs
+102,jabugo,jabugo
+103,jamon,Ham
+104,jamon iberico,Iberian Ham
+105,jengibre,ginger
+106,kokotxas,kokotxas
+107,lechazo,lamb
+108,leche con chocolate,chocolate milk
+109,leche frita,fried milk
+110,lentejas estofadas,stewed lentils
+111,lipton,lipton
+112,magret de pato,duck breast
+113,marisco,shellfish
+114,marmitako,marmitako
+115,mayonesa,Mayonnaise
+116,mayonesa de ajo,Garlic Mayonnaise
+117,mayonesa de curry,curry mayonnaise
+118,mazapanes,marzipan
+119,merengue,Meringue
+120,mermelada,marmalade
+121,migas,crumbs
+122,miguelitos,miguelitos
+123,mini postres,mini desserts
+124,mojo,mojo
+125,montaditos,montaditos
+126,mousse de cafe,coffee mousse
+127,mousse de chocolate,chocolate mousse
+128,mousse de coco,coconut mousse
+129,mousse de limon,lemon mousse
+130,mousse de nata,cream mousse
+131,mousse de yogur,yogurt mousse
+132,natillas ,Custard
+133,neula,neula
+134,nuggets de pollo,Chicken Nuggets
+135,olla gitana,gypsy pot
+136,olla podrida,rotten pot
+137,orejas,ears
+138,paella,Paella
+139,paella de marisco,seafood paella
+140,paella valenciana,Valencian paella
+141,pan tomate,tomato bread
+142,pan tumaca,tumaca bread
+143,panellets,panellets
+144,panettone,Panettone
+145,panna cotta,panna cotta
+146,papas con mojo,potatoes with mojo
+147,pasta,pasta
+148,pastel de crema,cream cake
+149,pastel de zanahoria,carrot cake
+150,pastel murciano,murcian cake
+151,patatas bravas,spicy potatoes
+152,pate de higaditos de pollo,chicken liver pate
+153,penne rigate,penne rigate
+154,perrunillas,perrunillas
+155,pinchitos,skewers
+156,pisto,ratatouille
+157,pisto de tomate,tomato ratatouille
+158,pizza,Pizza
+159,polbo a feira,polbo to feira
+160,pollo al ajillo,garlic chicken
+161,porrusalda,porrusalda
+162,pulpo,octopus
+163,pulpo a la gallega,Galician octopus
+164,pure de patatas,mashed potatoes
+165,queso crema,cream cheese
+166,queso de cabra,goat cheese
+167,queso tetilla,cheese nipple
+168,queso vegano,vegan cheese
+169,rabo de buey,oxtail
+170,rabo de toro,bull's tail
+171,ravioli,ravioli
+172,roncal ,husky
+173,roscon de reyes,roscon de reyes
+174,rosquillas,Donuts
+175,salchicha,sausage
+176,salmorejo,Salmorejo
+177,salsa agridulce,sweet and sour sauce
+178,salsa americana,American sauce
+179,salsa barbacoa,barbecue sauce
+180,salsa curry,curry sauce
+181,salsa de boletus,boletus sauce
+182,salsa de lima,lime sauce
+183,salsa demiglace,demiglace sauce
+184,salsa mostaza y miel,mustard and honey sauce
+185,salsa teriyaki,teriyaki sauce
+186,salsa verde,green sauce
+187,salsa yogur,yogurt sauce
+188,sandwich de pastrami,pastrami sandwich
+189,sangria,Bleeding
+190,sardinas,sardines
+191,sobao,sobao
+192,sobrasada,sobrasada
+193,sofrito,sofrito
+194,sopa castellana,Castilian soup
+195,sopa de mayonesa,mayonnaise soup
+196,sopa de tomate,tomato soup
+197,sopa fria,cold soup
+198,sorbete de limon,lemon sorbet
+199,souffle,souffle
+200,tagliatelle,tagliatelle
+201,tapas,tapas
+202,tarta santiago,Santiago cake
+203,te verde,Green Tea
+204,ternera,veal
+205,tigres,tigers
+206,tiramisu,Tiramisu
+207,torrijas,French toast
+208,tortilla,tortilla
+209,tortilla de patatas,omelette
+210,trifasico,three-phase
+211,tumbet,tumbet
+212,turron,nougat
+213,vinagreta de mostaza,mustard vinaigrette
+214,vinagreta de tomate,tomato vinaigrette
+215,yogur postre,yogurt dessert
+216,zarangollo,zarangollo

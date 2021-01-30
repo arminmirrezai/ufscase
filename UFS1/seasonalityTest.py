@@ -7,7 +7,7 @@ Created on Fri Jan  8 09:27:42 2021
 """
 import os
 import pandas as pd
-
+import ApiExtract
 from statsmodels.tsa.seasonal import STL
 from statsmodels.tsa.stattools import adfuller
 from scipy.stats import wilcoxon
@@ -19,12 +19,9 @@ def testSeasonality(df, keywords):
     
     noSeasonality = 0
     for keyword in keywords:
-        
-        data = df[df.keyword == keyword]
-        product = data.interest.rename(index = data.date)
-        product.index = pd.to_datetime(product.index)
-        product = pd.Series(product, index = pd.date_range(product.index[0], periods=len(product), freq='W'), name = keyword)
-        
+
+        product = readData(df, keyword)
+                  
         seasonalComponent = STL(product, seasonal=13).fit().seasonal
         """it is advisable to isolate the trend before embarking on test for 
         presence of seasonal effect in a series."""
@@ -50,11 +47,7 @@ def testStationarity(df, keywords):
 
     for keyword in keywords:
         
-        data = df[df.keyword == keyword]
-        product = data.interest.rename(index = data.date)
-        product.index = pd.to_datetime(product.index)
-        
-        product = pd.Series(product, index = pd.date_range(product.index[0], periods=len(product), freq='W'), name = keyword)
+        product = readData(df, keyword)
 
         stl = STL(product, seasonal=13)
         res = stl.fit()
@@ -64,27 +57,30 @@ def testStationarity(df, keywords):
         if result[1] > 0.05:
             print(keyword, result[1])
 
-def getKeywords(df):
+def readData(df, keyword):
 
-    keywords = [df.keyword[0]]    
-    for k in range(1,len(df)):  
-        if df.keyword[k] != df.keyword[k-1]:
-            keywords.append(df.keyword[k])
+    data = df[df.keyword == keyword][['interest', 'startDate']]
+    data = data.interest.rename(index = data.startDate)
 
-    return keywords
+    # startYear = data.index[0].year
+    # endYear = data.index[len(data)-1].year + 1
+
+    # splitThreshold = int(len(data)*(1-1/(endYear - startYear)))
+
+    return data#, data[:splitThreshold], data[splitThreshold+1:]
 
 def main():
-    
-    country = 'DE'
-    
-    os.chdir("/Users/safouane/Desktop/Data")
-    df = pd.read_csv('data_UFS.csv')
-    df = df[df.countryCode == country]
-    
-    keywords = getKeywords(df)
-    
+
+    country = 'NL'
+    startYear = 2016
+    endYear = 2021
+    df = ApiExtract.extract(range(startYear, endYear), country)
+    keywords = df.keyword.unique() #['zwezerik']
+
     #testStationarity(df, keywords)
     testSeasonality(df, keywords)
+
+
 
 if __name__ == "__main__":
     main()

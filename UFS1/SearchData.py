@@ -16,8 +16,8 @@ class GSData:
         :return: pandas data frame
         """
         if self.df is None:
-            data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data/data_UFS.csv"
-            self.df = pd.read_csv(filepath_or_buffer=data_path, sep=',', header=0)
+            data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data/data_UFS2.csv"
+            self.df = pd.read_csv(filepath_or_buffer=data_path, sep=';', header=0)
             self.df = self.df.astype({'date': 'datetime64', 'startDate': 'datetime64', 'endDate': 'datetime64'})
         return self.df
 
@@ -37,8 +37,9 @@ class GSData:
             self._create_folder(folder_path)
             key_words = self._key_words_UF(country)
             if translated:
-                key_words_trans = [[key_word, ts.google(key_word, from_language=country.lower(), to_language='en')]
-                                    for key_word in key_words]
+                print("Translating keywords...")
+                key_words_trans = [[key_word, ts.google(key_word, from_language=country.lower(), to_language='en')
+                                    if country != 'ZA' else ts.google(key_word, to_language='en')] for key_word in key_words]
                 self.df_kws = pd.DataFrame(key_words_trans)
                 self.df_kws.columns = [country, 'EN']
             else:
@@ -63,7 +64,6 @@ class GSData:
             return self.df[self.df['countryCode'] == country]['keyword'].unique()
         else:
             return self.df.groupby('countryCode')['keyword'].unique()
-
 
     @staticmethod
     def _create_folder(path):

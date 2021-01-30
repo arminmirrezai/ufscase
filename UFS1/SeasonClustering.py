@@ -1,3 +1,4 @@
+from numpy.lib.function_base import append
 import pandas as pd
 import numpy as np
 import seaborn as sbn
@@ -70,10 +71,10 @@ def hierarchical_clustering(dist_mat, method='complete'):
     if method == 'ward':
         Z = ward(distance_matrix)
     
-    fig = plt.figure(figsize=(16, 8))
-    dn = dendrogram(Z)
-    plt.title("Dendrogram for {method}-linkage with dtw distance")
-    plt.show()
+    # fig = plt.figure(figsize=(16, 8))
+    # dn = dendrogram(Z)
+    # plt.title(f"Dendrogram for {method}-linkage with dtw distance")
+    # plt.show()
     
     return Z
 
@@ -85,6 +86,83 @@ from scipy.cluster.hierarchy import fcluster
 cluster_labels = fcluster(linkage_matrix, 3, criterion='maxclust')
 print(np.unique(cluster_labels))
 
+# distances = []                  ###########################################ELBOW PLOT<<<<<<<<<<>>>>>>>>>>>
+# bestClusters = []
+# for c in range(1,10+1):
+#     print(c)
+#     cluster_labels = fcluster(linkage_matrix, t=c, criterion='maxclust')
+#     numbOfClusters = max(cluster_labels)
+#     cluster1 = []
+#     cluster2 = []
+#     cluster3 = []
+#     cluster4 = []
+#     cluster5 = []
+#     cluster6 = []
+#     cluster7 = []
+#     cluster8 = []
+#     cluster9 = []
+#     cluster10 = []
+#     for i in range(len(cluster_labels)):
+#         if cluster_labels[i] == 1:
+#             cluster1.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 2:
+#             cluster2.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 3:
+#             cluster3.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 4:
+#             cluster4.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 5:
+#             cluster5.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 6:
+#             cluster6.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 7:
+#             cluster7.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 8:
+#             cluster8.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 9:
+#             cluster9.append(seasonal_series[:,i])
+#         elif cluster_labels[i] == 10:
+#             cluster10.append(seasonal_series[:,i])
+        
+#     cluster1 = np.transpose(np.array(cluster1))
+#     cluster2 = np.transpose(np.array(cluster2))
+#     cluster3 = np.transpose(np.array(cluster3))
+#     cluster4 = np.transpose(np.array(cluster4))
+#     cluster5 = np.transpose(np.array(cluster5))
+#     cluster6 = np.transpose(np.array(cluster6))
+#     cluster7 = np.transpose(np.array(cluster7))
+#     cluster8 = np.transpose(np.array(cluster8))
+#     cluster9 = np.transpose(np.array(cluster9))
+#     cluster10 = np.transpose(np.array(cluster10))
+
+#     if i ==6:
+#         bestClusters = [cluster1, cluster2, cluster3, cluster4, cluster5, cluster6, cluster7]
+    
+#     averageDists = []
+
+#     for cluster in [cluster1, cluster2, cluster3, cluster4, cluster5, cluster6, cluster7, cluster8, cluster9, cluster10]:
+#         if len(cluster) == 0:
+#             continue
+#         n_series = len(cluster[0])
+#         totDist = 0
+#         for i in range(n_series):
+#             for j in range(n_series):
+#                 x = cluster[:,i]
+#                 y = cluster[:,j]
+#                 if i != j:
+#                     dist = dtw(x, y)
+#                     totDist += dist
+#         if totDist > 0:
+#             averageDists.append(totDist/len(cluster))
+
+#     distances.append(np.sum(averageDists)/c)
+
+# plt.figure()
+# plt.plot(np.arange(1,10+1), distances)
+# plt.title("Elbow plot of the average distance within differently sized clusters")
+# plt.ylabel("Avg dist wthin clusters")
+# plt.xlabel("Number of clusters")
+# plt.show()                                 #END##########################################ELBOW PLOT<<<<<<<<<<>>>>>>>>>>>END
 
 # kNN_____________________________________________________________________________________________
 
@@ -92,6 +170,9 @@ print(np.unique(cluster_labels))
 # knn = NearestNeighbors(n_neighbors=3, metric=DTW)
 # knn.fit(seasonal_series)
 
+# hand-select an appropriate cut-off on the dendrogram
+# cluster_labels = fcluster(linkage_matrix, 207000, criterion='distance')
+# print(np.unique(cluster_labels))
 
 # Agglomerative___________________________________________________________________________________
 
