@@ -14,39 +14,44 @@ class Arima:
 
     @property
     def residuals(self):
-        return self.model.resid() if self.model is not None else 0
+        return self.model.resid()
 
     @property
     def aic(self):
-        return self.model.aic
+        return self.model.aic()
 
     @property
     def log_likelihood(self):
         return len(self.model.params()) - self.aic/2
+
+    def save_stats(self, path: str):
+        with open(path, 'w') as file:
+            file.write(self.stats)
 
     def time_series(self, keyword):
         ts = self.df[self.df.keyword == keyword]['interest']
         ts.index = self.df.startDate.unique()
         return ts
 
-    def fit(self, keyword):
+    def fit(self, keyword, method='nm'):
         """
         Fit the best arima or sarima model for the keyword
+        :param method: Default Nelder-Mead based on speed
         :param keyword: keyword
         :return: fitted model
         """
         stationary, has_trend = self.dd.statistics.stationary(keyword)
         if stationary:
-            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=0,
-                                  trend='ct' if has_trend else 'c', with_intercept=True)
-            sarima = pm.auto_arima(self.time_series(keyword), seasonal=True, stationary=stationary, d=0,
-                                   trend='ct' if has_trend else 'c', with_intercept=True)
+            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=0, method=method,
+                                  trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
+            sarima = pm.auto_arima(self.time_series(keyword), seasonal=True, stationary=stationary, d=0, method=method,
+                                   trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
         else:
             stationary, has_trend = self.dd.statistics.stationary(keyword, first_difference=True)
-            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1,
-                                  trend='ct' if has_trend else 'c', with_intercept=True)
-            sarima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1,
-                                   trend='ct' if has_trend else 'c', with_intercept=True)
+            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1, method=method,
+                                  trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
+            sarima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1, method=method,
+                                   trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
         if arima.order == sarima.order:
             self.model = arima
         else:
@@ -60,10 +65,10 @@ class Arima:
         :param keyword:
         :return:
         """
-        self.stats += keyword + ":\n"
+        self.stats += "\n" + keyword + ":\n"
         self.stats += "Order: " + str(self.model.order) + "\n"
         self.stats += "SSR: " + str(sum(np.square(self.residuals)))
-        self.stats += "AIC: " + str(self.aic)
+        self.stats += "AIC: " + str(self.aic) + "\n"
 
     @staticmethod
     def llr_test(model1: pm.ARIMA, model2: pm.ARIMA, significance=0.05):
@@ -79,8 +84,7 @@ class Arima:
         lr = 2 * (k1 - k2) + model2.aic - model1.aic
         return chi2.sf(lr, k2 - k1) > significance
 
-#
-#
+
 # def multiPlot(trainSets, testSets, forecasts):
 #
 #     fig, ax = plt.subplots(len(testSets.columns), 1)
@@ -90,9 +94,6 @@ class Arima:
 #         ax[i].plot(forecasts[forecasts.columns[i]], 'r--')
 #
 #     plt.show()
-#
-#
-#
 #
 #
 # def runKeywords(df, keywords):
@@ -120,21 +121,4 @@ class Arima:
 #
 #     SARIMA.plot_diagnostics()
 #     plt.show()
-#
-# def manualArima(trainData, testData, order, seasonal_order):
-#
-#     SARIMAestimation = ARIMA(trainData ,order=order, seasonal_order=seasonal_order).fit()
-#     forecast = SARIMAestimation.predict(start=testData.index[0], end=testData.index[len(testData.index)-1])
-#     arimaForecast = pd.Series(forecast, index = testData.index)
-#
-#     return SARIMAestimation, arimaForecast
-#
-# def autoArima(trainData, testData):
-#
-#     SARIMA = pm.auto_arima(trainData, start_p=1, start_q=1,test='adf',max_p=3, max_q=3, m=len(testData) ,start_P=0, seasonal=True,d=None, D=1, trace=True,
-#                          error_action='ignore',  suppress_warnings=True, stepwise=True, trend = 'ct')
-#     forecast = SARIMA.predict(n_periods = len(testData))
-#     arimaForecast = pd.Series(forecast, index = testData.index)
-#
-#     return SARIMA, arimaForecast
 #

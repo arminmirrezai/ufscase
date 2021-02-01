@@ -45,15 +45,16 @@ class Decompose:
         """
         self.ts_decomp = sm.tsa.seasonal_decompose(self.time_series(keyword), model='additive')
 
-    def decompose_stl(self, keyword):
+    def decompose_stl(self, keyword, robust=False):
         """
         Decomposition by STL LOESS
+        :param robust: robust estimation orr not
         :param keyword: keyword to be used
         """
         ts = self.time_series(keyword)
         ts_bc = self.time_series_box_cox(keyword)
-        decomp_add = seasonal.STL(ts).fit()
-        decomp_mult = seasonal.STL(ts_bc).fit()
+        decomp_add = seasonal.STL(ts, robust=robust).fit()
+        decomp_mult = seasonal.STL(ts_bc, robust=robust).fit()
         if stats.jarque_bera(decomp_add.resid).pvalue > stats.jarque_bera(decomp_mult.resid).pvalue:
             self.ts_decomp = decomp_add
         else:
