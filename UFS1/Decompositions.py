@@ -2,6 +2,7 @@ import statsmodels.api as sm
 from statsmodels.tsa import seasonal
 from Description import Data
 from scipy import stats
+import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
@@ -31,6 +32,12 @@ class Decompose:
         ts.index = self.df.startDate.unique()
         return ts
 
+    def time_series_box_cox(self, keyword):
+        ts_bc, _ = stats.boxcox(self.time_series(keyword))
+        ts_bc = pd.Series(ts_bc)
+        ts_bc.index = self.df.startDate.unique()
+        return ts_bc
+
     def decompose_ma(self, keyword):
         """
         Decomposition by moving average design
@@ -44,7 +51,7 @@ class Decompose:
         :param keyword: keyword to be used
         """
         ts = self.time_series(keyword)
-        ts_bc, _ = stats.boxcox(ts)
+        ts_bc = self.time_series_box_cox(keyword)
         decomp_add = seasonal.STL(ts).fit()
         decomp_mult = seasonal.STL(ts_bc).fit()
         if stats.jarque_bera(decomp_add.resid).pvalue > stats.jarque_bera(decomp_mult.resid).pvalue:
