@@ -12,20 +12,20 @@ class Decompose:
 
     def __init__(self, df):
         self.df = df
-        self.ts_decomp = None
+        self.decomposition = None
         self.stats = Data(df).statistics
 
     @property
     def trend(self):
-        return self.ts_decomp.trend
+        return self.decomposition.trend
 
     @property
     def seasonal(self):
-        return self.ts_decomp.seasonal
+        return self.decomposition.seasonal
 
     @property
     def remainder(self):
-        return self.ts_decomp.resid
+        return self.decomposition.resid
 
     def time_series(self, keyword):
         ts = self.df[self.df.keyword == keyword]['interest']
@@ -43,7 +43,7 @@ class Decompose:
         Decomposition by moving average design
         :param keyword: keyword to be used
         """
-        self.ts_decomp = sm.tsa.seasonal_decompose(self.time_series(keyword), model='additive')
+        self.decomposition = sm.tsa.seasonal_decompose(self.time_series(keyword), model='additive')
 
     def decompose_stl(self, keyword, robust=False):
         """
@@ -56,21 +56,40 @@ class Decompose:
         decomp_add = seasonal.STL(ts, robust=robust).fit()
         decomp_mult = seasonal.STL(ts_bc, robust=robust).fit()
         if stats.jarque_bera(decomp_add.resid).pvalue > stats.jarque_bera(decomp_mult.resid).pvalue:
-            self.ts_decomp = decomp_add
+            self.decomposition = decomp_add
         else:
-            self.ts_decomp = decomp_mult
+            self.decomposition = decomp_mult
+
+    def outlier_score(self):
+        """
+        Output outlier scores based on 1.5 above first and third quantile
+        :return:
+        """
+        quants = np.quantile(self.remainder, [0.25, 0.75])
+        iqr = np.diff(quants)
+        lb, ub = quants + 1.5 * iqr * [-1, 1]
+        scores = np.zeros_like(self.remainder)
+        for i in range(len(scores)):
+            error = self.remainder[i]
+            if error < lb:
+                scores[i] = (lb - error) / iqr
+            elif error > ub:
+                scores[i] = (error - ub) / iqr
+        scores = pd.Series(scores)
+        scores.index = self.df.startDate.unique()
+        return scores
 
     def trend_F(self):
         """"
         F-measure for trend
         """
-        return max(0, 1 - np.var(self.ts_decomp.resid)/np.var(self.ts_decomp.trend + self.ts_decomp.resid))
+        return max(0, 1 - np.var(self.decomposition.resid)/np.var(self.decomposition.trend + self.decomposition.resid))
 
     def seasonality_F(self):
         """
         F-measure for seasonality
         :return:
         """
-        return max(0, 1 - np.var(self.ts_decomp.resid)/np.var(self.ts_decomp.seasonal + self.ts_decomp.resid))
+        return max(0, 1 - np.var(self.decomposition.resid)/np.var(self.decomposition.seasonal + self.decomposition.resid))
 
 
