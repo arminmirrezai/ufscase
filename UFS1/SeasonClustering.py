@@ -5,64 +5,68 @@ import seaborn as sbn
 import ApiExtract
 from statsmodels.tsa.seasonal import STL
 import matplotlib.pyplot as plt
-
-# from trendypy.trendy import Trendy
-
-# from scipy.spatial import distance
-# from sklearn.neighbors import NearestNeighbors
-# from fastdtw import fastdtw
+from dtw import dtw
+from scipy.cluster.hierarchy import single, complete, average, ward, dendrogram, fcluster
+from sklearn import metrics
+from c_index import calc_c_index
 
 
+# Import data________________________________________________________________________________________________________
 
-years = range(2016,2021)
+years = range(2015,2021)
+
 df = ApiExtract.extract(years,'NL')
- 
-all_series = []
-# stl_series = []
-for keyword in df.keyword.unique():
-    product = df[df.keyword == keyword]['interest']
-    time_series = pd.Series(product.tolist(), index = pd.date_range('1-1-2017', periods=len(product), freq='W'), name = keyword)
-    stl = STL(time_series, robust=True).fit()
-    # stl_series.append(stl)
-    seasonal = stl.seasonal
-    all_series.append(seasonal)
-    # all_series.append(time_series.tolist())
+
+# df1 = ApiExtract.extract(years,'NL')
+# df2 = ApiExtract.extract(years,'DE')
+# df3 = ApiExtract.extract(years,'ES')
+# df = pd.concat([df1, df2, df3])
 
 
-# Hierarchical clustering_____________________________________________________________________________________________
+# Sparsity series____________________________________________________________________________________________________
 
-for i in range(len(all_series)):
-    length = len(all_series[i])
-    all_series[i] = all_series[i].values.reshape((length, 1))
-    # series[i] = series[i].reshape((length, 1))
+from Description import Data
+data = Data(df)
+low_sparsity = []
+sparsity = []
 
-# from sktime.distances.elastic_cython import dtw_distance
-from dtw import *
+for word in df.keyword.unique():
+    if data.statistics.sparsity(word) > 0.3:
+        sparsity.append(word)
+    else:
+        low_sparsity.append(word)
 
-n_series = len(all_series)
+sparsity_series = []
+for keyword in low_sparsity:
+    product = df[df.keyword == keyword]
+    for country in product.country.unique():
+        time_series = product[product.country == country]["interest"]
+        time_series.index = product.startDate.unique()
+        sparsity_series.append(time_series.tolist())
+
+
+# -------------------------------------------------------------------------------------------------------------------
+# Distance measures
+# -------------------------------------------------------------------------------------------------------------------
+
+# Dynamic Time Warping_______________________________________________________________________________________________
+n_series = len(sparsity_series)
 distance_matrix = np.zeros(shape=(n_series, n_series))
 
 for i in range(n_series):
     for j in range(n_series):
-        x = all_series[i]
-        y = all_series[j]
+        x = sparsity_series[i]
+        y = sparsity_series[j]
         if i != j:
             # dist = dtw_distance(x, y)
             dist = dtw(x, y, keep_internals=True).distance
             distance_matrix[i, j] = dist
 
-# for i in range(n_series):
-#     for j in range(n_series):
-#         x1 = stl_series[i].seasonal.values.reshape((len(stl_series[i].seasonal), 1))
-#         y1 = stl_series[j].seasonal.values.reshape((len(stl_series[j].seasonal), 1))
-#         x2 = stl_series[i].trend.values.reshape((len(stl_series[i].trend), 1))
-#         y2 = stl_series[j].trend.values.reshape((len(stl_series[j].trend), 1))
-#         if i != j:
-#             dist = dtw_distance(x1, y1) + dtw_distance(x2, y2)
-#             distance_matrix[i, j] = dist
+# -------------------------------------------------------------------------------------------------------------------
+# Clustering methods
+# -------------------------------------------------------------------------------------------------------------------
 
-from scipy.cluster.hierarchy import single, complete, average, ward, dendrogram
-
+# Hierarchical clustering____________________________________________________________________________________________
 def hierarchical_clustering(dist_mat, method='complete'):
     if method == 'complete':
         Z = complete(distance_matrix)
@@ -82,57 +86,54 @@ def hierarchical_clustering(dist_mat, method='complete'):
 
 linkage_matrix = hierarchical_clustering(distance_matrix)
 
-from scipy.cluster.hierarchy import fcluster
 
-# select maximum number of clusters
-cluster_labels = fcluster(linkage_matrix, 20, criterion='maxclust')
-print(np.unique(cluster_labels))
+# -------------------------------------------------------------------------------------------------------------------
+# Determine number of clusters
+# -------------------------------------------------------------------------------------------------------------------
 
-# kNN_____________________________________________________________________________________________
+# Calinski-Harabasz index____________________________________________________________________________________________
+# only useful when using lock-step distance measure (not DTW/LCSS)
+CH = []
+for i in range(10):
+    cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
+    CH.append(metrics.calinski_harabasz_score(sparsity_series, cluster_labels))
 
-# nbrs = NearestNeighbors(n_neighbors=2, radius=0.4)
-# knn = NearestNeighbors(n_neighbors=3, metric=DTW)
-# knn.fit(seasonal_series)
-
-# hand-select an appropriate cut-off on the dendrogram
-# cluster_labels = fcluster(linkage_matrix, 207000, criterion='distance')
-# print(np.unique(cluster_labels))
-
-# Agglomerative___________________________________________________________________________________
-
-from sklearn.cluster import AgglomerativeClustering
-
-clustering = AgglomerativeClustering(n_clusters=10, affinity='precomputed', linkage='average').fit(distance_matrix)
-cluster_labels = clustering.labels_
-print(clustering.labels_)
+# maximize
+num_clusters = CH.index(max(CH)) + 2
+cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
 
 
-# Trendy package___________________________________________________________________________________
+# C index____________________________________________________________________________________________________________
+X = np.array(sparsity_series)
 
-# trendy = Trendy(n_clusters=4)
-# trendy.fit(seasonal_series[:10])
-# print(trendy.labels_)
+C = []
+for i in range(15):
+    cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
+    cindex = calc_c_index(X, cluster_labels)
+    C.append(cindex)
+
+# minimize
+num_clusters = C.index(min(C)) + 2
+cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
 
 
-# plot_____________________________________________________________________________________________
+# -------------------------------------------------------------------------------------------------------------------
+# Miscellaneous
+# -------------------------------------------------------------------------------------------------------------------
 
-# for i in range(3):
-#     cluster = np.where(cluster_labels == i)
-#     fig, axs = plt.subplots(cluster[0].size)
-#     if cluster[0].size == 1:
-#         axs.plot(all_series[cluster[0][0]])
-#     else:
-#         for j in range(cluster[0].size):
-#             axs[j].plot(all_series[cluster[0][j]]) 
-#     plt.show()
+# plot_______________________________________________________________________________________________________________
 
-for i in range(20):
-    cluster = np.where(cluster_labels == i)
+for i in range(num_clusters):
+    cluster = np.where(cluster_labels == i+1)
+    mean_series = np.zeros(np.array(sparsity_series[cluster[0][0]]).size)
     for j in range(cluster[0].size):
-        plt.plot(all_series[cluster[0][j]])
+        mean_series += np.array(sparsity_series[cluster[0][j]])
+        plt.plot(sparsity_series[cluster[0][j]], 'k')
+    mean_series = mean_series / cluster[0].size
+    plt.plot(mean_series, 'r')
     plt.show()
 
-# F-measure_____________________________________________________________________________________________
+# F-measure__________________________________________________________________________________________________________
 
 from Decompositions import Decompose
 dd = Decompose(df)
@@ -150,16 +151,22 @@ for word in df.keyword.unique():
     else:
         high_seasonal.append(word)
 
-print(low_seasonal)
-print(mid_seasonal)
-print(high_seasonal)
-
-series = []
+seasonal_series = []
 for keyword in high_seasonal:
     product = df[df.keyword == keyword]['interest']
     time_series = pd.Series(product.tolist(), index = pd.date_range('1-1-2017', periods=len(product), freq='W'), name = keyword)
-    series.append(time_series.to_numpy())
+    seasonal_series.append(time_series.tolist())
 
+# all/stl series_____________________________________________________________________________________________________
 
+all_series = []
+# stl_series = []
 
-
+for keyword in df.keyword.unique():
+    product = df[df.keyword == keyword]
+    for country in product.country.unique():
+        time_series = product[product.country == country]["interest"]
+        time_series.index = product.startDate.unique()
+        # stl = STL(time_series, robust=True).fit()
+        # stl_series.append(stl)
+        all_series.append(time_series.tolist())
