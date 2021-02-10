@@ -1,4 +1,5 @@
 import statsmodels.api as sm
+import matplotlib.pyplot as plt
 from statsmodels.tsa import seasonal
 from Description import Data
 from scipy import stats
@@ -28,10 +29,26 @@ class Decompose:
     def remainder(self):
         return self.decomposition.resid
 
+    def plot(self):
+        """
+        Plot the decomposition results
+        """
+        if type(self.decomposition) == pd.DataFrame:
+            for i in range(4):
+                plt.subplot(4, 1, (i + 1))
+                if i == 3:
+                    plt.scatter(self.decomposition.index, self.decomposition.iloc[:, i])
+                else:
+                    plt.plot(self.decomposition.iloc[:, i], color='blue')
+                plt.title(self.decomposition.columns[i])
+            plt.tight_layout()
+        else:
+            self.decomposition.plot()
+        plt.show()
+
     def periods(self):
-        t0 = self.df.startDate.unique()[0]
-        t1 = self.df.startDate.unique()[1]
-        return 12 if (t1 - t0).days > 7 else 52
+        dates = pd.DatetimeIndex([self.df.startDate.unique()[0], self.df.startDate.unique()[1]]).date
+        return 12 if (dates[1] - dates[0]).days > 7 else 52
 
     def time_series(self, keyword):
         ts = self.df[self.df.keyword == keyword]['interest']
@@ -68,7 +85,11 @@ class Decompose:
         return self.decomposition
 
     def decompose_robustSTL(self, keyword):
-        result = RB.RobustSTL(self.df[self.df.keyword == keyword].interest, self.periods())
+        """
+        Robust STL method based with smoother seasonality
+        :param keyword: keyword to be used
+        """
+        result = RB.RobustSTL(self.df[self.df.keyword == keyword].interest, self.periods(), H=13)
         self.decomposition = pd.DataFrame(list(map(list, zip(*result))), index=self.df.startDate.unique(),
                                           columns=['observed', 'trend', 'seasonal', 'resid'])
         return self.decomposition

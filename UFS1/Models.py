@@ -2,6 +2,7 @@ import numpy as np
 import pmdarima as pm
 from Description import Data
 from scipy.stats.distributions import chi2
+from statsmodels.stats.diagnostic import het_arch
 
 
 class Arima:
@@ -10,6 +11,7 @@ class Arima:
         self.df = df
         self.dd = Data(df)
         self.model = pm.ARIMA
+        self.test = self.Tests(self)
         self.stats = ""
 
     @property
@@ -59,6 +61,9 @@ class Arima:
         self._write_stats(keyword)
         return self.model
 
+    def garch_model(self):
+        pass
+
     def _write_stats(self, keyword):
         """
         Write the stats of the model
@@ -70,55 +75,38 @@ class Arima:
         self.stats += "SSR: " + str(sum(np.square(self.residuals)))
         self.stats += "AIC: " + str(self.aic) + "\n"
 
-    @staticmethod
-    def llr_test(model1: pm.ARIMA, model2: pm.ARIMA, significance=0.05):
-        """
-        Likelihood ratio test
-        :param model1: H0 model
-        :param model2: HA model
-        :param significance: significance level
-        :return: H0 result test
-        """
-        k1 = len(model1.params())
-        k2 = len(model2.params())
-        lr = 2 * (k1 - k2) + model2.aic - model1.aic
-        return chi2.sf(lr, k2 - k1) > significance
+    class Tests:
 
+        def __init__(self, arima):
+            self.model = arima.model
 
-# def multiPlot(trainSets, testSets, forecasts):
-#
-#     fig, ax = plt.subplots(len(testSets.columns), 1)
-#     for i in range(len(testSets.columns)):
-#         ax[i].plot(trainSets[trainSets.columns[i]], color = 'black')
-#         ax[i].plot(testSets[testSets.columns[i]], color = 'green')
-#         ax[i].plot(forecasts[forecasts.columns[i]], 'r--')
-#
-#     plt.show()
-#
-#
-# def runKeywords(df, keywords):
-#     trainSets = pd.DataFrame(columns=keywords)
-#     testSets = pd.DataFrame(columns=keywords)
-#     forecasts = pd.DataFrame(columns = keywords)
-#     for keyword in keywords:
-#         (trainData, testData) = readData(df, keyword)
-#         trainSets[keyword] = trainData
-#         testSets[keyword] = testData
-#         forecasts[keyword] = autoArima(trainData, testData)[1]
-#
-#     return trainSets, testSets, forecasts
-#
-# def singlePlot(trainData, testData, arimaForecast, SARIMA):
-#
-#     print("the lowest value is", min(arimaForecast))
-#
-#     plt.figure()
-#     plt.plot(trainData, color = 'black', label = "Training data")
-#     plt.plot(testData, color = 'green', label = "Testing data")
-#     plt.plot(arimaForecast, 'r-.', label = "Prediction")
-#     plt.legend(loc = 'upper left')
-#     plt.show()
-#
-#     SARIMA.plot_diagnostics()
-#     plt.show()
-#
+        def heteroskedastic(self, significance=0.05) -> bool:
+            """
+            Goldfeldt Quandt test heteroskedasticity
+            :param significance: significance level
+            :return: True or False
+            """
+            return self.model.arima_res_.test_heteroskedasticity(method=None, alternative='two-sided')[0, 1] \
+                < significance
+
+        def conditional_heteroskedastic(self, significance=0.05) -> bool:
+            """
+            Engles LM test H0 homoskedastic
+            :param significance: significance level
+            :return: True or False of CH
+            """
+            return het_arch(self.model.resid, ddof=sum(self.model.order))[2] < significance
+
+        @staticmethod
+        def llr_test(model1: pm.ARIMA, model2: pm.ARIMA, significance=0.05) -> bool:
+            """
+            Likelihood ratio test
+            :param model1: H0 model
+            :param model2: HA model
+            :param significance: significance level
+            :return: H0 result test
+            """
+            k1 = len(model1.params())
+            k2 = len(model2.params())
+            lr = 2 * (k1 - k2) + model2.aic - model1.aic
+            return chi2.sf(lr, k2 - k1) > significance
