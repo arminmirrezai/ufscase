@@ -7,12 +7,13 @@ from statsmodels.tsa.seasonal import STL
 import matplotlib.pyplot as plt
 from dtw import dtw
 from scipy.cluster.hierarchy import single, complete, average, ward, dendrogram, fcluster
+from scipy.spatial.distance import pdist, squareform
 from sklearn import metrics
 from c_index import calc_c_index
 
 
 # Import data________________________________________________________________________________________________________
-years = range(2015,2021)
+years = range(2016,2021)
 
 df = ApiExtract.extract(years,'NL')
 
@@ -29,7 +30,7 @@ low_sparsity = []
 sparsity = []
 
 for word in df.keyword.unique():
-    if data.statistics.sparsity(word) > 0.3:
+    if data.statistics.sparsity(word) > 0.1:
         sparsity.append(word)
     else:
         low_sparsity.append(word)
@@ -47,6 +48,18 @@ for keyword in low_sparsity:
 # Distance measures
 # -------------------------------------------------------------------------------------------------------------------
 
+# Manhattan Distance_________________________________________________________________________________________________
+ts_matrix = np.array(sparsity_series) 
+distance_matrix = squareform(pdist(ts_matrix, 'cityblock'))
+
+# Euclidean Distance_________________________________________________________________________________________________
+ts_matrix = np.array(sparsity_series) 
+distance_matrix = squareform(pdist(ts_matrix, 'euclidean'))
+
+# Chebyshev Distance_________________________________________________________________________________________________
+ts_matrix = np.array(sparsity_series) 
+distance_matrix = squareform(pdist(ts_matrix, 'chebyshev'))
+
 # Dynamic Time Warping_______________________________________________________________________________________________
 n_series = len(sparsity_series)
 distance_matrix = np.zeros(shape=(n_series, n_series))
@@ -59,6 +72,48 @@ for i in range(n_series):
             # dist = dtw_distance(x, y)
             dist = dtw(x, y, keep_internals=True).distance
             distance_matrix[i, j] = dist
+
+# Longest Common Subsequence_________________________________________________________________________________________
+from numba import jit as _jit
+
+def check_arrays(X, Y):
+    X = np.array(X, dtype=np.float)
+    Y = np.array(Y, dtype=np.float)
+    if X.ndim == 1:
+        X = np.reshape(X, (1, X.size))
+    if Y.ndim == 1:
+        Y = np.reshape(Y, (1, Y.size))
+    return X, Y
+
+@_jit(nopython=True)
+def _lcss_dist(X, Y, delta, epsilon):
+    n_frame_X, n_frame_Y = X.shape[1], Y.shape[1]
+    S = np.zeros((n_frame_X+1, n_frame_Y+1))
+    for i in range(1, n_frame_X+1):
+        for j in range(1, n_frame_Y+1):
+            if np.all(np.abs(X[:, i-1]-Y[:, j-1]) < epsilon) and (
+                np.abs(i-j) < delta):
+                S[i, j] = S[i-1, j-1]+1
+            else:
+                S[i, j] = max(S[i, j-1], S[i-1, j])
+    return 1-S[n_frame_X, n_frame_Y]/min(n_frame_X, n_frame_Y)
+
+def lcss_dist(X, Y, delta, epsilon):
+    X, Y = check_arrays(X, Y)
+    dist = _lcss_dist(X, Y, delta, epsilon)
+    return dist
+
+n_series = len(sparsity_series)
+distance_matrix = np.zeros(shape=(n_series, n_series))
+
+for i in range(n_series):
+    for j in range(n_series):
+        x = sparsity_series[i]
+        y = sparsity_series[j]
+        if i != j:
+            dist = lcss_dist(x, y, delta=np.inf, epsilon=0.5)
+            distance_matrix[i, j] = dist
+
 
 # -------------------------------------------------------------------------------------------------------------------
 # Clustering methods
@@ -138,7 +193,7 @@ mid_seasonal = []
 high_seasonal =[]
 
 for word in df.keyword.unique():
-    dd.decompose_ma(word)
+    dd.decompose_robustSTL(word)
     # print(f"{word}: seasonal F-measure = {dd.seasonality_F()}")
     if dd.seasonality_F() < 0.3:
         low_seasonal.append(word)
