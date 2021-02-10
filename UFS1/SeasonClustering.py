@@ -12,7 +12,6 @@ from c_index import calc_c_index
 
 
 # Import data________________________________________________________________________________________________________
-
 years = range(2015,2021)
 
 df = ApiExtract.extract(years,'NL')
@@ -24,7 +23,6 @@ df = ApiExtract.extract(years,'NL')
 
 
 # Sparsity series____________________________________________________________________________________________________
-
 from Description import Data
 data = Data(df)
 low_sparsity = []
@@ -121,8 +119,7 @@ cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
 # Miscellaneous
 # -------------------------------------------------------------------------------------------------------------------
 
-# plot_______________________________________________________________________________________________________________
-
+# Plot_______________________________________________________________________________________________________________
 for i in range(num_clusters):
     cluster = np.where(cluster_labels == i+1)
     mean_series = np.zeros(np.array(sparsity_series[cluster[0][0]]).size)
@@ -134,7 +131,6 @@ for i in range(num_clusters):
     plt.show()
 
 # F-measure__________________________________________________________________________________________________________
-
 from Decompositions import Decompose
 dd = Decompose(df)
 low_seasonal = []
@@ -158,7 +154,6 @@ for keyword in high_seasonal:
     seasonal_series.append(time_series.tolist())
 
 # all/stl series_____________________________________________________________________________________________________
-
 all_series = []
 # stl_series = []
 
