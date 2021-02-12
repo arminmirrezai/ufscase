@@ -139,11 +139,11 @@ def runLstm(train_resids, test_resids, params):
 
     return np.array(optimal_params).astype(int)
 
-def runSarima(train_data, order, seasonal_order):
+def runSarima(train_data, order, seasonal_order, trend):
 
     m = 52 #Frequenty of the data
 
-    sarima = pm.arima.ARIMA(order=order, seasonal_order=seasonal_order, trend = 'ct').fit(train_data)
+    sarima = pm.arima.ARIMA(order=order, seasonal_order=seasonal_order, trend = trend).fit(train_data)
     residuals = sarima.resid().reshape(-1,1)
 
     train_resids = residuals[:len(residuals)-m]
@@ -171,6 +171,7 @@ def main():
     keyword = 'apfelstrudel'
     order = (0,1,1)
     seasonal_order = (1,1,0,52)
+    trend = 'ct'
     params_lstm = [[52], [10, 18, 20, 26, 32, 50], [1], [400, 500], [26, 30, 40, 52, 65]]
     
     ################ MAIN CODE:
@@ -179,7 +180,7 @@ def main():
 
     train_data, test_data = readData(df, keyword)
     
-    sarima, train_resids, test_resids = runSarima(train_data, order, seasonal_order)
+    sarima, train_resids, test_resids = runSarima(train_data, order, seasonal_order, trend)
     optimal_params = runLstm(train_resids, test_resids, params_lstm)
     sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data)
 
