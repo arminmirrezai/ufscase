@@ -60,7 +60,6 @@ def extract(years, country, extended=True) -> pd.DataFrame:
         return extract(years, country)
 
 
-
 def adjustDataframe(df: pd.DataFrame, path: str):
     """
     Adjust dataframe to also get information
@@ -72,8 +71,8 @@ def adjustDataframe(df: pd.DataFrame, path: str):
     keyword = dir_names[-1][:-4]
     country = dir_names[-2]
     time_interval = dir_names[-3].split()
-    t0 = datetime.strptime(time_interval[0], '%Y-%m-%d').date()
-    T = datetime.strptime(time_interval[1], '%Y-%m-%d').date()
+    t0 = datetime.strptime(time_interval[0], '%Y-%m-%d')
+    T = datetime.strptime(time_interval[1], '%Y-%m-%d')
     if (T - t0).days > (4 * 365 + 366):
         start_dates = [t0 + relativedelta(months=+i) for i in range(len(df.index))]
         end_dates = [start_dates[i] + relativedelta(months=+1) - timedelta(days=1) for i in range(len(df.index))]

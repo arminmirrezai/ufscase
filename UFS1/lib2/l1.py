@@ -1,5 +1,4 @@
 # Sources: http://cvxopt.org/examples/mlbook/l1.html?highlight=l1
-
 from cvxopt import lapack, solvers
 from cvxopt import matrix, spdiag, mul, div
 

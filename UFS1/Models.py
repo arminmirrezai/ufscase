@@ -1,8 +1,11 @@
 import numpy as np
+import pandas as pd
 import pmdarima as pm
 from Description import Data
+from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
+from arch import arch_model
 
 
 class Arima:
@@ -10,8 +13,10 @@ class Arima:
     def __init__(self, df):
         self.df = df
         self.dd = Data(df)
+        self.dmp = Decompose(df)
         self.model = pm.ARIMA
         self.test = self.Tests(self)
+        self.dummy = None
         self.stats = ""
 
     @property
@@ -35,6 +40,14 @@ class Arima:
         ts.index = self.df.startDate.unique()
         return ts
 
+    def get_dummies(self, keyword, benchmark=2.5):
+        self.dmp.decompose_robustSTL(keyword)
+        scores = self.dmp.outlier_score()
+        dummies = pd.Series(0, index=scores.index)
+        dummies[scores.index[scores > benchmark]] = 1
+        self.stats += "Outliers: " + str(int(len(dummies))) + "\n"
+        return dummies
+
     def fit(self, keyword, method='nm'):
         """
         Fit the best arima or sarima model for the keyword
@@ -44,25 +57,30 @@ class Arima:
         """
         stationary, has_trend = self.dd.statistics.stationary(keyword)
         if stationary:
-            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=0, method=method,
-                                  trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
-            sarima = pm.auto_arima(self.time_series(keyword), seasonal=True, stationary=stationary, d=0, method=method,
-                                   trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
+            self._fit(self.time_series(keyword), self.get_dummies(), stationary, 'ct' if has_trend else 'c', 0, method)
         else:
             stationary, has_trend = self.dd.statistics.stationary(keyword, first_difference=True)
-            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1, method=method,
-                                  trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
-            sarima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1, method=method,
-                                   trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
-        if arima.order == sarima.order:
-            self.model = arima
-        else:
-            self.model = arima if self.llr_test(arima, sarima) else sarima
+            self._fit(self.time_series(keyword), self.get_dummies(), stationary, 'ct' if has_trend else 'c', 1, method)
+
         self._write_stats(keyword)
         return self.model
 
+    def _fit(self, ts, dummies, stationary, trend, diff, method='nm'):
+        exog = np.array(dummies).reshape(-1, 1)
+        arima = pm.auto_arima(y=ts, X=exog, seasonal=False, stationary=stationary, d=diff, method=method,
+                              trend=trend, with_intercept=True, max_order=None, max_P=len(ts.index))
+        sarima = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, method=method,
+                               trend=trend, with_intercept=True, max_order=None, max_P=len(ts.index))
+        self.model = arima if self.test.llr_test(arima, sarima) else sarima
+
     def garch_model(self):
-        pass
+        if self.test.conditional_heteroskedastic():
+            p, o, q = self.model.order
+            if p > 0 or o > 0:
+                am = arch_model(self.residuals, p=p, o=o, q=q)
+                self.model = am.fit(update_freq=0)
+        else:  # errors are homoskedastic
+            pass
 
     def _write_stats(self, keyword):
         """
@@ -108,5 +126,5 @@ class Arima:
             """
             k1 = len(model1.params())
             k2 = len(model2.params())
-            lr = 2 * (k1 - k2) + model2.aic - model1.aic
+            lr = 2 * (k1 - k2) + model2.aic() - model1.aic()
             return chi2.sf(lr, k2 - k1) > significance

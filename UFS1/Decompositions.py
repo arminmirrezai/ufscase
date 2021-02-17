@@ -56,10 +56,14 @@ class Decompose:
         return ts
 
     def time_series_box_cox(self, keyword):
-        ts_bc, _ = stats.boxcox(self.time_series(keyword))
-        ts_bc = pd.Series(ts_bc)
-        ts_bc.index = self.df.startDate.unique()
-        return ts_bc
+        try:
+            ts_bc, _ = stats.boxcox(self.time_series(keyword))
+            ts_bc = pd.Series(ts_bc)
+            ts_bc.index = self.df.startDate.unique()
+            return ts_bc
+        except ValueError:
+            print(f"Sparsity of {keyword} is to large")
+            return self.time_series(keyword)
 
     def decompose_ma(self, keyword):
         """
