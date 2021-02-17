@@ -78,12 +78,7 @@ def calculate_performance(y_true, y_pred):
     return round(mse, 3), round(mae, 3), round(rmse, 3)
 
 def lstm(params, train_resids, test_resids):
-
-    look_back = params[0]
-    hidden_nodes = params[1]
-    output_nodes = params[2]
-    nb_epoch = params[3]    #number of times the algorithm will work through the entire training set.
-    batch_size = params[4]  #number of samples to work through.
+    [look_back, hidden_nodes, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
 
     # scaler = MinMaxScaler(feature_range=(-1, 1)) #Rescale the training residuals
     # train_resids = scaler.fit_transform(train_resids)
