@@ -77,8 +77,12 @@ def calculate_performance(y_true, y_pred):
 
     return round(mse, 3), round(mae, 3), round(rmse, 3)
 
-def lstm(params, train_resids, test_resids):
-    [look_back, hidden_nodes, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
+def lstm(params, train_resids, test_resids, teller):
+    if teller == 0: print("Fitting a hybrid model using the best parameter combination .....")
+    else: print(f"Computing performance for parameter combination {teller}")
+
+    [look_back, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
+    hidden_nodes = int(2*(look_back+output_nodes)/3)
 
     # scaler = MinMaxScaler(feature_range=(-1, 1)) #Rescale the training residuals
     # train_resids = scaler.fit_transform(train_resids)
@@ -87,25 +91,24 @@ def lstm(params, train_resids, test_resids):
     generator = TimeseriesGenerator(train_resids, train_resids, length=look_back, batch_size=batch_size, shuffle = True)
 
     model = Sequential()
-    model.add(LSTM(hidden_nodes, activation='tanh', recurrent_activation='sigmoid', recurrent_dropout=0, unroll=False, use_bias=True))
+    model.add(LSTM(hidden_nodes, activation='tanh', recurrent_activation='sigmoid'))
     model.add(Dense(output_nodes))
     model.compile(optimizer='adam', loss='mean_squared_error')
-    start_time = time.time()
     model.fit(generator, epochs=nb_epoch, verbose=0)
-    print(f"Time passed fitting with parameters {params}: {time.time()-start_time} seconds")
     
     lstm_prediction = []
     first_eval_batch = train_resids[-look_back:]
     current_batch = first_eval_batch.reshape((1, look_back, 1))
-    for i in range(len(test_resids)):
+    for i in range(int(len(test_resids) / output_nodes)):
         pred = model.predict(current_batch)[0]
-        lstm_prediction.append(pred)
-        current_batch = np.append(current_batch[:,1:,:], [[pred]], axis=1)
+        if i < 10: print(pred)
+        for p in pred: lstm_prediction.append(np.array([p]))
+        current_batch = current_batch[:,output_nodes:,:]
+        for p in pred: current_batch = np.append(current_batch, [[np.array([p])]], axis=1)
     
     # lstm_prediction = list(scaler.inverse_transform(lstm_prediction))
 
     mse, mae, rmse = calculate_performance(test_resids, lstm_prediction)
-
     info = list(params) + [mse, mae, rmse]
 
     return info, lstm_prediction
