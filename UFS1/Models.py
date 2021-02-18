@@ -1,5 +1,5 @@
 from typing import Type
-
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pmdarima as pm
@@ -29,6 +29,7 @@ class Arima:
         self.model = pm.ARIMA
         self.test = self.Tests(self)
         self.stats = ""
+        self.kw = ""
 
     @property
     def residuals(self):
@@ -46,7 +47,7 @@ class Arima:
         with open(path, 'w') as file:
             file.write(self.stats)
 
-    def time_series(self, keyword, train=True):
+    def time_series(self, keyword, train=True) -> pd.Series:
         if train:
             ts = self.df_train[self.df_train.keyword == keyword]['interest']
             ts.index = self.df_train.startDate.unique()
@@ -55,7 +56,7 @@ class Arima:
             ts.index = self.df_test.startDate.unique()
         return ts
 
-    def get_dummies(self, keyword, benchmark=2.5):
+    def get_dummies(self, keyword, benchmark=2.5) -> pd.Series:
         self.dmp.decompose_robustSTL(keyword)
         scores = self.dmp.outlier_score()
         dummies = pd.Series(0, index=scores.index)
@@ -63,18 +64,28 @@ class Arima:
         self.stats += "Outliers: " + str(int(len(dummies))) + "\n"
         return dummies
 
-    def predict(self, keyword):
-        ts = self.time_series(keyword, train=False)
+    def predict(self):
+        ts = self.time_series(self.kw, train=False)
         n_periods = len(ts.index)
-        return pd.Series(self.model.predict(n_periods), index=ts.index)
+        dummies = np.zeros_like(ts).reshape(-1, 1)
+        return pd.Series(self.model.predict(n_periods, dummies), index=ts.index)
 
-    def fit(self, keyword, method='nm'):
+    def plot_predict(self):
+        ts = self.time_series(self.kw).append(self.time_series(self.kw, False))
+        plt.figure()
+        plt.plot(ts, color='black', label=str(self.kw))
+        plt.plot(self.predict(), color='red', label='Prediction')
+        plt.legend(loc='upper left')
+        plt.show()
+
+    def fit(self, keyword, method='bfgs'):
         """
         Fit the best arima or sarima model for the keyword
         :param method: Default Nelder-Mead based on speed
         :param keyword: keyword
         :return: fitted model
         """
+        self.kw = keyword
         stationary, has_trend = self.dd.statistics.stationary(keyword)
         ts = self.time_series(keyword)
         x = self.get_dummies(keyword)
@@ -85,16 +96,15 @@ class Arima:
             self._model(ts, x, stationary, 'ct' if has_trend else 'c', 1, method)
 
         self._write_stats(keyword)
-        self.model = self.model.fit(ts)
         return self.model
 
-    def _model(self, ts, dummies, stationary, trend, diff, method='nm'):
+    def _model(self, ts, dummies, stationary, trend, diff, method='bfgs'):
         exog = np.array(dummies).reshape(-1, 1)
         years = ts.index[-1].year - ts.index[0].year + 1
         periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
-        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=None, stationary=stationary, d=diff, max_p=periods/4,
-                                method=method, trend=trend, with_intercept=True, max_order=None, max_P=periods/4,
-                                max_D=int(years/2), m=periods)
+        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=periods/4,
+                                method=method, trend=trend, with_intercept=True, max_order=None, D=None,
+                                max_P=periods/4, max_D=int(years/2), m=periods, stepwise=True)
         self.model = sarimax
 
     def garch_model(self):
