@@ -1,6 +1,9 @@
+from typing import Type
+
 import numpy as np
 import pandas as pd
 import pmdarima as pm
+from pmdarima import ARIMA
 from Description import Data
 from Decompositions import Decompose
 from scipy.stats.distributions import chi2
@@ -10,13 +13,21 @@ from arch import arch_model
 
 class Arima:
 
-    def __init__(self, df):
-        self.df = df
-        self.dd = Data(df)
-        self.dmp = Decompose(df)
+    model: Type[ARIMA]
+    df_train: Type[pd.DataFrame]
+    df_test: Type[pd.DataFrame]
+
+    def __init__(self, df, train_percentage=1.0):
+        if train_percentage != 1.0:
+            self.df_train = df[df.startDate <= df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
+            self.df_test = df[df.startDate > df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
+        else:
+            self.df_train = df
+            self.df_test = pd.DataFrame
+        self.dd = Data(self.df_train)
+        self.dmp = Decompose(self.df_train)
         self.model = pm.ARIMA
         self.test = self.Tests(self)
-        self.dummy = None
         self.stats = ""
 
     @property
@@ -35,9 +46,13 @@ class Arima:
         with open(path, 'w') as file:
             file.write(self.stats)
 
-    def time_series(self, keyword):
-        ts = self.df[self.df.keyword == keyword]['interest']
-        ts.index = self.df.startDate.unique()
+    def time_series(self, keyword, train=True):
+        if train:
+            ts = self.df_train[self.df_train.keyword == keyword]['interest']
+            ts.index = self.df_train.startDate.unique()
+        else:
+            ts = self.df_test[self.df_test.keyword == keyword]['interest']
+            ts.index = self.df_test.startDate.unique()
         return ts
 
     def get_dummies(self, keyword, benchmark=2.5):
@@ -48,6 +63,11 @@ class Arima:
         self.stats += "Outliers: " + str(int(len(dummies))) + "\n"
         return dummies
 
+    def predict(self, keyword):
+        ts = self.time_series(keyword, train=False)
+        n_periods = len(ts.index)
+        return pd.Series(self.model.predict(n_periods), index=ts.index)
+
     def fit(self, keyword, method='nm'):
         """
         Fit the best arima or sarima model for the keyword
@@ -56,22 +76,26 @@ class Arima:
         :return: fitted model
         """
         stationary, has_trend = self.dd.statistics.stationary(keyword)
+        ts = self.time_series(keyword)
+        x = self.get_dummies(keyword)
         if stationary:
-            self._fit(self.time_series(keyword), self.get_dummies(), stationary, 'ct' if has_trend else 'c', 0, method)
+            self._model(ts, x, stationary, 'ct' if has_trend else 'c', 0, method)
         else:
             stationary, has_trend = self.dd.statistics.stationary(keyword, first_difference=True)
-            self._fit(self.time_series(keyword), self.get_dummies(), stationary, 'ct' if has_trend else 'c', 1, method)
+            self._model(ts, x, stationary, 'ct' if has_trend else 'c', 1, method)
 
         self._write_stats(keyword)
+        self.model = self.model.fit(ts)
         return self.model
 
-    def _fit(self, ts, dummies, stationary, trend, diff, method='nm'):
+    def _model(self, ts, dummies, stationary, trend, diff, method='nm'):
         exog = np.array(dummies).reshape(-1, 1)
-        arima = pm.auto_arima(y=ts, X=exog, seasonal=False, stationary=stationary, d=diff, method=method,
-                              trend=trend, with_intercept=True, max_order=None, max_P=len(ts.index))
-        sarima = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, method=method,
-                               trend=trend, with_intercept=True, max_order=None, max_P=len(ts.index))
-        self.model = arima if self.test.llr_test(arima, sarima) else sarima
+        years = ts.index[-1].year - ts.index[0].year + 1
+        periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
+        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=None, stationary=stationary, d=diff, max_p=periods/4,
+                                method=method, trend=trend, with_intercept=True, max_order=None, max_P=periods/4,
+                                max_D=int(years/2), m=periods)
+        self.model = sarimax
 
     def garch_model(self):
         if self.test.conditional_heteroskedastic():
