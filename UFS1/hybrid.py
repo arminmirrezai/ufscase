@@ -55,7 +55,7 @@ def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
     plt.title("Normal Q-Q plot for hybrid residuals")
     plt.show()
 
-def getForecasts(sarima, optimal_params, test_data):
+def getForecasts(sarima, optimal_params, test_data, params_lstm):
 
     horizon = len(test_data.index)
     sarima_forecast = sarima.predict(horizon)
@@ -64,12 +64,22 @@ def getForecasts(sarima, optimal_params, test_data):
     train_resids = sarima.resid().reshape(-1,1)
     test_resids = np.array(test_data - sarima_forecast).reshape(-1,1)
 
-    plt.figure()
-    plt.plot(train_resids)
-    plt.show()
+    # plt.figure()
+    # plt.plot(train_resids)
+    # plt.show()
 
     lstm_forecast = lstm(optimal_params, train_resids, test_resids, 0)[1]
     lstm_forecast = pd.Series(lstm_forecast, index=test_data.index)
+
+    arima_performance = calculate_performance(test_data, sarima_forecast)
+    lstm_performance = calculate_performance(test_data, sarima_forecast + lstm_forecast)
+    
+    if arima_performance[1] < lstm_performance[1]:
+        print("Hybrid model did not perform well, performing a grid search once again:")
+        optimal_params =  runLstm(train_resids, test_resids, params_lstm)
+        sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data, params_lstm)
+    else:
+        print(f"The mean absolute error goes from {arima_performance[1]} to {lstm_performance[1]} after fitting the arima residuals using LSTM!")
 
     return sarima_forecast, lstm_forecast
 
@@ -92,13 +102,13 @@ def lstm(params, train_resids, test_resids, teller):
     output_nodes = params[1]
     nb_epoch = params[2]    #number of times the algorithm will work through the entire training set.
     batch_size = params[3]  #number of samples to work through.
-    hidden_nodes = int(2*(look_back*output_nodes)/3)
+    hidden_nodes = int(2*(look_back+output_nodes)/3)
 
     # scaler = MinMaxScaler(feature_range=(-1, 1)) #Rescale the training residuals
     # train_resids = scaler.fit_transform(train_resids)
     # test_resids = scaler.fit_transform(test_resids)
 
-    generator = TimeseriesGenerator(train_resids, train_resids, length=look_back, batch_size=batch_size, shuffle = True)
+    generator = TimeseriesGenerator(train_resids, train_resids, length=look_back, batch_size=batch_size)
 
     model = Sequential()
     model.add(LSTM(hidden_nodes, activation='tanh', recurrent_activation='sigmoid'))
@@ -130,6 +140,7 @@ def runLstm(train_resids, test_resids, params):
     pool = mp.Pool(mp.cpu_count())
     performance = pool.starmap(lstm, [(combination, train_resids, test_resids, param_combinations.index(combination)+1) for combination in param_combinations])
     performance = [p[0] for p in performance]
+
     pool.close()
 
     performance_df = pd.DataFrame(performance, columns = ['look back', 'output nodes', 'epochs', 'batch size', 'MSE', 'MAE', 'RMSE'])
@@ -177,7 +188,7 @@ def main():
     seasonal_order = (2,0,0,52)
     trend = 'c' #'c' if statistics.stationary returns (True, False) and 'ct' if statistics.stationary returns (True, True)
     d = 0 #0 if stationary, else 1
-    params_lstm = [[52, 65, 78], [1], [400], [104, 156]]
+    params_lstm = [[52, 65, 78, 91], [1], [400], [104, 156, 208]]
     
     ################ MAIN CODE:
     df = ApiExtract.extract(range(start_year, end_year), country)
@@ -194,8 +205,8 @@ def main():
     train_data, test_data = readData(df, keyword)
 
     sarima, train_resids, test_resids = runSarima(train_data, order, seasonal_order, trend)
-    optimal_params = runLstm(train_resids, test_resids, params_lstm)
-    sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data)
+    optimal_params =  runLstm(train_resids, test_resids, params_lstm) #[65, 1, 400, 208]
+    sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data, params_lstm)
 
     ################ OUTPUT AND PLOTTING:
     plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
