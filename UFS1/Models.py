@@ -8,7 +8,7 @@ from Description import Data
 from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
-from arch import arch_model
+#from arch import arch_model
 
 
 class Arima:
