@@ -171,9 +171,9 @@ def readData(df, keyword):
     data = data.interest.rename(index = data.startDate)
 
     startYear = data.index[0].year
-    endYear = data.index[len(data)-1].year + 1
+    endYear = data.index[-1].year
 
-    splitThreshold = int(len(data)*(1-1/(endYear - startYear)))
+    splitThreshold = int(len(data) * (1 - 1/(endYear - startYear + 1)))
 
     return data[:splitThreshold], data[splitThreshold+1:]
 
