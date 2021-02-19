@@ -10,8 +10,7 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler
 from keras.preprocessing.sequence import TimeseriesGenerator
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_squared_log_error, mean_absolute_percentage_error
 import warnings
 warnings.filterwarnings("ignore")
 from scipy import stats
@@ -20,6 +19,9 @@ import multiprocessing as mp
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 from Models import Arima
+from ApiExtract import extract
+import Description
+import sys
 
 def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
 
@@ -89,22 +91,18 @@ def calculate_performance(y_true, y_pred):
     
     mse = mean_squared_error(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+    rmse = np.sqrt(mse)
+    # msle = mean_squared_log_error(y_true, y_pred)
+    mape = mean_absolute_percentage_error(y_true, y_pred)
 
-    return round(mse, 3), round(mae, 3), round(rmse, 3)
+    return round(mse, 3), round(mae, 3), round(rmse, 3), round(mape, 3) #, round(msle, 3)
 
 
 def lstm(params, train_resids, test_resids, teller):
+    if teller == 0: print("Fitting a hybrid model using the best parameter combination .....")
+    else: print(f"Computing performance for parameter combination {teller}")
 
-    if teller == 0:
-        print("Fitting a hybrid model using the best parameter combination .....")
-    else:
-        print(f"Computing performance for parameter combination {teller}")
-
-    look_back = params[0] 
-    output_nodes = params[1]
-    nb_epoch = params[2]    #number of times the algorithm will work through the entire training set.
-    batch_size = params[3]  #number of samples to work through.
+    [look_back, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
     hidden_nodes = int(2*(look_back+output_nodes)/3)
 
     # scaler = MinMaxScaler(feature_range=(-1, 1)) #Rescale the training residuals
@@ -138,9 +136,9 @@ def lstm(params, train_resids, test_resids, teller):
     
     # lstm_prediction = list(scaler.inverse_transform(lstm_prediction))
 
-    mse, mae, rmse = calculate_performance(test_resids, lstm_prediction)
+    mse, mae, rmse, mape = calculate_performance(test_resids, lstm_prediction)
 
-    info = list(params) + [mse, mae, rmse]
+    info = list(params) + [mse, mae, rmse, mape]
 
     return info, lstm_prediction
 
@@ -156,7 +154,7 @@ def runLstm(train_resids, test_resids, params):
 
     pool.close()
 
-    performance_df = pd.DataFrame(performance, columns = ['look back', 'output nodes', 'epochs', 'batch size', 'MSE', 'MAE', 'RMSE'])
+    performance_df = pd.DataFrame(performance, columns = ['look back', 'output nodes', 'epochs', 'batch size', 'MSE', 'MAE', 'RMSE', 'MAPE'])
     print(performance_df)
 
     optimal_params = performance_df.iloc[performance_df.RMSE.argmin(), :4]
@@ -188,6 +186,11 @@ def main():
     optimal_params =  runLstm(train_resids, test_resids, params_lstm) #[65, 1, 400, 208]
     sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data)
 
+    startYear = data.index[0].year
+    endYear = data.index[-1].year
+
+    splitThreshold = int(len(data) * (1 - 1/(endYear - startYear + 1)))
+
     ################ OUTPUT AND PLOTTING:
     plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
 
@@ -213,3 +216,18 @@ if __name__ == "__main__":
     #     plt.plot(data)
     #     plt.title(product)
     #     plt.show()
+
+    train_data, test_data = readData(df, keyword)
+
+    for p in params_lstm[1]: 
+        if (len(test_data) % p != 0): sys.exit("The length of the test data is not a multiple of the output nodes")
+
+    sarima, train_resids, test_resids = runSarima(train_data, order, seasonal_order, trend)
+    optimal_params =  runLstm(train_resids, test_resids, params_lstm) #[65, 1, 400, 208]
+    sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data, params_lstm)
+
+    ################ OUTPUT AND PLOTTING:
+    plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
+
+if __name__ == "__main__":
+    main()
