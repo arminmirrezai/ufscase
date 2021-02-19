@@ -19,6 +19,8 @@ import time
 import multiprocessing as mp
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+from ApiExtract import extract
+import Description
 
 def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
 
@@ -183,11 +185,14 @@ def main():
     start_year = 2016
     end_year = 2021
     country = 'ES'
-    keyword = 'jabugo'
-    order = (1,0,1)
-    seasonal_order = (2,0,0,52)
-    trend = 'c' #'c' if statistics.stationary returns (True, False) and 'ct' if statistics.stationary returns (True, True)
-    d = 0 #0 if stationary, else 1
+    keyword = 'guarnicion'
+    order = (1,0,0)
+    seasonal_order = (1,0,1,52)
+    df = extract(range(start_year, end_year), country)
+    dd = Description.Data(df)
+    (stationary, det_trend) = (dd.statistics.stationary(keyword))
+    d = 0 if stationary else 1
+    trend = "ct" if det_trend else "c"
     params_lstm = [[52, 65, 78, 91], [1], [400], [104, 156, 208]]
     
     ################ MAIN CODE:

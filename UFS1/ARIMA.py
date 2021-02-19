@@ -53,9 +53,9 @@ def manualArima(trainData, testData, order, seasonal_order):
 
     return SARIMA, arimaForecast
 
-def autoArima(trainData, testData, trend, d):
+def autoArima(trainData, testData, seasonality, trend, d):
     
-    SARIMA = pm.auto_arima(trainData, start_p=1, start_q=1,test='adf',max_p=3, max_q=3, m=len(testData) ,start_P=0, seasonal=True,d=d, D=None, trace=True,
+    SARIMA = pm.auto_arima(trainData, start_p=1, start_q=1,test='adf',max_p=3, max_q=3, m=len(testData) ,start_P=0, seasonal=seasonality,d=d, D=None, trace=True,
                          error_action='ignore',  suppress_warnings=True, stepwise=True, trend = trend)
     forecast = SARIMA.predict(n_periods = len(testData))
     arimaForecast = pd.Series(forecast, index = testData.index)
@@ -80,13 +80,13 @@ def main():
     country = 'ES'
     startYear = 2016
     endYear = 2021
-    keyword = 'jengibre'
-
+    keyword = 'guarnicion'
+    seasonality = True
     df = extract(range(startYear, endYear), country)
     dd = Description.Data(df)
-    (trend, d) = (dd.statistics.stationary(keyword))
-    d = 0 if d else 1
-    trend = "c" if trend else "ct"
+    (stationary, det_trend) = (dd.statistics.stationary(keyword))
+    d = 0 if stationary else 1
+    trend = "ct" if det_trend else "c"
 
     ################ MAIN CODE:
     df = ApiExtract.extract(range(startYear, endYear), country)
@@ -95,7 +95,7 @@ def main():
     (trainData, testData) = readData(df, keyword)
     
     #(trainSets, testSets, arimaModels) = runKeywords(df, keywords[:10])
-    (SARIMA, autoForecastData) = autoArima(trainData, testData, trend, d)
+    (SARIMA, autoForecastData) = autoArima(trainData, testData, seasonality, trend, d)
 
     #(SARIMA, manualForecacastData) = manualArima(trainData, testData, (0,1,1), (1,1,0,52))
 
