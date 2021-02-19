@@ -89,7 +89,7 @@ def calculate_performance(y_true, y_pred):
     
     mse = mean_squared_error(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+    rmse = np.sqrt(mse)
 
     return round(mse, 3), round(mae, 3), round(rmse, 3)
 
@@ -209,6 +209,9 @@ def main():
     #     plt.show()
 
     train_data, test_data = readData(df, keyword)
+
+    for p in params_lstm[1]: 
+        if (len(test_data) % p != 0): sys.exit("The length of the test data is not a multiple of the output nodes")
 
     sarima, train_resids, test_resids = runSarima(train_data, order, seasonal_order, trend)
     optimal_params =  runLstm(train_resids, test_resids, params_lstm) #[65, 1, 400, 208]
