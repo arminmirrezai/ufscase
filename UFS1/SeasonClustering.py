@@ -17,12 +17,12 @@ from pyclustering.cluster.clarans import clarans
 # Import data________________________________________________________________________________________________________
 years = range(2016,2021)
 
-# df = ApiExtract.extract(years,'NL')
+df = ApiExtract.extract(years,'NL')
 
-df1 = ApiExtract.extract(years,'NL')
-df2 = ApiExtract.extract(years,'DE')
-df3 = ApiExtract.extract(years,'ES')
-df = pd.concat([df1, df2, df3])
+# df1 = ApiExtract.extract(years,'NL')
+# df2 = ApiExtract.extract(years,'DE')
+# df3 = ApiExtract.extract(years,'ES')
+# df = pd.concat([df1, df2, df3])
 
 
 # Sparsity series____________________________________________________________________________________________________
@@ -69,7 +69,9 @@ for keyword in no_sparsity:
         time_series.index = product.startDate.unique()
         no_sparsity_series.append(time_series.tolist())
 
+
 series = low_sparsity_series
+
 
 # -------------------------------------------------------------------------------------------------------------------
 # Distance measures
@@ -150,14 +152,12 @@ for i in range(n_series):
         x = series[i]
         y = series[j]
         if i != j:
-            x.dft = np.fft.rfft(x)
-            y.dft = np.fft.rfft(y)
-
-            # sort x.dft and y.dft and take first 50/60/70 (variable)
-
-            dist = np.linalg.norm(x.dft - y.dft) 
+            xdft = np.fft.rfft(x)
+            ydft = np.fft.rfft(y)
+            num_freq = 50
+            dist = np.linalg.norm(np.asarray(sorted(xdft, reverse=True)[0:num_freq]) - np.asarray(sorted(ydft, reverse=True)[0:num_freq])) 
+            # dist = np.linalg.norm(np.asarray(sorted(xdft, reverse=True)) - np.asarray(sorted(ydft, reverse=True))) 
             distance_matrix[i, j] = dist
-
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -220,14 +220,14 @@ def CLARANS(distance_matrix, num_clusters):
 # only useful when using lock-step distance measure (not DTW/LCSS)
 CH = []
 for i in range(10):
-    # cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
-    cluster_labels = kMedoids(distance_matrix, i+2)
+    cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
+    # cluster_labels = kMedoids(distance_matrix, i+2)
     CH.append(metrics.calinski_harabasz_score(distance_matrix, cluster_labels))
 
 # maximize
 num_clusters = CH.index(max(CH)) + 2
-# cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
-cluster_labels = kMedoids(distance_matrix, num_clusters)
+cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
+# cluster_labels = kMedoids(distance_matrix, num_clusters)
 CH
 
 
@@ -236,15 +236,15 @@ X = np.array(series)
 
 C = []
 for i in range(15):
-    # cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
-    cluster_labels = kMedoids(distance_matrix, i+2)
+    cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
+    # cluster_labels = kMedoids(distance_matrix, i+2)
     cindex = calc_c_index(X, cluster_labels)
     C.append(cindex)
 
 # minimize
 num_clusters = C.index(min(C)) + 2
-# cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
-cluster_labels = kMedoids(distance_matrix, num_clusters)
+cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
+# cluster_labels = kMedoids(distance_matrix, num_clusters)
 C
 
 
@@ -253,15 +253,15 @@ from sklearn.metrics import silhouette_score
 
 silhouette = []
 for i in range(15):
-    # cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
-    cluster_labels = kMedoids(distance_matrix, i+2)
+    cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
+    # cluster_labels = kMedoids(distance_matrix, i+2)
     silhouette_avg = silhouette_score(distance_matrix, cluster_labels, metric="precomputed")
     silhouette.append(silhouette_avg)
 
 # minimize
 num_clusters = silhouette.index(max(silhouette)) + 2
-# cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
-cluster_labels = kMedoids(distance_matrix, num_clusters)
+cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
+# cluster_labels = kMedoids(distance_matrix, num_clusters)
 silhouette
 
 
@@ -297,38 +297,18 @@ def Baker_Hubert_Gamma(distance_matrix, cluster_labels):
     gamma = (splus-sminus)/(splus+sminus)
     return gamma
 
+gamma = []
+for i in range(15):
+    # cluster_labels = fcluster(linkage_matrix, i+2, criterion='maxclust')
+    cluster_labels = kMedoids(distance_matrix, i+2)
+    g = Baker_Hubert_Gamma(distance_matrix, cluster_labels)
+    gamma.append(g)
 
-# Gamma score________________________________________________________________________________________________________
-def Baker_Hubert_Gamma(distance_matrix, cluster_labels):
-    splus=0
-    sminus=0
-    pair_dis=squareform(distance_matrix)
-    # numPair=len(pairDis)
-    num_pair = len(pair_dis)
-    # temp = np.zeros((len(self.classLabel),2))
-    temp = np.zeros((len(cluster_labels),2))
-    temp[:,0]= cluster_labels
-    vecB= pdist(temp)
-    #iterate through all the pairwise comparisons
-    for i in range(num_pair-1):
-        for j in range(i+1,num_pair):
-            if vecB[i]>0 and vecB[j]==0:
-                #heter points smaller than homo points
-                if pair_dis[i]<pair_dis[j]:
-                    splus=splus+1
-                #heter points larger than homo points
-                if pair_dis[i]>vecB[j]:
-                    sminus=sminus+1
-            if vecB[i]==0 and vecB[j]>0:
-                #heter points smaller than homo points
-                if pair_dis[j]<pair_dis[i]:
-                    splus=splus+1
-                #heter points larger than homo points
-                if pair_dis[j]>vecB[i]:
-                    sminus=sminus+1
-    #compute the fitness
-    gamma = (splus-sminus)/(splus+sminus)
-    return gamma
+# minimize
+num_clusters = silhouette.index(max(silhouette)) + 2
+cluster_labels = fcluster(linkage_matrix, num_clusters, criterion='maxclust')
+# cluster_labels = kMedoids(distance_matrix, num_clusters)
+silhouette
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -369,6 +349,7 @@ for keyword in high_seasonal:
     product = df[df.keyword == keyword]['interest']
     time_series = pd.Series(product.tolist(), index = pd.date_range('1-1-2017', periods=len(product), freq='W'), name = keyword)
     seasonal_series.append(time_series.tolist())
+
 
 # all/stl series_____________________________________________________________________________________________________
 all_series = []

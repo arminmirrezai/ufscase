@@ -29,6 +29,9 @@ class Data:
                 self._save_graph(keyword)
             plt.show()
 
+        def figure_residuals(self):
+            pass
+
         def hist_sparsity(self, save=False):
             sparsity = [1 - (np.count_nonzero(self.df[self.df.keyword == keyword]['interest']))/self.df.startDate.nunique()
                         for keyword in self.df.keyword.unique()]

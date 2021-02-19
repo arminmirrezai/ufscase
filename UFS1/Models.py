@@ -1,18 +1,35 @@
+from typing import Type
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import pmdarima as pm
+from pmdarima import ARIMA
 from Description import Data
+from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
+from arch import arch_model
 
 
 class Arima:
 
-    def __init__(self, df):
-        self.df = df
-        self.dd = Data(df)
+    model: Type[ARIMA]
+    df_train: Type[pd.DataFrame]
+    df_test: Type[pd.DataFrame]
+
+    def __init__(self, df, train_percentage=1.0):
+        if train_percentage != 1.0:
+            self.df_train = df[df.startDate <= df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
+            self.df_test = df[df.startDate > df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
+        else:
+            self.df_train = df
+            self.df_test = pd.DataFrame
+        self.dd = Data(self.df_train)
+        self.dmp = Decompose(self.df_train)
         self.model = pm.ARIMA
         self.test = self.Tests(self)
         self.stats = ""
+        self.kw = ""
 
     @property
     def residuals(self):
@@ -30,39 +47,74 @@ class Arima:
         with open(path, 'w') as file:
             file.write(self.stats)
 
-    def time_series(self, keyword):
-        ts = self.df[self.df.keyword == keyword]['interest']
-        ts.index = self.df.startDate.unique()
+    def time_series(self, keyword, train=True) -> pd.Series:
+        if train:
+            ts = self.df_train[self.df_train.keyword == keyword]['interest']
+            ts.index = self.df_train.startDate.unique()
+        else:
+            ts = self.df_test[self.df_test.keyword == keyword]['interest']
+            ts.index = self.df_test.startDate.unique()
         return ts
 
-    def fit(self, keyword, method='nm'):
+    def get_dummies(self, keyword, benchmark=2.5) -> pd.Series:
+        self.dmp.decompose_robustSTL(keyword)
+        scores = self.dmp.outlier_score()
+        dummies = pd.Series(0, index=scores.index)
+        dummies[scores.index[scores > benchmark]] = 1
+        self.stats += "Outliers: " + str(int(len(dummies))) + "\n"
+        return dummies
+
+    def predict(self):
+        ts = self.time_series(self.kw, train=False)
+        n_periods = len(ts.index)
+        dummies = np.zeros_like(ts).reshape(-1, 1)
+        return pd.Series(self.model.predict(n_periods, dummies), index=ts.index)
+
+    def plot_predict(self):
+        ts = self.time_series(self.kw).append(self.time_series(self.kw, False))
+        plt.figure()
+        plt.plot(ts, color='black', label=str(self.kw))
+        plt.plot(self.predict(), color='red', label='Prediction')
+        plt.legend(loc='upper left')
+        plt.show()
+
+    def fit(self, keyword, method='bfgs'):
         """
         Fit the best arima or sarima model for the keyword
         :param method: Default Nelder-Mead based on speed
         :param keyword: keyword
         :return: fitted model
         """
+        self.kw = keyword
         stationary, has_trend = self.dd.statistics.stationary(keyword)
+        ts = self.time_series(keyword)
+        x = self.get_dummies(keyword)
         if stationary:
-            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=0, method=method,
-                                  trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
-            sarima = pm.auto_arima(self.time_series(keyword), seasonal=True, stationary=stationary, d=0, method=method,
-                                   trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
+            self._model(ts, x, stationary, 'ct' if has_trend else 'c', 0, method)
         else:
             stationary, has_trend = self.dd.statistics.stationary(keyword, first_difference=True)
-            arima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1, method=method,
-                                  trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
-            sarima = pm.auto_arima(self.time_series(keyword), seasonal=False, stationary=stationary, d=1, method=method,
-                                   trend='ct' if has_trend else 'c', with_intercept=True, max_order=None)
-        if arima.order == sarima.order:
-            self.model = arima
-        else:
-            self.model = arima if self.llr_test(arima, sarima) else sarima
+            self._model(ts, x, stationary, 'ct' if has_trend else 'c', 1, method)
+
         self._write_stats(keyword)
         return self.model
 
+    def _model(self, ts, dummies, stationary, trend, diff, method='bfgs'):
+        exog = np.array(dummies).reshape(-1, 1)
+        years = ts.index[-1].year - ts.index[0].year + 1
+        periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
+        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=periods/4,
+                                method=method, trend=trend, with_intercept=True, max_order=None, D=None,
+                                max_P=periods/4, max_D=int(years/2), m=periods, stepwise=True)
+        self.model = sarimax
+
     def garch_model(self):
-        pass
+        if self.test.conditional_heteroskedastic():
+            p, o, q = self.model.order
+            if p > 0 or o > 0:
+                am = arch_model(self.residuals, p=p, o=o, q=q)
+                self.model = am.fit(update_freq=0)
+        else:  # errors are homoskedastic
+            pass
 
     def _write_stats(self, keyword):
         """
@@ -108,5 +160,5 @@ class Arima:
             """
             k1 = len(model1.params())
             k2 = len(model2.params())
-            lr = 2 * (k1 - k2) + model2.aic - model1.aic
+            lr = 2 * (k1 - k2) + model2.aic() - model1.aic()
             return chi2.sf(lr, k2 - k1) > significance
