@@ -19,8 +19,7 @@ import time
 import multiprocessing as mp
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
-from ApiExtract import extract
-import Description
+from Models import Arima
 
 def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
 
@@ -57,11 +56,11 @@ def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
     plt.title("Normal Q-Q plot for hybrid residuals")
     plt.show()
 
-def getForecasts(sarima, optimal_params, test_data, params_lstm):
+
+def getForecasts(sarima, optimal_params, test_data):
 
     horizon = len(test_data.index)
-    sarima_forecast = sarima.predict(horizon)
-    sarima_forecast = pd.Series(sarima_forecast, index=test_data.index)
+    sarima_forecast = dd.predict()
     
     train_resids = sarima.resid().reshape(-1,1)
     test_resids = np.array(test_data - sarima_forecast).reshape(-1,1)
@@ -77,13 +76,14 @@ def getForecasts(sarima, optimal_params, test_data, params_lstm):
     lstm_performance = calculate_performance(test_data, sarima_forecast + lstm_forecast)
     
     if arima_performance[1] < lstm_performance[1]:
-        print("Hybrid model did not perform well, performing a grid search once again:")
+        print(f"\nHybrid model did not perform well ({arima_performance[1]},{lstm_performance[1]}), performing a grid search once again:\n")
         optimal_params =  runLstm(train_resids, test_resids, params_lstm)
         sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data, params_lstm)
     else:
-        print(f"The mean absolute error goes from {arima_performance[1]} to {lstm_performance[1]} after fitting the arima residuals using LSTM!")
+        print(f"\nThe mean absolute error goes from {arima_performance[1]} to {lstm_performance[1]} after fitting the arima residuals using LSTM!")
 
     return sarima_forecast, lstm_forecast
+
 
 def calculate_performance(y_true, y_pred):
     
@@ -92,6 +92,7 @@ def calculate_performance(y_true, y_pred):
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
 
     return round(mse, 3), round(mae, 3), round(rmse, 3)
+
 
 def lstm(params, train_resids, test_resids, teller):
 
@@ -116,8 +117,16 @@ def lstm(params, train_resids, test_resids, teller):
     model.add(LSTM(hidden_nodes, activation='tanh', recurrent_activation='sigmoid'))
     model.add(Dense(output_nodes))
     model.compile(optimizer='adam', loss='mean_squared_error')
-    model.fit(generator, epochs=nb_epoch, verbose=0)
+    hystory = model.fit(generator, epochs=nb_epoch, verbose=0)
     
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model train vs validation loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper right')
+    plt.show()
+
     lstm_prediction = []
     first_eval_batch = train_resids[-look_back:]
     current_batch = first_eval_batch.reshape((1, look_back, 1))
@@ -134,6 +143,7 @@ def lstm(params, train_resids, test_resids, teller):
     info = list(params) + [mse, mae, rmse]
 
     return info, lstm_prediction
+
 
 def runLstm(train_resids, test_resids, params):
 
@@ -155,13 +165,12 @@ def runLstm(train_resids, test_resids, params):
 
     return np.array(optimal_params).astype(int)
 
-def runSarima(train_data, order, seasonal_order, trend):
 
-    m = 52 #Frequenty of the data
+def runSarima(keyword):
 
-    sarima = pm.arima.ARIMA(order=order, seasonal_order=seasonal_order, trend = trend).fit(train_data)
-    # sarima.plot_diagnostics()
-    # plt.show()
+    m = 52 if (dd.time_series.index[1].month - dd.time_series.index[0].month) == 0 else 12
+
+    sarima = dd.fit(keyword)
     residuals = sarima.resid().reshape(-1,1)
 
     train_resids = residuals[:len(residuals)-m]
@@ -169,37 +178,34 @@ def runSarima(train_data, order, seasonal_order, trend):
 
     return sarima, train_resids, test_resids
 
-def readData(df, keyword):
-
-    data = df[df.keyword == keyword][['interest', 'startDate']]
-    data = data.interest.rename(index = data.startDate)
-
-    startYear = data.index[0].year
-    endYear = data.index[len(data)-1].year + 1
-
-    splitThreshold = int(len(data)*(1-1/(endYear - startYear)))
-
-    return data[:splitThreshold], data[splitThreshold+1:]
 
 def main():
-    ################ VARIABLES:
+
+    train_data = dd.time_series(keyword, True)
+    test_data = dd.time_series(keyword, False)
+
+    sarima, train_resids, test_resids = runSarima(keyword)
+    optimal_params =  runLstm(train_resids, test_resids, params_lstm) #[65, 1, 400, 208]
+    sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data)
+
+    ################ OUTPUT AND PLOTTING:
+    plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
+
+
+if __name__ == "__main__":
+
     start_year = 2016
     end_year = 2021
-    country = 'ES'
-    keyword = 'guarnicion'
-    order = (1,0,0)
-    seasonal_order = (1,0,1,52)
-    df = extract(range(start_year, end_year), country)
-    dd = Description.Data(df)
-    (stationary, det_trend) = (dd.statistics.stationary(keyword))
-    d = 0 if stationary else 1
-    trend = "ct" if det_trend else "c"
+    country = 'DE'
+    keyword = 'apfelstrudel'
     params_lstm = [[52, 65, 78, 91], [1], [400], [104, 156, 208]]
-    
-    ################ MAIN CODE:
     df = ApiExtract.extract(range(start_year, end_year), country)
-    keywords = df.keyword.unique()
+    dd = Arima(df, .8)
+    main()
 
+
+        ################ MAIN CODE:
+    # keywords = df.keyword.unique()
     # for product in keywords[93:110]:
     #     data = df[df.keyword == product][['interest', 'startDate']]
     #     data = data.interest.rename(index = data.startDate)
@@ -207,15 +213,3 @@ def main():
     #     plt.plot(data)
     #     plt.title(product)
     #     plt.show()
-
-    train_data, test_data = readData(df, keyword)
-
-    sarima, train_resids, test_resids = runSarima(train_data, order, seasonal_order, trend)
-    optimal_params =  runLstm(train_resids, test_resids, params_lstm) #[65, 1, 400, 208]
-    sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data, params_lstm)
-
-    ################ OUTPUT AND PLOTTING:
-    plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
-
-if __name__ == "__main__":
-    main()
