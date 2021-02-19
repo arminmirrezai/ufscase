@@ -164,11 +164,16 @@ def runLstm(train_resids, test_resids, params):
     return np.array(optimal_params).astype(int)
 
 
+<<<<<<< Updated upstream
 def runSarima(keyword):
 
     m = 52 if (dd.time_series.index[1].month - dd.time_series.index[0].month) == 0 else 12
 
     sarima = dd.fit(keyword)
+=======
+    m = 52 #Frequenty of the data
+    sarima = pm.arima.ARIMA(order=order, seasonal_order=seasonal_order, trend = trend).fit(train_data)
+>>>>>>> Stashed changes
     residuals = sarima.resid().reshape(-1,1)
 
     train_resids = residuals[:len(residuals)-m]

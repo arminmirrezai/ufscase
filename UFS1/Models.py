@@ -78,7 +78,7 @@ class Arima:
         plt.legend(loc='upper left')
         plt.show()
 
-    def fit(self, keyword, method='bfgs'):
+    def fit(self, keyword, method='lbfgs'):
         """
         Fit the best arima or sarima model for the keyword
         :param method: Default Nelder-Mead based on speed
@@ -98,13 +98,14 @@ class Arima:
         self._write_stats(keyword)
         return self.model
 
-    def _model(self, ts, dummies, stationary, trend, diff, method='bfgs'):
+    def _model(self, ts, dummies, stationary, trend, diff, method='lbfgs'):
         exog = np.array(dummies).reshape(-1, 1)
         years = ts.index[-1].year - ts.index[0].year + 1
         periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
-        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=periods/4,
-                                method=method, trend=trend, with_intercept=True, max_order=None, D=None,
-                                max_P=periods/4, max_D=int(years/2), m=periods, stepwise=True)
+        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=5,
+                                method=method, trend=trend, with_intercept=True, max_order=None,
+                                max_P=int(years/2), D=pm.arima.nsdiffs(ts, periods), m=periods,
+                                stepwise=True, maxiter=25, sarimax_kwargs={'cov_type': None})
         self.model = sarimax
 
     def garch_model(self):

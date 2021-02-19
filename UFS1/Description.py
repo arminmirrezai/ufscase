@@ -53,8 +53,12 @@ class Data:
         def __init__(self, df):
             self.df = df
 
-        def sparsity(self, keyword):
-            return 1 - np.count_nonzero(self.df[self.df.keyword == keyword]['interest']) / self.df.startDate.nunique()
+        def sparsity(self, keyword, country=''):
+            if country != '':
+                return 1 - np.count_nonzero(self.df[(self.df.keyword == keyword) &
+                                            (self.df.country == country)]['interest']) / self.df.startDate.nunique()
+            else:
+                return 1 - np.count_nonzero(self.df[self.df.keyword == keyword]['interest']) / self.df.startDate.nunique()
 
         def stationary(self, keyword, first_difference=False, significance='5%'):
             """
