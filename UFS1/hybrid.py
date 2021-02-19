@@ -121,10 +121,11 @@ def lstm(params, train_resids, test_resids, teller):
     lstm_prediction = []
     first_eval_batch = train_resids[-look_back:]
     current_batch = first_eval_batch.reshape((1, look_back, 1))
-    for i in range(len(test_resids)):
+    for i in range(int(len(test_resids) / output_nodes)):
         pred = model.predict(current_batch)[0]
-        lstm_prediction.append(pred)
-        current_batch = np.append(current_batch[:,1:,:], [[pred]], axis=1)
+        for p in pred: lstm_prediction.append(np.array([p]))
+        current_batch = current_batch[:,output_nodes:,:]
+        for p in pred: current_batch = np.append(current_batch, [[np.array([p])]], axis=1)
     
     # lstm_prediction = list(scaler.inverse_transform(lstm_prediction))
 

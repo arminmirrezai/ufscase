@@ -129,7 +129,7 @@ def _RobustSTL(input, season_len, reg1=10.0, reg2=0.5, K=2, H=5, dn1=1., dn2=1.,
         if trial != 1:
             converge = check_converge_criteria(previous_remainders, remainders_hat)
             if converge:
-                print("[!] RobustSTL completed in", trial, "trials!")
+                #print("[!] RobustSTL completed in", trial, "trials!")
                 return [input, trends_hat, seasons_hat, remainders_hat]
 
         trial += 1
@@ -137,7 +137,7 @@ def _RobustSTL(input, season_len, reg1=10.0, reg2=0.5, K=2, H=5, dn1=1., dn2=1.,
         previous_remainders = remainders_hat[:]
         sample = trends_hat + seasons_hat + remainders_hat
 
-    print("[!] RobustSTL forces to and end!")
+    #print("[!] RobustSTL forces to and end!")
     return [input, trends_hat, seasons_hat, remainders_hat]
 
 
