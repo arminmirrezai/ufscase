@@ -175,22 +175,14 @@ if __name__ == "__main__":
     start_year = 2016
     end_year = 2021
     country = 'DE'
-    keyword = 'cluster1'
+    keyword = 'cluster6'
     params_lstm = [[52, 65, 78, 91], [1], [400], [104, 156, 208]]
+    
     cluster_mean = pd.read_csv('/Users/safouane/Desktop/cluster_means.csv')[keyword]
     df = ApiExtract.extract(range(start_year, end_year), country)[:len(cluster_mean.index)]
     df['interest'] = cluster_mean
     df['keyword'] = keyword
     df['category'] = 'cluster'
-    print(df)
+    
     dd = Arima(df, .8)
     main()
-
-    # keywords = df.keyword.unique()
-    # for product in keywords[93:110]:
-    #     data = df[df.keyword == product][['interest', 'startDate']]
-    #     data = data.interest.rename(index = data.startDate)
-    #     plt.figure()
-    #     plt.plot(data)
-    #     plt.title(product)
-    #     plt.show()
