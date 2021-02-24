@@ -1,7 +1,6 @@
 from typing import Type
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import pmdarima as pm
 from pmdarima import ARIMA
 from Description import Data
@@ -9,6 +8,7 @@ from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
 from arch import arch_model
+from DataUtil import *
 
 
 class Arima:
@@ -56,12 +56,11 @@ class Arima:
             ts.index = self.df_test.startDate.unique()
         return ts
 
-    def get_dummies(self, keyword, benchmark=2.5) -> pd.Series:
+    def get_dummies(self, keyword, benchmark=3) -> pd.Series:
         self.dmp.decompose_robustSTL(keyword)
         scores = self.dmp.outlier_score()
         dummies = pd.Series(0, index=scores.index)
         dummies[scores.index[scores > benchmark]] = 1
-        self.stats += "Outliers: " + str(int(len(dummies))) + "\n"
         return dummies
 
     def predict(self):
@@ -78,9 +77,11 @@ class Arima:
         plt.legend(loc='upper left')
         plt.show()
 
-    def fit(self, keyword, method='lbfgs'):
+    def fit(self, keyword, method='lbfgs', robust=False, save=False):
         """
         Fit the best arima or sarima model for the keyword
+        :param robust: robust estimation by using dummies for outliers
+        :param save: save parameter results
         :param method: Default Nelder-Mead based on speed
         :param keyword: keyword
         :return: fitted model
@@ -88,25 +89,30 @@ class Arima:
         self.kw = keyword
         stationary, has_trend = self.dd.statistics.stationary(keyword)
         ts = self.time_series(keyword)
-        x = self.get_dummies(keyword)
+        x = self.get_dummies(keyword) if robust else None
         if stationary:
+            x = self.get_dummies(keyword)
             self._model(ts, x, stationary, 'ct' if has_trend else 'c', 0, method)
         else:
             stationary, has_trend = self.dd.statistics.stationary(keyword, first_difference=True)
             self._model(ts, x, stationary, 'ct' if has_trend else 'c', 1, method)
 
-        self._write_stats(keyword)
+        self._write_stats(outliers=x)
+        if save:
+            self.save_stats()
         return self.model
 
-    def _model(self, ts, dummies, stationary, trend, diff, method='lbfgs'):
-        exog = np.array(dummies).reshape(-1, 1)
+    def _model(self, ts, stationary, trend, diff, dummies=None, method='lbfgs'):
+        exog = np.array(dummies).reshape(-1, 1) if dummies is not None else None
         years = ts.index[-1].year - ts.index[0].year + 1
         periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
-        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=5,
+        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=10,
                                 method=method, trend=trend, with_intercept=True, max_order=None,
                                 max_P=int(years/2), D=pm.arima.nsdiffs(ts, periods), m=periods,
-                                stepwise=True, maxiter=25, sarimax_kwargs={'cov_type': None})
+                                stepwise=True, maxiter=45, sarimax_kwargs={'cov_type': None})
         self.model = sarimax
+
+
 
     def garch_model(self):
         if self.test.conditional_heteroskedastic():
@@ -117,15 +123,25 @@ class Arima:
         else:  # errors are homoskedastic
             pass
 
-    def _write_stats(self, keyword):
+    def save_stats(self):
+        """
+        Save stats in the order file
+        """
+        folder_name = f"Models/Sarimax/{self.df_train.country.unique()[0]}"
+        saveResult(self.kw, folder_name, txt=self.stats)
+
+    def _write_stats(self, outliers):
         """
         Write the stats of the model
-        :param keyword:
         :return:
         """
-        self.stats += "\n" + keyword + ":\n"
+        self.stats = ""
+        if outliers is not None:
+            self.stats += "Outliers: " + str(sum(outliers)) + "\n"
+        self.stats += "Trend: " + self.model.trend + "\n"
         self.stats += "Order: " + str(self.model.order) + "\n"
-        self.stats += "SSR: " + str(sum(np.square(self.residuals)))
+        self.stats += "Seasonal order: " + str(self.model.seasonal_order) + "\n"
+        self.stats += "SSR: " + str(sum(np.square(self.residuals))) + "\n"
         self.stats += "AIC: " + str(self.aic) + "\n"
 
     class Tests:

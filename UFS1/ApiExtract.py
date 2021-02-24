@@ -3,11 +3,10 @@ from pytrends.exceptions import ResponseError
 import pandas as pd
 from pandas.errors import EmptyDataError
 import time
-from pathlib import Path
-import os
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from SearchData import GSData
+from DataUtil import *
 
 gd = GSData()
 
@@ -37,7 +36,7 @@ def extract(years, country, extended=True) -> pd.DataFrame:
             try:
                 pytrend.build_payload(kw_list, cat='71', geo=country, timeframe=time_interval)
                 df_time = pytrend.interest_over_time()
-                saveResult(df_time, file_name=file_name, folder_name=folder_name)
+                saveResult(df=df_time, file_name=file_name, folder_name=folder_name)
                 if not df_time.empty:
                     frames.append(adjustDataframe(df_time, getPath(file_name, folder_name)))
             except ResponseError:
@@ -93,54 +92,3 @@ def adjustDataframe(df: pd.DataFrame, path: str):
     df_new['endDate'] = pd.Series(end_dates)
     df_new['country'] = country
     return df_new
-
-
-def saveResult(df, file_name, folder_name):
-    """
-    Save the results in a new or existing folder of the day
-    :param df: data frame to save
-    :param file_name: filename required
-    :param folder_name: a folder name
-    """
-    data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data"
-    folder_path = data_path + "/" + folder_name
-    try:
-        createDir(folder_path)
-        df.to_csv(folder_path + "/" + file_name + ".txt", header=None, index=None, sep=',', mode='a')
-    except OSError:
-        df.to_csv(data_path + "/" + file_name + ".txt", header=None, index=None, sep=',', mode='a')
-
-
-def isSaved(file_name, folder_name):
-    """
-    Check if file is saved in Data
-    """
-    data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data"
-    return os.path.exists(data_path + "/" + folder_name + "/" + file_name + ".txt")
-
-
-def getPath(file_name, folder_name):
-    """
-    Give path to data
-    """
-    data_path = Path.cwd().absolute().parents[0].as_posix() + "/Data"
-    return data_path + "/" + folder_name + "/" + file_name + ".txt"
-
-
-def createDir(path):
-    """
-    Create directory of multiple folders
-    """
-    folders = []
-    curr_path = path
-    while not os.path.exists(curr_path):
-        if curr_path == '':
-            break
-        curr_path, folder = os.path.split(curr_path)
-        folders.append(folder)
-    for i in range(len(folders) - 1, -1, -1):
-        curr_path += '/' + folders[i]
-        try:
-            os.mkdir(curr_path)
-        except OSError:
-            print("Failed to create folder: " + folders[i])
