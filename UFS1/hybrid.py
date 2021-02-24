@@ -98,13 +98,20 @@ def calculate_performance(y_true, y_pred):
 def lstm_models(params, train_resids, test_resids, teller):
     if teller == 0: print("Fitting a hybrid model using the best parameter combination .....")
     else: print(f"Computing performance for parameter combination {teller}")
-
+        
+    minimum = min(train_resids.min(axis=0), test_resids.min(axis=0))
+    maximum = max(train_resids.max(axis=0), test_resids.max(axis=0))
+    scaled_train_resids = 4 * (train_resids - minimum) / (maximum - minimum) - 2
+    scaled_test_resids = 4 * (test_resids - minimum) / (maximum - minimum) - 2
+    
     [look_back, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
-    m = LSTMtest(train_resids, test_resids, look_back,  output_nodes, nb_epoch, batch_size)
+    m = LSTM(scaled_train_resids, scaled_test_resids, look_back,  output_nodes, nb_epoch, batch_size)
     generator = m.time_series_generator()
     history = m.fit()
     lstm_prediction = m.predict()
     info = list(params) + [m.mse(), m.rmse(), m.mae(), m.mape()]
+    
+    lstm_prediction = (lstm_prediction + 2) * (maximum - minimum) / 4 + minimum
 
     return info, lstm_prediction
 
