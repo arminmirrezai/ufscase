@@ -115,7 +115,12 @@ def lstm(params, train_resids, test_resids, teller):
     [look_back, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
     hidden_nodes = int(2*(look_back+output_nodes)/3)
 
-    generator = TimeseriesGenerator(train_resids, train_resids, length=look_back, batch_size=batch_size)
+    minimum = min(train_resids.min(axis=0), test_resids.min(axis=0))
+    maximum = max(train_resids.max(axis=0), test_resids.max(axis=0))
+    scaled_train_resids = 4 * (train_resids - minimum) / (maximum - minimum) - 2
+    scaled_test_resids = 4 * (test_resids - minimum) / (maximum - minimum) - 2
+    
+    generator = TimeseriesGenerator(scaled_train_resids, scaled_train_resids, length=look_back, batch_size=batch_size)
 
     model = Sequential()
     model.add(LSTM(hidden_nodes, activation='tanh', recurrent_activation='sigmoid'))
@@ -124,18 +129,18 @@ def lstm(params, train_resids, test_resids, teller):
     history = model.fit(generator, epochs=nb_epoch, verbose=0)
 
     lstm_prediction = []
-    first_eval_batch = train_resids[-look_back:]
+    first_eval_batch = scaled_train_resids[-look_back:]
     current_batch = first_eval_batch.reshape((1, look_back, 1))
-    for i in range(int(len(test_resids) / output_nodes)):
+    for i in range(int(len(scaled_test_resids) / output_nodes)):
         pred = model.predict(current_batch)[0]
         for p in pred: lstm_prediction.append(np.array([p]))
         current_batch = current_batch[:,output_nodes:,:]
         for p in pred: current_batch = np.append(current_batch, [[np.array([p])]], axis=1)
 
-    mse, mae, rmse, mape = calculate_performance(test_resids, lstm_prediction)
-
+    mse, mae, rmse, mape = calculate_performance(scaled_test_resids, lstm_prediction)
     info = list(params) + [mse, mae, rmse, mape]
-
+    lstm_prediction = (lstm_prediction + 2) * (maximum - minimum) / 4 + minimum
+    
     return info, lstm_prediction
 
 def runLstm(train_resids, test_resids):
