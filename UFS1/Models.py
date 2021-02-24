@@ -7,9 +7,8 @@ from Description import Data
 from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
-from arch import arch_model
 from DataUtil import *
-
+from csv import reader
 
 class Arima:
 
@@ -91,7 +90,6 @@ class Arima:
         ts = self.time_series(keyword)
         x = self.get_dummies(keyword) if robust else None
         if stationary:
-            x = self.get_dummies(keyword)
             self._model(ts, x, stationary, 'ct' if has_trend else 'c', 0, method)
         else:
             stationary, has_trend = self.dd.statistics.stationary(keyword, first_difference=True)
@@ -102,26 +100,35 @@ class Arima:
             self.save_stats()
         return self.model
 
-    def _model(self, ts, stationary, trend, diff, dummies=None, method='lbfgs'):
+    def _model(self, ts, dummies, stationary, trend, diff, method='lbfgs'):
         exog = np.array(dummies).reshape(-1, 1) if dummies is not None else None
         years = ts.index[-1].year - ts.index[0].year + 1
         periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
-        sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=10,
-                                method=method, trend=trend, with_intercept=True, max_order=None,
-                                max_P=int(years/2), D=pm.arima.nsdiffs(ts, periods), m=periods,
-                                stepwise=True, maxiter=45, sarimax_kwargs={'cov_type': None})
+        hyper_params = self.get_hyperparams()
+        if len(hyper_params) == 0:
+            sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=10,
+                                    method=method, trend=trend, with_intercept=True, max_order=None,
+                                    max_P=int(years/2), D=pm.arima.nsdiffs(ts, periods), m=periods,
+                                    stepwise=True, maxiter=45, sarimax_kwargs={'cov_type': None})
+        else:
+            sarimax = pm.ARIMA(order=eval(hyper_params['Order']), seasonal_order=eval(hyper_params['Seasonal order']),
+                               method=method, maxiter=45, trend=hyper_params['Trend']).fit(y=ts, X=exog)
         self.model = sarimax
 
-
-
-    def garch_model(self):
-        if self.test.conditional_heteroskedastic():
-            p, o, q = self.model.order
-            if p > 0 or o > 0:
-                am = arch_model(self.residuals, p=p, o=o, q=q)
-                self.model = am.fit(update_freq=0)
-        else:  # errors are homoskedastic
-            pass
+    def get_hyperparams(self):
+        """
+        Get the hyperparameteres for the specific file if already ran (only for one period for now)
+        :return: result of hyperparams
+        """
+        path = getPath(self.kw,  f"Models/Sarimax/{self.df_train.country.unique()[0]}")
+        res = dict()
+        if os.path.exists(path):
+            with open(path, 'r') as file:
+                lines = reader(file, delimiter='\n')
+                for line in lines:
+                    stat = line[0].split(': ')
+                    res[stat[0]] = stat[1]
+        return res
 
     def save_stats(self):
         """
@@ -179,3 +186,16 @@ class Arima:
             k2 = len(model2.params())
             lr = 2 * (k1 - k2) + model2.aic() - model1.aic()
             return chi2.sf(lr, k2 - k1) > significance
+
+
+
+
+
+# def garch_model(self):
+    #     if self.test.conditional_heteroskedastic():
+    #         p, o, q = self.model.order
+    #         if p > 0 or o > 0:
+    #             am = arch_model(self.residuals, p=p, o=o, q=q)
+    #             self.model = am.fit(update_freq=0)
+    #     else:  # errors are homoskedastic
+    #         pass
