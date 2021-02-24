@@ -199,3 +199,57 @@ class Arima:
     #             self.model = am.fit(update_freq=0)
     #     else:  # errors are homoskedastic
     #         pass
+    
+   
+class LSTM:
+    model: Type[ARIMA]
+    train_resids: Type[pd.DataFrame]
+    test_resids: Type[pd.DataFrame]
+
+    def __init__(self, train_resids, test_resids, look_back, output_nodes, nb_epoch, batch_size):
+        self.train_resids = train_resids
+        self.test_resids = test_resids
+        self.look_back = look_back
+        self.output_nodes = output_nodes
+        self.nb_epoch = nb_epoch
+        self.batch_size = batch_size
+        self.hidden_nodes = int(2 * (look_back + output_nodes) / 3)
+        self.model = Sequential()
+
+    def time_series_generator(self):
+        return TimeseriesGenerator(self.train_resids, self.train_resids, length=self.look_back, batch_size=self.batch_size)
+
+    def fit(self):
+        model.add(LSTM(self.hidden_nodes, activation='tanh',
+                       recurrent_activation='sigmoid'))
+        model.add(Dense(self.output_nodes))
+        model.compile(optimizer='adam', loss='mean_squared_error')
+        return model.fit(generator, epochs=self.nb_epoch, verbose=0)
+
+    def predict(self):
+        prediction = []
+        first_eval_batch = self.train_resids[-self.look_back:]
+        current_batch = first_eval_batch.reshape((1, self.look_back, 1))
+
+        for i in range(int(len(self.test_resids) / self.output_nodes)):
+            pred = model.predict(current_batch)[0]
+            for p in pred:
+                lstm_prediction.append(np.array([p]))
+            current_batch = current_batch[:, self.output_nodes:, :]
+            for p in pred:
+                current_batch = np.append(
+                    current_batch, [[np.array([p])]], axis=1)
+
+        return prediction
+
+    def mse(self):
+        return mean_squared_error(self.test_resids, self.predict())
+
+    def rmse(self):
+        return np.sqrt(self.mse())
+
+    def mae(self):
+        return mean_absolute_error(self.test_resids, self.predict())
+
+    def mape(self):
+        return mean_absolute_percentage_error(self.test_resids, self.predict())
