@@ -1,0 +1,6 @@
+Outliers: 10
+Trend: ct
+Order: (0, 0, 0)
+Seasonal order: (0, 0, 0, 52)
+SSR: 29891.106736123602
+AIC: 1638.379551069982
