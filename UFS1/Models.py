@@ -225,11 +225,11 @@ class LSTM:
         return TimeseriesGenerator(self.train_resids, self.train_resids, length=self.look_back, batch_size=self.batch_size)
 
     def fit(self):
-        model.add(LSTM(self.hidden_nodes, activation='tanh',
-                       recurrent_activation='sigmoid'))
-        model.add(Dense(self.output_nodes))
-        model.compile(optimizer='adam', loss='mean_squared_error')
-        return model.fit(generator, epochs=self.nb_epoch, verbose=0)
+        self.model.add(LSTM(self.hidden_nodes, activation='tanh',
+                            recurrent_activation='sigmoid'))
+        self.model.add(Dense(self.output_nodes))
+        self.model.compile(optimizer='adam', loss='mean_squared_error')
+        return model.fit(self.time_series_generator(), epochs=self.nb_epoch, verbose=0)
 
     def predict(self):
         prediction = []
