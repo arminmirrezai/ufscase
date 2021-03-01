@@ -99,7 +99,7 @@ def lstm(params, train_resids, test_resids, teller):
     scaled_test_resids = 4 * (test_resids - minimum) / (maximum - minimum) - 2
     
     [look_back, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
-    m = LSTM(scaled_train_resids, scaled_test_resids, look_back,  output_nodes, nb_epoch, batch_size)
+    m = Lstm(scaled_train_resids, scaled_test_resids, look_back,  output_nodes, nb_epoch, batch_size)
     generator = m.time_series_generator()
     history = m.fit()
     lstm_prediction = m.predict()
