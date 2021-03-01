@@ -46,15 +46,9 @@ def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
     plt.show()
 
 
-def getForecasts(sarima, optimal_params, test_data):
-
+def getForecasts(train_resids, optimal_params, test_data):
     sarima_forecast = dd.predict()
-
-    train_resids = sarima.resid().reshape(-1,1) #4 jaar 
-    test_resids = np.array(test_data - sarima_forecast).reshape(-1,1) #1 jaar
-    # plt.figure()
-    # plt.plot(train_resids)
-    # plt.show()
+    test_resids = np.array(test_data - sarima_forecast).reshape(-1,1)
 
     lstm_forecast = lstm(optimal_params, train_resids, test_resids, 0)[1]
     lstm_forecast = pd.Series(lstm_forecast, index=test_data.index)
@@ -68,7 +62,6 @@ def getForecasts(sarima, optimal_params, test_data):
 
 
 def lstm(params, train_resids, test_resids, teller):
-
     if teller == 0: print("Fitting a hybrid model using the best parameter combination .....")
     else: print(f"Computing performance for parameter combination {teller}")
 
@@ -76,15 +69,12 @@ def lstm(params, train_resids, test_resids, teller):
     m = Lstm(train_resids, test_resids, look_back,  output_nodes, nb_epoch, batch_size)
     m.fit()
     lstm_prediction = m.predict()
-    print(type(m.mae()), "-----type (hybridKeywords.py)")
-    print(m.mae())
     info = list(params) + [m.mse(), m.mae(),m.rmse()]
 
     return info, lstm_prediction
 
 
 def gridSearch(residuals):
-
     m = 52 if (dd.time_series(keyword).index[1].month - dd.time_series(keyword).index[0].month) == 0 else 12
 
     train_resids = residuals[:len(residuals)-int(m/2)]
@@ -109,23 +99,21 @@ def gridSearch(residuals):
 
 
 def main():
-    
     train_data = dd.time_series(keyword, True)
     test_data = dd.time_series(keyword, False)
     for p in params_lstm[1]: 
         if (len(test_data) % p != 0): sys.exit("The length of the test data is not a multiple of the output nodes")
 
-    
     sarima = dd.fit(keyword)
-    residuals = sarima.resid().reshape(-1,1)
+    residuals = np.array(sarima.resid()).reshape(-1,1)
 
     optimal_params = gridSearch(residuals)
-    sarima_forecast, lstm_forecast = getForecasts(sarima, optimal_params, test_data)
+    sarima_forecast, lstm_forecast = getForecasts(residuals, optimal_params, test_data)
 
     plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
 
-def cluster_df():
 
+def cluster_df():
     cluster_mean = pd.read_csv('/Users/safouane/Desktop/cluster_means.csv')[keyword]
     df = ApiExtract.extract(range(start_year, end_year), country)[:len(cluster_mean.index)]
     df['interest'] = cluster_mean
@@ -135,17 +123,16 @@ def cluster_df():
     return df
 
 if __name__ == "__main__":
-
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 
     start_year = 2016
     end_year = 2021
     country = 'ES'
-    keyword = 'cluster7'
-    params_lstm = [[52], [1], [100], [104]]#[[52], [1], [600, 800, 1000], [104, 208]]
+    keyword = 'jamon'
+    params_lstm = [[52], [2], [600, 800, 1000], [104, 208]]
 
     df = cluster_df() if 'cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
     dd = Arima(df, .9)
-#    dd.get_covid_policy()
+    dd.get_covid_policy()
 
     main()
