@@ -213,15 +213,12 @@ class Lstm:
         self.hidden_nodes = int(2 * (look_back + output_nodes) / 3)
         self.model = Sequential()
 
-    @property
     def mse(self):
         return mean_squared_error(self.test_resids, self.predict())
 
-    @property
     def rmse(self):
         return np.sqrt(self.mse())
 
-    @property
     def mae(self):
         return mean_absolute_error(self.test_resids, self.predict())
 
