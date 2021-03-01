@@ -14,7 +14,7 @@ import time
 import multiprocessing as mp
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
-from Models import Arima
+from Models import Arima, Lstm
 from ApiExtract import extract
 import Description
 import sys
