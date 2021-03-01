@@ -6,11 +6,7 @@ import pmdarima as pm
 import itertools
 import matplotlib.pyplot as plt
 from operator import index
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
-from sklearn.preprocessing import MinMaxScaler
-from keras.preprocessing.sequence import TimeseriesGenerator
-from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_squared_log_error#, mean_absolute_percentage_error
+from sklearn.metrics import mean_absolute_error
 import warnings
 warnings.filterwarnings("ignore")
 from scipy import stats
@@ -90,12 +86,10 @@ def calculate_performance(y_true, y_pred):
     mse = mean_squared_error(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mse)
-    # msle = mean_squared_log_error(y_true, y_pred)
-    #mape = mean_absolute_percentage_error(y_true, y_pred)
 
-    return round(mse, 3), round(mae, 3), round(rmse, 3), round(rmse,3)#, round(mape, 3) #, round(msle, 3)
+    return round(mse, 3), round(mae, 3), round(rmse, 3)
 
-def lstm_models(params, train_resids, test_resids, teller):
+def lstm(params, train_resids, test_resids, teller):
     if teller == 0: print("Fitting a hybrid model using the best parameter combination .....")
     else: print(f"Computing performance for parameter combination {teller}")
         
@@ -113,41 +107,6 @@ def lstm_models(params, train_resids, test_resids, teller):
     
     lstm_prediction = (lstm_prediction + 2) * (maximum - minimum) / 4 + minimum
 
-    return info, lstm_prediction
-
-def lstm(params, train_resids, test_resids, teller):
-    if teller == 0: print("Fitting a hybrid model using the best parameter combination .....")
-    else: print(f"Computing performance for parameter combination {teller}")
-
-    [look_back, output_nodes, nb_epoch, batch_size] = [elt for elt in params]
-    hidden_nodes = int(2*(look_back+output_nodes)/3)
-
-    minimum = min(train_resids.min(axis=0), test_resids.min(axis=0))
-    maximum = max(train_resids.max(axis=0), test_resids.max(axis=0))
-    scaled_train_resids = 4 * (train_resids - minimum) / (maximum - minimum) - 2
-    scaled_test_resids = 4 * (test_resids - minimum) / (maximum - minimum) - 2
-    
-    generator = TimeseriesGenerator(scaled_train_resids, scaled_train_resids, length=look_back, batch_size=batch_size)
-
-    model = Sequential()
-    model.add(LSTM(hidden_nodes, activation='tanh', recurrent_activation='sigmoid'))
-    model.add(Dense(output_nodes))
-    model.compile(optimizer='adam', loss='mean_squared_error')
-    history = model.fit(generator, epochs=nb_epoch, verbose=0)
-
-    lstm_prediction = []
-    first_eval_batch = scaled_train_resids[-look_back:]
-    current_batch = first_eval_batch.reshape((1, look_back, 1))
-    for i in range(int(len(scaled_test_resids) / output_nodes)):
-        pred = model.predict(current_batch)[0]
-        for p in pred: lstm_prediction.append(np.array([p]))
-        current_batch = current_batch[:,output_nodes:,:]
-        for p in pred: current_batch = np.append(current_batch, [[np.array([p])]], axis=1)
-
-    mse, mae, rmse, mape = calculate_performance(scaled_test_resids, lstm_prediction)
-    info = list(params) + [mse, mae, rmse, mape]
-    lstm_prediction = (lstm_prediction + 2) * (maximum - minimum) / 4 + minimum
-    
     return info, lstm_prediction
 
 def runLstm(train_resids, test_resids):
