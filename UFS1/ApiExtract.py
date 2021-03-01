@@ -11,17 +11,29 @@ from DataUtil import *
 gd = GSData()
 
 
-def extract(years, country, extended=True) -> pd.DataFrame:
+def extract(years, country, period='weekly', extended=True) -> pd.DataFrame:
     """
     Extract the data from google trends given the time interval and country
+    :param period:
     :param years: number of years
     :param country: country of choice
     :param extended: True if you also want to include native language and native
     :return: array with data frames of searched data
     """
+    if period not in {'weekly', 'monthly'}:
+        raise ValueError("Period must be weekly or monthly")
     start_time = time.time()
     key_words = gd.load_key_words(country, translated=extended)
-    time_interval = f"{years[0]}-01-01 {years[-1]}-12-31"
+    if years[-1] == datetime.now().year:
+        if period == 'monthly':
+            last_date = _get_date_complete_month()
+            time_interval = f"{years[0]}-01-01 {last_date.year}-{last_date.month:02d}-{last_date.day:02d}"
+        elif period == 'weekly':
+            last_date = _get_date_complete_week()
+            time_interval = f"{last_date.year - 5}-{last_date.month:02d}-{last_date.day:02d} " \
+                            f"{last_date.year}-{last_date.month:02d}-{last_date.day:02d}"
+    else:
+        time_interval = f"{years[0]}-01-01 {years[-1]}-12-31"
 
     folder_name = ('Extended' if extended else 'Simple') + f"/{time_interval}/{country}"
     pytrend = TrendReq(hl='en-US', timeout=(10, 25))
@@ -92,3 +104,19 @@ def adjustDataframe(df: pd.DataFrame, path: str):
     df_new['endDate'] = pd.Series(end_dates)
     df_new['country'] = country
     return df_new
+
+
+def _get_date_complete_month():
+    datum = datetime.now()
+    curr_month = datum.month
+    while datum.month == curr_month:
+        datum -= timedelta(days=1)
+    return datum
+
+
+def _get_date_complete_week():
+    datum = datetime.now()
+    while datum.weekday() != 6:
+        datum -= timedelta(days=1)
+    return datum
+
