@@ -12,6 +12,7 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import pandas as pd
+import numpy as np
 
 class Arima:
 
