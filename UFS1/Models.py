@@ -1,6 +1,5 @@
 from typing import Type
 import matplotlib.pyplot as plt
-import numpy as np
 import pmdarima as pm
 from pmdarima import ARIMA
 from Description import Data
@@ -12,8 +11,8 @@ from csv import reader
 from keras.preprocessing.sequence import TimeseriesGenerator
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_squared_log_error, mean_absolute_percentage_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
 
 class Arima:
 
@@ -28,12 +27,13 @@ class Arima:
         else:
             self.df_train = df
             self.df_test = pd.DataFrame
+        self.x_train, self.x_test = None, None
         self.dd = Data(self.df_train)
         self.dmp = Decompose(self.df_train)
         self.model = pm.ARIMA
         self.test = self.Tests(self)
         self.stats = ""
-        self.kw = ""
+        self.kw = self.df_train.keyword.unique()[0]
 
     @property
     def residuals(self):
@@ -67,11 +67,18 @@ class Arima:
         dummies[scores.index[scores > benchmark]] = 1
         return dummies
 
+    def get_covid_policy(self):
+        dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        x = get_corona_policy(dates, self.df_train.country.unique()[0])
+        self.x_train = x[x.index <= self.df_train.startDate.unique()[-1]]
+        self.x_test = x[x.index > self.df_train.startDate.unique()[-1]]
+        return self.x_train, self.x_test
+
     def predict(self):
         ts = self.time_series(self.kw, train=False)
         n_periods = len(ts.index)
-        dummies = np.zeros_like(ts).reshape(-1, 1)
-        return pd.Series(self.model.predict(n_periods, dummies), index=ts.index)
+        # dummies = np.zeros_like(ts).reshape(-1, 1)
+        return pd.Series(self.model.predict(n_periods, self.x_test), index=ts.index)
 
     def plot_predict(self):
         ts = self.time_series(self.kw).append(self.time_series(self.kw, False))
@@ -107,6 +114,7 @@ class Arima:
 
     def _model(self, ts, dummies, stationary, trend, diff, method='lbfgs'):
         exog = np.array(dummies).reshape(-1, 1) if dummies is not None else None
+        exog = self.x_train
         years = ts.index[-1].year - ts.index[0].year + 1
         periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
         hyper_params = self.get_hyperparams()
@@ -193,23 +201,7 @@ class Arima:
             return chi2.sf(lr, k2 - k1) > significance
 
 
-
-
-
-# def garch_model(self):
-    #     if self.test.conditional_heteroskedastic():
-    #         p, o, q = self.model.order
-    #         if p > 0 or o > 0:
-    #             am = arch_model(self.residuals, p=p, o=o, q=q)
-    #             self.model = am.fit(update_freq=0)
-    #     else:  # errors are homoskedastic
-    #         pass
-    
-   
-class LSTM:
-    model: Type[ARIMA]
-    train_resids: Type[pd.DataFrame]
-    test_resids: Type[pd.DataFrame]
+class Lstm:
 
     def __init__(self, train_resids, test_resids, look_back, output_nodes, nb_epoch, batch_size):
         self.train_resids = train_resids
@@ -221,15 +213,27 @@ class LSTM:
         self.hidden_nodes = int(2 * (look_back + output_nodes) / 3)
         self.model = Sequential()
 
+    @property
+    def mse(self):
+        return mean_squared_error(self.test_resids, self.predict())
+
+    @property
+    def rmse(self):
+        return np.sqrt(self.mse())
+
+    @property
+    def mae(self):
+        return mean_absolute_error(self.test_resids, self.predict())
+
     def time_series_generator(self):
         return TimeseriesGenerator(self.train_resids, self.train_resids, length=self.look_back, batch_size=self.batch_size)
 
     def fit(self):
         self.model.add(LSTM(self.hidden_nodes, activation='tanh',
-                            recurrent_activation='sigmoid'))
+                       recurrent_activation='sigmoid'))
         self.model.add(Dense(self.output_nodes))
         self.model.compile(optimizer='adam', loss='mean_squared_error')
-        return model.fit(self.time_series_generator(), epochs=self.nb_epoch, verbose=0)
+        return self.model.fit(self.time_series_generator(), epochs=self.nb_epoch, verbose=0)
 
     def predict(self):
         prediction = []
@@ -237,24 +241,10 @@ class LSTM:
         current_batch = first_eval_batch.reshape((1, self.look_back, 1))
 
         for i in range(int(len(self.test_resids) / self.output_nodes)):
-            pred = model.predict(current_batch)[0]
-            for p in pred:
-                lstm_prediction.append(np.array([p]))
+            pred = self.model.predict(current_batch)[0]
             current_batch = current_batch[:, self.output_nodes:, :]
             for p in pred:
-                current_batch = np.append(
-                    current_batch, [[np.array([p])]], axis=1)
-
+                prediction.append(np.array([p]))
+                current_batch = np.append(current_batch, [[np.array([p])]], axis=1)
         return prediction
 
-    def mse(self):
-        return mean_squared_error(self.test_resids, self.predict())
-
-    def rmse(self):
-        return np.sqrt(self.mse())
-
-    def mae(self):
-        return mean_absolute_error(self.test_resids, self.predict())
-
-    def mape(self):
-        return mean_absolute_percentage_error(self.test_resids, self.predict())

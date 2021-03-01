@@ -1,7 +1,24 @@
 from pathlib import Path
 import pandas as pd
 from datetime import datetime, timedelta
+import numpy as np
 import os
+
+
+def get_corona_policy(dates: pd.DatetimeIndex, country: str):
+    d_country = {'NL': 'NLD', 'ES': 'ESP', 'DE': 'DEU'}
+    first_day_2020 = dates[dates.year == 2020][0].day
+    covid_data = pd.read_csv(Path.cwd().absolute().parents[0].as_posix() + "/Data" + '/covid-stringency-index.csv')
+    if country == 'All':
+        pol_new = [covid_data[first_day_2020:][covid_data.Code == country][:(7*53)] for country in d_country.values()]
+        policy_daily = pd.concat(pol_new).groupby('Date').mean()
+    else:
+        policy_daily = covid_data[first_day_2020:][covid_data.Code == d_country[country]]
+    policy_weekly = policy_daily.groupby(np.arange(len(policy_daily))//7).mean()[:52]
+    policy_weekly.index = dates[dates.year == 2020]
+    x = pd.DataFrame(data=np.zeros(len(dates[dates.year != 2020])), index=dates[dates.year != 2020],
+                     columns=policy_weekly.columns)
+    return pd.concat([x, policy_weekly])
 
 
 def get_mean_dataframe(path_to_clusters: str) -> pd.DataFrame:
@@ -21,7 +38,9 @@ def get_mean_dataframe(path_to_clusters: str) -> pd.DataFrame:
             df_temp.columns = ['interest', 'keyword', 'startDate']
             df_temp.index = start_dates
             dfs.append(df_temp)
-    return pd.concat(dfs)
+    df_new = pd.concat(dfs)
+    df_new['country'] = "All"
+    return df_new
 
 
 def saveResult(file_name, folder_name, df=None, txt=''):
@@ -55,7 +74,7 @@ def isSaved(file_name, folder_name):
     return os.path.exists(data_path + "/" + folder_name + "/" + file_name + ".txt")
 
 
-def getPath(file_name, folder_name):
+def getPath(file_name, folder_name=''):
     """
     Give path to data
     """
