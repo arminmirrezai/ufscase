@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 import os
+import json
 
 
 def get_corona_policy(dates: pd.DatetimeIndex, country: str):
@@ -10,13 +11,14 @@ def get_corona_policy(dates: pd.DatetimeIndex, country: str):
     first_day_2020 = dates[dates.year == 2020][0].day
     covid_data = pd.read_csv(Path.cwd().absolute().parents[0].as_posix() + "/Data" + '/covid-stringency-index.csv')
     if country == 'All':
-        pol_new = [covid_data[first_day_2020:][covid_data.Code == country][:(7*53)] for country in d_country.values()]
+        pol_new = [covid_data[first_day_2020:][covid_data.Code == country][:(7*len(dates[dates.year >= 2020]))]
+                   for country in d_country.values()]
         policy_daily = pd.concat(pol_new).groupby('Date').mean()
     else:
         policy_daily = covid_data[first_day_2020:][covid_data.Code == d_country[country]]
-    policy_weekly = policy_daily.groupby(np.arange(len(policy_daily))//7).mean()[:52]
-    policy_weekly.index = dates[dates.year == 2020]
-    x = pd.DataFrame(data=np.zeros(len(dates[dates.year != 2020])), index=dates[dates.year != 2020],
+    policy_weekly = policy_daily.groupby(np.arange(len(policy_daily))//7).mean()[:len(dates[dates.year >= 2020])]
+    policy_weekly.index = dates[dates.year >= 2020]
+    x = pd.DataFrame(data=np.zeros(len(dates[dates.year < 2020])), index=dates[dates.year < 2020],
                      columns=policy_weekly.columns)
     return pd.concat([x, policy_weekly])
 
@@ -40,6 +42,38 @@ def get_mean_dataframe(path_to_clusters: str) -> pd.DataFrame:
             dfs.append(df_temp)
     df_new = pd.concat(dfs)
     df_new['country'] = "All"
+    return df_new
+
+
+def get_cluster_means(path_to_res: str, method: str, distance: str) -> pd.DataFrame:
+    df_mean = pd.read_csv(path_to_res)
+    if method not in df_mean[df_mean.keys()[0]].values.tolist():
+        raise ValueError(f"Method not in list {df_mean[df_mean.keys()[0]].values.tolist()}")
+    if distance not in df_mean.keys():
+        raise ValueError(f"Distance not in list {df_mean.keys()}")
+    res_str = df_mean[df_mean[df_mean.keys()[0]] == method][distance].values[0]
+    res_str = res_str.replace("'", '"')
+    res_str = res_str.replace('array(', '')
+    res_str = res_str.replace('])', ']')
+    res_str = res_str.replace('.,', ',')
+    res_str = res_str.replace('.]', ']')
+    res_str = res_str.replace('. ', ' ')
+    res = json.loads(res_str)
+    means = res['means'][0]
+    keywords = res['keywords'][0]
+    start_dates = [datetime.strptime('2016-02-28', '%Y-%m-%d') + timedelta(weeks=i) for i in range(len(means[0]))]
+    dfs = []
+    for i, cluster in enumerate(means, 1):
+        df_temp = pd.DataFrame()
+        df_temp['interest'] = cluster
+        df_temp['keyword'] = 'Cluster' + str(i)
+        df_temp['startDate'] = start_dates
+        df_temp['cluster keywords'] = str(keywords[str(i)])
+        dfs.append(df_temp)
+    df_new = pd.concat(dfs)
+    df_new['country'] = "All"
+    df_new['method'] = method
+    df_new['distance'] = distance
     return df_new
 
 
@@ -99,4 +133,3 @@ def createDir(path):
             os.mkdir(curr_path)
         except OSError:
             print("Failed to create folder: " + folders[i])
-

@@ -14,6 +14,8 @@ from keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import pandas as pd
 import numpy as np
+import os
+
 
 class Arima:
 
@@ -21,7 +23,7 @@ class Arima:
     df_train: Type[pd.DataFrame]
     df_test: Type[pd.DataFrame]
 
-    def __init__(self, df, train_percentage=1.0):
+    def __init__(self, df, train_percentage=0.87):
         if train_percentage != 1.0:
             self.df_train = df[df.startDate <= df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
             self.df_test = df[df.startDate > df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
@@ -65,7 +67,10 @@ class Arima:
         return dummies
 
     def get_covid_policy(self):
-        dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        if not self.df_test.empty:
+            dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        else:
+            dates = self.time_series(self.kw).index
         x = get_corona_policy(dates, self.df_train.country.unique()[0])
         self.x_train = x[x.index <= self.df_train.startDate.unique()[-1]]
         self.x_test = x[x.index > self.df_train.startDate.unique()[-1]]
@@ -94,6 +99,8 @@ class Arima:
         :param keyword: keyword
         :return: fitted model
         """
+        if robust:
+            raise NotImplementedError('Robust not implemented yet')
         self.kw = keyword
         stationary, has_trend = self.dd.statistics.stationary(keyword)
         ts = self.time_series(keyword)
@@ -110,10 +117,11 @@ class Arima:
         return self.model
 
     def _model(self, ts, dummies, stationary, trend, diff, method='lbfgs'):
+        # TODO implement robust and corona variable
         exog = np.array(dummies).reshape(-1, 1) if dummies is not None else None
         exog = self.x_train
         years = ts.index[-1].year - ts.index[0].year + 1
-        periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
+        periods = 52 if (ts.index[2].month - ts.index[0].month) in {0, 1} else 12
         hyper_params = self.get_hyperparams()
         if len(hyper_params) == 0:
             sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=10,
@@ -130,7 +138,13 @@ class Arima:
         Get the hyperparameteres for the specific file if already ran (only for one period for now)
         :return: result of hyperparams
         """
-        path = getPath(self.kw,  f"Models/Sarimax/{self.df_train.country.unique()[0]}")
+        if 'method' in self.df_train.keys():
+            method = self.df_train['method'].unique()[0]
+            distance = self.df_train['distance'].unique()[0]
+            folder_name = f"Models/Final Sarimax/{method}/{distance}"
+        else:
+            folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
+        path = getPath(self.kw,  folder_name)
         res = dict()
         if os.path.exists(path):
             with open(path, 'r') as file:
@@ -144,7 +158,12 @@ class Arima:
         """
         Save stats in the order file
         """
-        folder_name = f"Models/Sarimax/{self.df_train.country.unique()[0]}"
+        if 'method' in self.df_train.keys():
+            method = self.df_train['method'].unique()[0]
+            distance = self.df_train['distance'].unique()[0]
+            folder_name = f"Models/Final Sarimax/{method}/{distance}"
+        else:
+            folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
         saveResult(self.kw, folder_name, txt=self.stats)
 
     def _write_stats(self, outliers):
@@ -214,7 +233,7 @@ class Lstm:
         return mean_squared_error(self.test_resids, self.predict())
 
     def rmse(self):
-        return np.sqrt(self.mse())
+        return np.sqrt(self.mse)
 
     def mae(self):
         return mean_absolute_error(self.test_resids, self.predict())

@@ -3337,6 +3337,10 @@ Australia,AUS,2021-02-19,53.24
 Australia,AUS,2021-02-20,53.24
 Australia,AUS,2021-02-21,53.24
 Australia,AUS,2021-02-22,53.24
+Australia,AUS,2021-02-23,53.24
+Australia,AUS,2021-02-24,53.24
+Australia,AUS,2021-02-25,53.24
+Australia,AUS,2021-02-26,53.24
 Austria,AUT,2020-01-01,0
 Austria,AUT,2020-01-02,0
 Austria,AUT,2020-01-03,0
@@ -3748,14 +3752,18 @@ Austria,AUT,2021-02-11,74.07
 Austria,AUT,2021-02-12,79.63
 Austria,AUT,2021-02-13,79.63
 Austria,AUT,2021-02-14,79.63
-Austria,AUT,2021-02-15,77.78
-Austria,AUT,2021-02-16,77.78
-Austria,AUT,2021-02-17,77.78
-Austria,AUT,2021-02-18,77.78
-Austria,AUT,2021-02-19,77.78
-Austria,AUT,2021-02-20,77.78
-Austria,AUT,2021-02-21,77.78
-Austria,AUT,2021-02-22,77.78
+Austria,AUT,2021-02-15,74.07
+Austria,AUT,2021-02-16,74.07
+Austria,AUT,2021-02-17,74.07
+Austria,AUT,2021-02-18,74.07
+Austria,AUT,2021-02-19,74.07
+Austria,AUT,2021-02-20,74.07
+Austria,AUT,2021-02-21,74.07
+Austria,AUT,2021-02-22,74.07
+Austria,AUT,2021-02-23,74.07
+Austria,AUT,2021-02-24,74.07
+Austria,AUT,2021-02-25,74.07
+Austria,AUT,2021-02-26,74.07
 Azerbaijan,AZE,2020-01-01,0
 Azerbaijan,AZE,2020-01-02,0
 Azerbaijan,AZE,2020-01-03,0
@@ -6680,6 +6688,14 @@ Belgium,BEL,2021-02-16,60.19
 Belgium,BEL,2021-02-17,60.19
 Belgium,BEL,2021-02-18,60.19
 Belgium,BEL,2021-02-19,60.19
+Belgium,BEL,2021-02-20,60.19
+Belgium,BEL,2021-02-21,60.19
+Belgium,BEL,2021-02-22,60.19
+Belgium,BEL,2021-02-23,60.19
+Belgium,BEL,2021-02-24,60.19
+Belgium,BEL,2021-02-25,60.19
+Belgium,BEL,2021-02-26,60.19
+Belgium,BEL,2021-02-27,60.19
 Belize,BLZ,2020-01-01,0
 Belize,BLZ,2020-01-02,0
 Belize,BLZ,2020-01-03,0
@@ -8771,6 +8787,8 @@ Bolivia,BOL,2021-02-21,19.44
 Bolivia,BOL,2021-02-22,19.44
 Bolivia,BOL,2021-02-23,19.44
 Bolivia,BOL,2021-02-24,19.44
+Bolivia,BOL,2021-02-25,21.3
+Bolivia,BOL,2021-02-26,21.3
 Bosnia and Herzegovina,BIH,2020-01-01,0
 Bosnia and Herzegovina,BIH,2020-01-02,0
 Bosnia and Herzegovina,BIH,2020-01-03,0
@@ -10833,6 +10851,13 @@ Bulgaria,BGR,2021-02-18,53.7
 Bulgaria,BGR,2021-02-19,53.7
 Bulgaria,BGR,2021-02-20,53.7
 Bulgaria,BGR,2021-02-21,53.7
+Bulgaria,BGR,2021-02-22,53.7
+Bulgaria,BGR,2021-02-23,53.7
+Bulgaria,BGR,2021-02-24,53.7
+Bulgaria,BGR,2021-02-25,53.7
+Bulgaria,BGR,2021-02-26,53.7
+Bulgaria,BGR,2021-02-27,53.7
+Bulgaria,BGR,2021-02-28,53.7
 Burkina Faso,BFA,2020-01-01,0
 Burkina Faso,BFA,2020-01-02,0
 Burkina Faso,BFA,2020-01-03,0
@@ -12922,6 +12947,7 @@ Canada,CAN,2021-02-22,75.46
 Canada,CAN,2021-02-23,75.46
 Canada,CAN,2021-02-24,75.46
 Canada,CAN,2021-02-25,75.46
+Canada,CAN,2021-02-26,75.46
 Cape Verde,CPV,2020-01-01,0
 Cape Verde,CPV,2020-01-02,0
 Cape Verde,CPV,2020-01-03,0
@@ -14849,7 +14875,7 @@ China,CHN,2020-09-19,81.94
 China,CHN,2020-09-20,81.94
 China,CHN,2020-09-21,75.46
 China,CHN,2020-09-22,71.76
-China,CHN,2020-09-23,63.43
+China,CHN,2020-09-23,60.65
 China,CHN,2020-09-24,63.43
 China,CHN,2020-09-25,63.43
 China,CHN,2020-09-26,54.17
@@ -15420,6 +15446,13 @@ Colombia,COL,2021-02-18,81.02
 Colombia,COL,2021-02-19,81.02
 Colombia,COL,2021-02-20,81.02
 Colombia,COL,2021-02-21,81.02
+Colombia,COL,2021-02-22,81.02
+Colombia,COL,2021-02-23,81.02
+Colombia,COL,2021-02-24,81.02
+Colombia,COL,2021-02-25,81.02
+Colombia,COL,2021-02-26,81.02
+Colombia,COL,2021-02-27,81.02
+Colombia,COL,2021-02-28,81.02
 Congo,COG,2020-01-01,0
 Congo,COG,2020-01-02,0
 Congo,COG,2020-01-03,0
@@ -19173,6 +19206,14 @@ Denmark,DNK,2021-02-16,66.67
 Denmark,DNK,2021-02-17,66.67
 Denmark,DNK,2021-02-18,66.67
 Denmark,DNK,2021-02-19,66.67
+Denmark,DNK,2021-02-20,62.96
+Denmark,DNK,2021-02-21,62.96
+Denmark,DNK,2021-02-22,62.96
+Denmark,DNK,2021-02-23,62.96
+Denmark,DNK,2021-02-24,62.96
+Denmark,DNK,2021-02-25,62.96
+Denmark,DNK,2021-02-26,62.96
+Denmark,DNK,2021-02-27,62.96
 Djibouti,DJI,2020-01-01,0
 Djibouti,DJI,2020-01-02,0
 Djibouti,DJI,2020-01-03,0
@@ -24597,6 +24638,14 @@ Finland,FIN,2021-02-16,52.31
 Finland,FIN,2021-02-17,52.31
 Finland,FIN,2021-02-18,52.31
 Finland,FIN,2021-02-19,52.31
+Finland,FIN,2021-02-20,52.31
+Finland,FIN,2021-02-21,52.31
+Finland,FIN,2021-02-22,52.31
+Finland,FIN,2021-02-23,52.31
+Finland,FIN,2021-02-24,52.31
+Finland,FIN,2021-02-25,52.31
+Finland,FIN,2021-02-26,52.31
+Finland,FIN,2021-02-27,52.31
 France,FRA,2020-01-01,0
 France,FRA,2020-01-02,0
 France,FRA,2020-01-03,0
@@ -25013,6 +25062,14 @@ France,FRA,2021-02-16,63.89
 France,FRA,2021-02-17,63.89
 France,FRA,2021-02-18,63.89
 France,FRA,2021-02-19,63.89
+France,FRA,2021-02-20,63.89
+France,FRA,2021-02-21,63.89
+France,FRA,2021-02-22,63.89
+France,FRA,2021-02-23,63.89
+France,FRA,2021-02-24,63.89
+France,FRA,2021-02-25,63.89
+France,FRA,2021-02-26,72.22
+France,FRA,2021-02-27,72.22
 Gabon,GAB,2020-01-01,0
 Gabon,GAB,2020-01-02,0
 Gabon,GAB,2020-01-03,0
@@ -26680,6 +26737,19 @@ Germany,DEU,2021-02-11,83.33
 Germany,DEU,2021-02-12,83.33
 Germany,DEU,2021-02-13,83.33
 Germany,DEU,2021-02-14,83.33
+Germany,DEU,2021-02-15,83.33
+Germany,DEU,2021-02-16,83.33
+Germany,DEU,2021-02-17,83.33
+Germany,DEU,2021-02-18,83.33
+Germany,DEU,2021-02-19,83.33
+Germany,DEU,2021-02-20,83.33
+Germany,DEU,2021-02-21,83.33
+Germany,DEU,2021-02-22,81.48
+Germany,DEU,2021-02-23,81.48
+Germany,DEU,2021-02-24,81.48
+Germany,DEU,2021-02-25,81.48
+Germany,DEU,2021-02-26,81.48
+Germany,DEU,2021-02-27,81.48
 Ghana,GHA,2020-01-01,0
 Ghana,GHA,2020-01-02,0
 Ghana,GHA,2020-01-03,0
@@ -33765,8 +33835,15 @@ Ireland,IRL,2021-02-14,87.96
 Ireland,IRL,2021-02-15,87.96
 Ireland,IRL,2021-02-16,87.96
 Ireland,IRL,2021-02-17,87.96
-Ireland,IRL,2021-02-18,85.19
-Ireland,IRL,2021-02-19,85.19
+Ireland,IRL,2021-02-18,87.96
+Ireland,IRL,2021-02-19,87.96
+Ireland,IRL,2021-02-20,87.96
+Ireland,IRL,2021-02-21,87.96
+Ireland,IRL,2021-02-22,87.96
+Ireland,IRL,2021-02-23,87.96
+Ireland,IRL,2021-02-24,87.96
+Ireland,IRL,2021-02-25,87.96
+Ireland,IRL,2021-02-26,87.96
 Israel,ISR,2020-01-01,0
 Israel,ISR,2020-01-02,0
 Israel,ISR,2020-01-03,0
@@ -34186,6 +34263,10 @@ Israel,ISR,2021-02-19,62.96
 Israel,ISR,2021-02-20,62.96
 Israel,ISR,2021-02-21,57.41
 Israel,ISR,2021-02-22,57.41
+Israel,ISR,2021-02-23,57.41
+Israel,ISR,2021-02-24,57.41
+Israel,ISR,2021-02-25,73.15
+Israel,ISR,2021-02-26,73.15
 Italy,ITA,2020-01-01,0
 Italy,ITA,2020-01-02,0
 Italy,ITA,2020-01-03,0
@@ -34604,6 +34685,13 @@ Italy,ITA,2021-02-18,82.41
 Italy,ITA,2021-02-19,82.41
 Italy,ITA,2021-02-20,82.41
 Italy,ITA,2021-02-21,82.41
+Italy,ITA,2021-02-22,82.41
+Italy,ITA,2021-02-23,82.41
+Italy,ITA,2021-02-24,82.41
+Italy,ITA,2021-02-25,82.41
+Italy,ITA,2021-02-26,82.41
+Italy,ITA,2021-02-27,82.41
+Italy,ITA,2021-02-28,82.41
 Jamaica,JAM,2020-01-01,0
 Jamaica,JAM,2020-01-02,0
 Jamaica,JAM,2020-01-03,0
@@ -35432,13 +35520,20 @@ Japan,JPN,2021-02-09,49.54
 Japan,JPN,2021-02-10,49.54
 Japan,JPN,2021-02-11,49.54
 Japan,JPN,2021-02-12,49.54
-Japan,JPN,2021-02-13,49.54
-Japan,JPN,2021-02-14,49.54
-Japan,JPN,2021-02-15,49.54
-Japan,JPN,2021-02-16,49.54
-Japan,JPN,2021-02-17,49.54
-Japan,JPN,2021-02-18,49.54
-Japan,JPN,2021-02-19,49.54
+Japan,JPN,2021-02-13,51.39
+Japan,JPN,2021-02-14,51.39
+Japan,JPN,2021-02-15,51.39
+Japan,JPN,2021-02-16,51.39
+Japan,JPN,2021-02-17,51.39
+Japan,JPN,2021-02-18,51.39
+Japan,JPN,2021-02-19,51.39
+Japan,JPN,2021-02-20,51.39
+Japan,JPN,2021-02-21,51.39
+Japan,JPN,2021-02-22,51.39
+Japan,JPN,2021-02-23,51.39
+Japan,JPN,2021-02-24,51.39
+Japan,JPN,2021-02-25,51.39
+Japan,JPN,2021-02-26,51.39
 Jordan,JOR,2020-01-01,0
 Jordan,JOR,2020-01-02,0
 Jordan,JOR,2020-01-03,0
@@ -38344,6 +38439,13 @@ Kyrgyzstan,KGZ,2021-02-18,36.11
 Kyrgyzstan,KGZ,2021-02-19,36.11
 Kyrgyzstan,KGZ,2021-02-20,36.11
 Kyrgyzstan,KGZ,2021-02-21,36.11
+Kyrgyzstan,KGZ,2021-02-22,36.11
+Kyrgyzstan,KGZ,2021-02-23,36.11
+Kyrgyzstan,KGZ,2021-02-24,36.11
+Kyrgyzstan,KGZ,2021-02-25,36.11
+Kyrgyzstan,KGZ,2021-02-26,36.11
+Kyrgyzstan,KGZ,2021-02-27,36.11
+Kyrgyzstan,KGZ,2021-02-28,36.11
 Laos,LAO,2020-01-01,0
 Laos,LAO,2020-01-02,0
 Laos,LAO,2020-01-03,0
@@ -39182,6 +39284,12 @@ Latvia,LVA,2021-02-19,56.48
 Latvia,LVA,2021-02-20,56.48
 Latvia,LVA,2021-02-21,56.48
 Latvia,LVA,2021-02-22,56.48
+Latvia,LVA,2021-02-23,56.48
+Latvia,LVA,2021-02-24,56.48
+Latvia,LVA,2021-02-25,56.48
+Latvia,LVA,2021-02-26,56.48
+Latvia,LVA,2021-02-27,56.48
+Latvia,LVA,2021-02-28,56.48
 Lebanon,LBN,2020-01-01,0
 Lebanon,LBN,2020-01-02,0
 Lebanon,LBN,2020-01-03,0
@@ -45860,6 +45968,13 @@ Moldova,MDA,2021-02-17,57.41
 Moldova,MDA,2021-02-18,57.41
 Moldova,MDA,2021-02-19,57.41
 Moldova,MDA,2021-02-20,51.85
+Moldova,MDA,2021-02-21,51.85
+Moldova,MDA,2021-02-22,51.85
+Moldova,MDA,2021-02-23,51.85
+Moldova,MDA,2021-02-24,51.85
+Moldova,MDA,2021-02-25,51.85
+Moldova,MDA,2021-02-26,51.85
+Moldova,MDA,2021-02-27,51.85
 Monaco,MCO,2020-01-01,0
 Monaco,MCO,2020-01-02,0
 Monaco,MCO,2020-01-03,0
@@ -49184,6 +49299,14 @@ Netherlands,NLD,2021-02-15,78.7
 Netherlands,NLD,2021-02-16,78.7
 Netherlands,NLD,2021-02-17,78.7
 Netherlands,NLD,2021-02-18,78.7
+Netherlands,NLD,2021-02-19,78.7
+Netherlands,NLD,2021-02-20,78.7
+Netherlands,NLD,2021-02-21,78.7
+Netherlands,NLD,2021-02-22,78.7
+Netherlands,NLD,2021-02-23,78.7
+Netherlands,NLD,2021-02-24,78.7
+Netherlands,NLD,2021-02-25,78.7
+Netherlands,NLD,2021-02-26,78.7
 New Zealand,NZL,2020-01-01,0
 New Zealand,NZL,2020-01-02,0
 New Zealand,NZL,2020-01-03,0
@@ -51269,6 +51392,14 @@ Norway,NOR,2021-02-15,73.15
 Norway,NOR,2021-02-16,73.15
 Norway,NOR,2021-02-17,73.15
 Norway,NOR,2021-02-18,73.15
+Norway,NOR,2021-02-19,73.15
+Norway,NOR,2021-02-20,73.15
+Norway,NOR,2021-02-21,73.15
+Norway,NOR,2021-02-22,71.3
+Norway,NOR,2021-02-23,67.59
+Norway,NOR,2021-02-24,67.59
+Norway,NOR,2021-02-25,67.59
+Norway,NOR,2021-02-26,67.59
 Oman,OMN,2020-01-01,0
 Oman,OMN,2020-01-02,0
 Oman,OMN,2020-01-03,0
@@ -54203,6 +54334,11 @@ Peru,PER,2021-02-19,86.11
 Peru,PER,2021-02-20,86.11
 Peru,PER,2021-02-21,86.11
 Peru,PER,2021-02-22,86.11
+Peru,PER,2021-02-23,86.11
+Peru,PER,2021-02-24,86.11
+Peru,PER,2021-02-25,86.11
+Peru,PER,2021-02-26,86.11
+Peru,PER,2021-02-27,86.11
 Philippines,PHL,2020-01-01,0
 Philippines,PHL,2020-01-02,0
 Philippines,PHL,2020-01-03,0
@@ -55033,6 +55169,16 @@ Poland,POL,2021-02-12,71.3
 Poland,POL,2021-02-13,71.3
 Poland,POL,2021-02-14,71.3
 Poland,POL,2021-02-15,71.3
+Poland,POL,2021-02-16,71.3
+Poland,POL,2021-02-17,71.3
+Poland,POL,2021-02-18,71.3
+Poland,POL,2021-02-19,71.3
+Poland,POL,2021-02-20,71.3
+Poland,POL,2021-02-21,71.3
+Poland,POL,2021-02-22,71.3
+Poland,POL,2021-02-23,71.3
+Poland,POL,2021-02-24,71.3
+Poland,POL,2021-02-25,71.3
 Portugal,PRT,2020-01-01,0
 Portugal,PRT,2020-01-02,0
 Portugal,PRT,2020-01-03,0
@@ -55450,6 +55596,12 @@ Portugal,PRT,2021-02-17,75
 Portugal,PRT,2021-02-18,75
 Portugal,PRT,2021-02-19,75
 Portugal,PRT,2021-02-20,75
+Portugal,PRT,2021-02-21,87.96
+Portugal,PRT,2021-02-22,73.15
+Portugal,PRT,2021-02-23,73.15
+Portugal,PRT,2021-02-24,73.15
+Portugal,PRT,2021-02-25,73.15
+Portugal,PRT,2021-02-26,84.26
 Puerto Rico,PRI,2020-01-01,0
 Puerto Rico,PRI,2020-01-02,0
 Puerto Rico,PRI,2020-01-03,0
@@ -56700,12 +56852,20 @@ Romania,ROU,2021-02-11,76.85
 Romania,ROU,2021-02-12,76.85
 Romania,ROU,2021-02-13,76.85
 Romania,ROU,2021-02-14,76.85
-Romania,ROU,2021-02-15,66.67
-Romania,ROU,2021-02-16,66.67
-Romania,ROU,2021-02-17,66.67
-Romania,ROU,2021-02-18,66.67
-Romania,ROU,2021-02-19,66.67
-Romania,ROU,2021-02-20,66.67
+Romania,ROU,2021-02-15,62.96
+Romania,ROU,2021-02-16,62.96
+Romania,ROU,2021-02-17,62.96
+Romania,ROU,2021-02-18,62.96
+Romania,ROU,2021-02-19,62.96
+Romania,ROU,2021-02-20,62.96
+Romania,ROU,2021-02-21,73.15
+Romania,ROU,2021-02-22,73.15
+Romania,ROU,2021-02-23,73.15
+Romania,ROU,2021-02-24,73.15
+Romania,ROU,2021-02-25,73.15
+Romania,ROU,2021-02-26,73.15
+Romania,ROU,2021-02-27,73.15
+Romania,ROU,2021-02-28,73.15
 Russia,RUS,2020-01-01,0
 Russia,RUS,2020-01-02,0
 Russia,RUS,2020-01-03,0
@@ -57124,6 +57284,12 @@ Russia,RUS,2021-02-18,45.83
 Russia,RUS,2021-02-19,45.83
 Russia,RUS,2021-02-20,45.83
 Russia,RUS,2021-02-21,45.83
+Russia,RUS,2021-02-22,45.83
+Russia,RUS,2021-02-23,45.83
+Russia,RUS,2021-02-24,45.83
+Russia,RUS,2021-02-25,45.83
+Russia,RUS,2021-02-26,45.83
+Russia,RUS,2021-02-27,45.83
 Rwanda,RWA,2020-01-01,0
 Rwanda,RWA,2020-01-02,0
 Rwanda,RWA,2020-01-03,0
@@ -59639,6 +59805,12 @@ Seychelles,SYC,2021-02-19,78.7
 Seychelles,SYC,2021-02-20,78.7
 Seychelles,SYC,2021-02-21,78.7
 Seychelles,SYC,2021-02-22,78.7
+Seychelles,SYC,2021-02-23,78.7
+Seychelles,SYC,2021-02-24,78.7
+Seychelles,SYC,2021-02-25,78.7
+Seychelles,SYC,2021-02-26,78.7
+Seychelles,SYC,2021-02-27,78.7
+Seychelles,SYC,2021-02-28,78.7
 Sierra Leone,SLE,2020-01-01,0
 Sierra Leone,SLE,2020-01-02,0
 Sierra Leone,SLE,2020-01-03,0
@@ -60477,6 +60649,10 @@ Singapore,SGP,2021-02-19,50.93
 Singapore,SGP,2021-02-20,50.93
 Singapore,SGP,2021-02-21,50.93
 Singapore,SGP,2021-02-22,50.93
+Singapore,SGP,2021-02-23,50.93
+Singapore,SGP,2021-02-24,50.93
+Singapore,SGP,2021-02-25,50.93
+Singapore,SGP,2021-02-26,50.93
 Slovakia,SVK,2020-01-01,0
 Slovakia,SVK,2020-01-02,0
 Slovakia,SVK,2020-01-03,0
@@ -62150,7 +62326,13 @@ Somalia,SOM,2021-02-18,2.78
 Somalia,SOM,2021-02-19,2.78
 Somalia,SOM,2021-02-20,2.78
 Somalia,SOM,2021-02-21,2.78
-Somalia,SOM,2021-02-22,2.78
+Somalia,SOM,2021-02-22,13.89
+Somalia,SOM,2021-02-23,33.33
+Somalia,SOM,2021-02-24,33.33
+Somalia,SOM,2021-02-25,33.33
+Somalia,SOM,2021-02-26,33.33
+Somalia,SOM,2021-02-27,33.33
+Somalia,SOM,2021-02-28,33.33
 South Africa,ZAF,2020-01-01,0
 South Africa,ZAF,2020-01-02,0
 South Africa,ZAF,2020-01-03,0
@@ -62981,10 +63163,18 @@ South Korea,KOR,2021-02-11,63.89
 South Korea,KOR,2021-02-12,63.89
 South Korea,KOR,2021-02-13,63.89
 South Korea,KOR,2021-02-14,63.89
-South Korea,KOR,2021-02-15,60.19
-South Korea,KOR,2021-02-16,60.19
-South Korea,KOR,2021-02-17,60.19
-South Korea,KOR,2021-02-18,60.19
+South Korea,KOR,2021-02-15,63.89
+South Korea,KOR,2021-02-16,63.89
+South Korea,KOR,2021-02-17,63.89
+South Korea,KOR,2021-02-18,63.89
+South Korea,KOR,2021-02-19,63.89
+South Korea,KOR,2021-02-20,63.89
+South Korea,KOR,2021-02-21,63.89
+South Korea,KOR,2021-02-22,63.89
+South Korea,KOR,2021-02-23,63.89
+South Korea,KOR,2021-02-24,63.89
+South Korea,KOR,2021-02-25,63.89
+South Korea,KOR,2021-02-26,63.89
 South Sudan,SSD,2020-01-01,0
 South Sudan,SSD,2020-01-02,0
 South Sudan,SSD,2020-01-03,0
@@ -63820,6 +64010,15 @@ Spain,ESP,2021-02-16,71.3
 Spain,ESP,2021-02-17,71.3
 Spain,ESP,2021-02-18,71.3
 Spain,ESP,2021-02-19,71.3
+Spain,ESP,2021-02-20,71.3
+Spain,ESP,2021-02-21,71.3
+Spain,ESP,2021-02-22,71.3
+Spain,ESP,2021-02-23,71.3
+Spain,ESP,2021-02-24,71.3
+Spain,ESP,2021-02-25,71.3
+Spain,ESP,2021-02-26,71.3
+Spain,ESP,2021-02-27,71.3
+Spain,ESP,2021-02-28,71.3
 Sri Lanka,LKA,2020-01-01,0
 Sri Lanka,LKA,2020-01-02,0
 Sri Lanka,LKA,2020-01-03,0
@@ -65068,7 +65267,15 @@ Suriname,SUR,2021-02-11,70.37
 Suriname,SUR,2021-02-12,70.37
 Suriname,SUR,2021-02-13,70.37
 Suriname,SUR,2021-02-14,70.37
-Suriname,SUR,2021-02-15,70.37
+Suriname,SUR,2021-02-15,66.67
+Suriname,SUR,2021-02-16,66.67
+Suriname,SUR,2021-02-17,66.67
+Suriname,SUR,2021-02-18,66.67
+Suriname,SUR,2021-02-19,66.67
+Suriname,SUR,2021-02-20,66.67
+Suriname,SUR,2021-02-21,66.67
+Suriname,SUR,2021-02-22,66.67
+Suriname,SUR,2021-02-23,66.67
 Sweden,SWE,2020-01-01,0
 Sweden,SWE,2020-01-02,0
 Sweden,SWE,2020-01-03,0
@@ -65485,6 +65692,13 @@ Sweden,SWE,2021-02-16,69.44
 Sweden,SWE,2021-02-17,69.44
 Sweden,SWE,2021-02-18,69.44
 Sweden,SWE,2021-02-19,69.44
+Sweden,SWE,2021-02-20,69.44
+Sweden,SWE,2021-02-21,69.44
+Sweden,SWE,2021-02-22,69.44
+Sweden,SWE,2021-02-23,69.44
+Sweden,SWE,2021-02-24,69.44
+Sweden,SWE,2021-02-25,69.44
+Sweden,SWE,2021-02-26,69.44
 Switzerland,CHE,2020-01-01,0
 Switzerland,CHE,2020-01-02,0
 Switzerland,CHE,2020-01-03,0
@@ -65903,6 +66117,13 @@ Switzerland,CHE,2021-02-18,60.19
 Switzerland,CHE,2021-02-19,60.19
 Switzerland,CHE,2021-02-20,60.19
 Switzerland,CHE,2021-02-21,60.19
+Switzerland,CHE,2021-02-22,60.19
+Switzerland,CHE,2021-02-23,60.19
+Switzerland,CHE,2021-02-24,60.19
+Switzerland,CHE,2021-02-25,60.19
+Switzerland,CHE,2021-02-26,60.19
+Switzerland,CHE,2021-02-27,60.19
+Switzerland,CHE,2021-02-28,60.19
 Syria,SYR,2020-01-01,0
 Syria,SYR,2020-01-02,0
 Syria,SYR,2020-01-03,0
@@ -67151,6 +67372,13 @@ Tajikistan,TJK,2021-02-18,22.22
 Tajikistan,TJK,2021-02-19,22.22
 Tajikistan,TJK,2021-02-20,22.22
 Tajikistan,TJK,2021-02-21,22.22
+Tajikistan,TJK,2021-02-22,22.22
+Tajikistan,TJK,2021-02-23,22.22
+Tajikistan,TJK,2021-02-24,22.22
+Tajikistan,TJK,2021-02-25,16.67
+Tajikistan,TJK,2021-02-26,16.67
+Tajikistan,TJK,2021-02-27,16.67
+Tajikistan,TJK,2021-02-28,16.67
 Tanzania,TZA,2020-01-01,0
 Tanzania,TZA,2020-01-02,0
 Tanzania,TZA,2020-01-03,0
@@ -69656,6 +69884,17 @@ Trinidad and Tobago,TTO,2021-02-12,64.81
 Trinidad and Tobago,TTO,2021-02-13,64.81
 Trinidad and Tobago,TTO,2021-02-14,64.81
 Trinidad and Tobago,TTO,2021-02-15,64.81
+Trinidad and Tobago,TTO,2021-02-16,57.41
+Trinidad and Tobago,TTO,2021-02-17,57.41
+Trinidad and Tobago,TTO,2021-02-18,57.41
+Trinidad and Tobago,TTO,2021-02-19,57.41
+Trinidad and Tobago,TTO,2021-02-20,57.41
+Trinidad and Tobago,TTO,2021-02-21,57.41
+Trinidad and Tobago,TTO,2021-02-22,57.41
+Trinidad and Tobago,TTO,2021-02-23,57.41
+Trinidad and Tobago,TTO,2021-02-24,57.41
+Trinidad and Tobago,TTO,2021-02-25,57.41
+Trinidad and Tobago,TTO,2021-02-26,57.41
 Tunisia,TUN,2020-01-01,0
 Tunisia,TUN,2020-01-02,0
 Tunisia,TUN,2020-01-03,0
@@ -70494,6 +70733,13 @@ Turkey,TUR,2021-02-18,72.22
 Turkey,TUR,2021-02-19,72.22
 Turkey,TUR,2021-02-20,72.22
 Turkey,TUR,2021-02-21,72.22
+Turkey,TUR,2021-02-22,72.22
+Turkey,TUR,2021-02-23,72.22
+Turkey,TUR,2021-02-24,72.22
+Turkey,TUR,2021-02-25,72.22
+Turkey,TUR,2021-02-26,72.22
+Turkey,TUR,2021-02-27,72.22
+Turkey,TUR,2021-02-28,72.22
 Turkmenistan,TKM,2020-01-01,0
 Turkmenistan,TKM,2020-01-02,0
 Turkmenistan,TKM,2020-01-03,0
@@ -70912,6 +71158,13 @@ Turkmenistan,TKM,2021-02-18,54.63
 Turkmenistan,TKM,2021-02-19,54.63
 Turkmenistan,TKM,2021-02-20,54.63
 Turkmenistan,TKM,2021-02-21,54.63
+Turkmenistan,TKM,2021-02-22,54.63
+Turkmenistan,TKM,2021-02-23,54.63
+Turkmenistan,TKM,2021-02-24,54.63
+Turkmenistan,TKM,2021-02-25,54.63
+Turkmenistan,TKM,2021-02-26,54.63
+Turkmenistan,TKM,2021-02-27,54.63
+Turkmenistan,TKM,2021-02-28,54.63
 Uganda,UGA,2020-01-01,0
 Uganda,UGA,2020-01-02,0
 Uganda,UGA,2020-01-03,0
@@ -71743,6 +71996,18 @@ Ukraine,UKR,2021-02-12,54.63
 Ukraine,UKR,2021-02-13,54.63
 Ukraine,UKR,2021-02-14,54.63
 Ukraine,UKR,2021-02-15,54.63
+Ukraine,UKR,2021-02-16,54.63
+Ukraine,UKR,2021-02-17,54.63
+Ukraine,UKR,2021-02-18,54.63
+Ukraine,UKR,2021-02-19,54.63
+Ukraine,UKR,2021-02-20,54.63
+Ukraine,UKR,2021-02-21,54.63
+Ukraine,UKR,2021-02-22,54.63
+Ukraine,UKR,2021-02-23,54.63
+Ukraine,UKR,2021-02-24,54.63
+Ukraine,UKR,2021-02-25,54.63
+Ukraine,UKR,2021-02-26,60.19
+Ukraine,UKR,2021-02-27,60.19
 United Arab Emirates,ARE,2020-01-01,0
 United Arab Emirates,ARE,2020-01-02,0
 United Arab Emirates,ARE,2020-01-03,0
@@ -72162,6 +72427,11 @@ United Arab Emirates,ARE,2021-02-19,55.56
 United Arab Emirates,ARE,2021-02-20,55.56
 United Arab Emirates,ARE,2021-02-21,55.56
 United Arab Emirates,ARE,2021-02-22,55.56
+United Arab Emirates,ARE,2021-02-23,55.56
+United Arab Emirates,ARE,2021-02-24,55.56
+United Arab Emirates,ARE,2021-02-25,55.56
+United Arab Emirates,ARE,2021-02-26,55.56
+United Arab Emirates,ARE,2021-02-27,55.56
 United Kingdom,GBR,2020-01-01,0
 United Kingdom,GBR,2020-01-02,0
 United Kingdom,GBR,2020-01-03,0
@@ -72510,77 +72780,81 @@ United Kingdom,GBR,2020-12-10,67.59
 United Kingdom,GBR,2020-12-11,67.59
 United Kingdom,GBR,2020-12-12,67.59
 United Kingdom,GBR,2020-12-13,67.59
-United Kingdom,GBR,2020-12-14,69.44
-United Kingdom,GBR,2020-12-15,69.44
-United Kingdom,GBR,2020-12-16,69.44
-United Kingdom,GBR,2020-12-17,69.44
-United Kingdom,GBR,2020-12-18,69.44
-United Kingdom,GBR,2020-12-19,73.15
-United Kingdom,GBR,2020-12-20,73.15
-United Kingdom,GBR,2020-12-21,73.15
-United Kingdom,GBR,2020-12-22,73.15
-United Kingdom,GBR,2020-12-23,73.15
-United Kingdom,GBR,2020-12-24,75.93
-United Kingdom,GBR,2020-12-25,71.76
-United Kingdom,GBR,2020-12-26,75.93
-United Kingdom,GBR,2020-12-27,75.93
-United Kingdom,GBR,2020-12-28,75.93
-United Kingdom,GBR,2020-12-29,75.93
-United Kingdom,GBR,2020-12-30,75.93
-United Kingdom,GBR,2020-12-31,75.93
-United Kingdom,GBR,2021-01-01,75.93
-United Kingdom,GBR,2021-01-02,75.93
-United Kingdom,GBR,2021-01-03,75.93
+United Kingdom,GBR,2020-12-14,73.15
+United Kingdom,GBR,2020-12-15,73.15
+United Kingdom,GBR,2020-12-16,73.15
+United Kingdom,GBR,2020-12-17,73.15
+United Kingdom,GBR,2020-12-18,73.15
+United Kingdom,GBR,2020-12-19,76.85
+United Kingdom,GBR,2020-12-20,76.85
+United Kingdom,GBR,2020-12-21,76.85
+United Kingdom,GBR,2020-12-22,76.85
+United Kingdom,GBR,2020-12-23,76.85
+United Kingdom,GBR,2020-12-24,79.63
+United Kingdom,GBR,2020-12-25,75.46
+United Kingdom,GBR,2020-12-26,79.63
+United Kingdom,GBR,2020-12-27,79.63
+United Kingdom,GBR,2020-12-28,79.63
+United Kingdom,GBR,2020-12-29,79.63
+United Kingdom,GBR,2020-12-30,79.63
+United Kingdom,GBR,2020-12-31,79.63
+United Kingdom,GBR,2021-01-01,79.63
+United Kingdom,GBR,2021-01-02,79.63
+United Kingdom,GBR,2021-01-03,79.63
 United Kingdom,GBR,2021-01-04,79.63
-United Kingdom,GBR,2021-01-05,86.11
-United Kingdom,GBR,2021-01-06,86.11
-United Kingdom,GBR,2021-01-07,86.11
-United Kingdom,GBR,2021-01-08,86.11
-United Kingdom,GBR,2021-01-09,86.11
-United Kingdom,GBR,2021-01-10,86.11
-United Kingdom,GBR,2021-01-11,86.11
-United Kingdom,GBR,2021-01-12,86.11
-United Kingdom,GBR,2021-01-13,86.11
-United Kingdom,GBR,2021-01-14,86.11
-United Kingdom,GBR,2021-01-15,86.11
-United Kingdom,GBR,2021-01-16,86.11
-United Kingdom,GBR,2021-01-17,86.11
-United Kingdom,GBR,2021-01-18,86.11
-United Kingdom,GBR,2021-01-19,86.11
-United Kingdom,GBR,2021-01-20,86.11
-United Kingdom,GBR,2021-01-21,86.11
-United Kingdom,GBR,2021-01-22,86.11
-United Kingdom,GBR,2021-01-23,86.11
-United Kingdom,GBR,2021-01-24,86.11
-United Kingdom,GBR,2021-01-25,86.11
-United Kingdom,GBR,2021-01-26,86.11
-United Kingdom,GBR,2021-01-27,86.11
-United Kingdom,GBR,2021-01-28,86.11
-United Kingdom,GBR,2021-01-29,86.11
-United Kingdom,GBR,2021-01-30,86.11
-United Kingdom,GBR,2021-01-31,86.11
-United Kingdom,GBR,2021-02-01,86.11
-United Kingdom,GBR,2021-02-02,86.11
-United Kingdom,GBR,2021-02-03,86.11
-United Kingdom,GBR,2021-02-04,86.11
-United Kingdom,GBR,2021-02-05,86.11
-United Kingdom,GBR,2021-02-06,86.11
-United Kingdom,GBR,2021-02-07,86.11
-United Kingdom,GBR,2021-02-08,86.11
-United Kingdom,GBR,2021-02-09,86.11
-United Kingdom,GBR,2021-02-10,86.11
-United Kingdom,GBR,2021-02-11,86.11
-United Kingdom,GBR,2021-02-12,86.11
-United Kingdom,GBR,2021-02-13,86.11
-United Kingdom,GBR,2021-02-14,86.11
-United Kingdom,GBR,2021-02-15,86.11
-United Kingdom,GBR,2021-02-16,86.11
-United Kingdom,GBR,2021-02-17,86.11
-United Kingdom,GBR,2021-02-18,86.11
-United Kingdom,GBR,2021-02-19,86.11
-United Kingdom,GBR,2021-02-20,86.11
-United Kingdom,GBR,2021-02-21,86.11
-United Kingdom,GBR,2021-02-22,86.11
+United Kingdom,GBR,2021-01-05,87.96
+United Kingdom,GBR,2021-01-06,87.96
+United Kingdom,GBR,2021-01-07,87.96
+United Kingdom,GBR,2021-01-08,87.96
+United Kingdom,GBR,2021-01-09,87.96
+United Kingdom,GBR,2021-01-10,87.96
+United Kingdom,GBR,2021-01-11,87.96
+United Kingdom,GBR,2021-01-12,87.96
+United Kingdom,GBR,2021-01-13,87.96
+United Kingdom,GBR,2021-01-14,87.96
+United Kingdom,GBR,2021-01-15,87.96
+United Kingdom,GBR,2021-01-16,87.96
+United Kingdom,GBR,2021-01-17,87.96
+United Kingdom,GBR,2021-01-18,87.96
+United Kingdom,GBR,2021-01-19,87.96
+United Kingdom,GBR,2021-01-20,87.96
+United Kingdom,GBR,2021-01-21,87.96
+United Kingdom,GBR,2021-01-22,87.96
+United Kingdom,GBR,2021-01-23,87.96
+United Kingdom,GBR,2021-01-24,87.96
+United Kingdom,GBR,2021-01-25,87.96
+United Kingdom,GBR,2021-01-26,87.96
+United Kingdom,GBR,2021-01-27,87.96
+United Kingdom,GBR,2021-01-28,87.96
+United Kingdom,GBR,2021-01-29,87.96
+United Kingdom,GBR,2021-01-30,87.96
+United Kingdom,GBR,2021-01-31,87.96
+United Kingdom,GBR,2021-02-01,87.96
+United Kingdom,GBR,2021-02-02,87.96
+United Kingdom,GBR,2021-02-03,87.96
+United Kingdom,GBR,2021-02-04,87.96
+United Kingdom,GBR,2021-02-05,87.96
+United Kingdom,GBR,2021-02-06,87.96
+United Kingdom,GBR,2021-02-07,87.96
+United Kingdom,GBR,2021-02-08,87.96
+United Kingdom,GBR,2021-02-09,87.96
+United Kingdom,GBR,2021-02-10,87.96
+United Kingdom,GBR,2021-02-11,87.96
+United Kingdom,GBR,2021-02-12,87.96
+United Kingdom,GBR,2021-02-13,87.96
+United Kingdom,GBR,2021-02-14,87.96
+United Kingdom,GBR,2021-02-15,87.96
+United Kingdom,GBR,2021-02-16,87.96
+United Kingdom,GBR,2021-02-17,87.96
+United Kingdom,GBR,2021-02-18,87.96
+United Kingdom,GBR,2021-02-19,87.96
+United Kingdom,GBR,2021-02-20,87.96
+United Kingdom,GBR,2021-02-21,87.96
+United Kingdom,GBR,2021-02-22,87.96
+United Kingdom,GBR,2021-02-23,87.96
+United Kingdom,GBR,2021-02-24,87.96
+United Kingdom,GBR,2021-02-25,87.96
+United Kingdom,GBR,2021-02-26,87.96
 United States,USA,2020-01-01,0
 United States,USA,2020-01-02,0
 United States,USA,2020-01-03,0
@@ -73415,6 +73689,15 @@ United States Virgin Islands,VIR,2021-02-15,42.59
 United States Virgin Islands,VIR,2021-02-16,42.59
 United States Virgin Islands,VIR,2021-02-17,42.59
 United States Virgin Islands,VIR,2021-02-18,42.59
+United States Virgin Islands,VIR,2021-02-19,39.81
+United States Virgin Islands,VIR,2021-02-20,39.81
+United States Virgin Islands,VIR,2021-02-21,39.81
+United States Virgin Islands,VIR,2021-02-22,39.81
+United States Virgin Islands,VIR,2021-02-23,39.81
+United States Virgin Islands,VIR,2021-02-24,39.81
+United States Virgin Islands,VIR,2021-02-25,39.81
+United States Virgin Islands,VIR,2021-02-26,39.81
+United States Virgin Islands,VIR,2021-02-27,39.81
 Uruguay,URY,2020-01-01,0
 Uruguay,URY,2020-01-02,0
 Uruguay,URY,2020-01-03,0
@@ -75079,6 +75362,13 @@ Venezuela,VEN,2021-02-18,87.96
 Venezuela,VEN,2021-02-19,87.96
 Venezuela,VEN,2021-02-20,87.96
 Venezuela,VEN,2021-02-21,87.96
+Venezuela,VEN,2021-02-22,84.26
+Venezuela,VEN,2021-02-23,84.26
+Venezuela,VEN,2021-02-24,84.26
+Venezuela,VEN,2021-02-25,84.26
+Venezuela,VEN,2021-02-26,84.26
+Venezuela,VEN,2021-02-27,84.26
+Venezuela,VEN,2021-02-28,84.26
 Vietnam,VNM,2020-01-01,0
 Vietnam,VNM,2020-01-02,0
 Vietnam,VNM,2020-01-03,0
