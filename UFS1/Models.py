@@ -234,7 +234,7 @@ class Lstm:
         first_eval_batch = self.train_resids[-self.look_back:]
         current_batch = first_eval_batch.reshape((1, self.look_back, 1))
 
-        for i in range(int(len(self.test_resids) / self.output_nodes)):
+        for _ in range(int(len(self.test_resids) / self.output_nodes)):
             pred = self.model.predict(current_batch)[0]
             current_batch = current_batch[:, self.output_nodes:, :]
             for p in pred:
