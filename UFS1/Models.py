@@ -7,7 +7,7 @@ from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
 from csv import reader
-from DataUtil import *
+from DataUtil import get_corona_policy, getPath, saveResult
 from keras.preprocessing.sequence import TimeseriesGenerator
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
@@ -47,10 +47,6 @@ class Arima:
     @property
     def log_likelihood(self):
         return len(self.model.params()) - self.aic/2
-
-    def save_stats(self, path: str):
-        with open(path, 'w') as file:
-            file.write(self.stats)
 
     def time_series(self, keyword, train=True) -> pd.Series:
         if train:
