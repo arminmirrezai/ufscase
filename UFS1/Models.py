@@ -6,12 +6,15 @@ from Description import Data
 from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
-from DataUtil import *
 from csv import reader
+from DataUtil import get_corona_policy, getPath, saveResult
 from keras.preprocessing.sequence import TimeseriesGenerator
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+import pandas as pd
+import numpy as np
+import os
 
 
 class Arima:
@@ -46,7 +49,6 @@ class Arima:
     @property
     def log_likelihood(self):
         return len(self.model.params()) - self.aic/2
-
 
     def time_series(self, keyword, train=True) -> pd.Series:
         if train:
@@ -147,7 +149,12 @@ class Arima:
         """
         Save stats in the order file
         """
-        folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
+        if 'method' in self.df_train.keys():
+            method = self.df_train['method'].unique()[0]
+            distance = self.df_train['distance'].unique()[0]
+            folder_name = f"Models/Final Sarimax/{method}/{distance}"
+        else:
+            folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
         saveResult(self.kw, folder_name, txt=self.stats)
 
     def _write_stats(self, outliers):
@@ -213,15 +220,12 @@ class Lstm:
         self.hidden_nodes = int(2 * (look_back + output_nodes) / 3)
         self.model = Sequential()
 
-    @property
     def mse(self):
         return mean_squared_error(self.test_resids, self.predict())
 
-    @property
     def rmse(self):
         return np.sqrt(self.mse)
 
-    @property
     def mae(self):
         return mean_absolute_error(self.test_resids, self.predict())
 
@@ -240,7 +244,7 @@ class Lstm:
         first_eval_batch = self.train_resids[-self.look_back:]
         current_batch = first_eval_batch.reshape((1, self.look_back, 1))
 
-        for i in range(int(len(self.test_resids) / self.output_nodes)):
+        for _ in range(int(len(self.test_resids) / self.output_nodes)):
             pred = self.model.predict(current_batch)[0]
             current_batch = current_batch[:, self.output_nodes:, :]
             for p in pred:
