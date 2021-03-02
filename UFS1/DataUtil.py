@@ -10,13 +10,14 @@ def get_corona_policy(dates: pd.DatetimeIndex, country: str):
     first_day_2020 = dates[dates.year == 2020][0].day
     covid_data = pd.read_csv(Path.cwd().absolute().parents[0].as_posix() + "/Data" + '/covid-stringency-index.csv')
     if country == 'All':
-        pol_new = [covid_data[first_day_2020:][covid_data.Code == country][:(7*53)] for country in d_country.values()]
+        pol_new = [covid_data[first_day_2020:][covid_data.Code == country][:(7*len(dates[dates.year >= 2020]))]
+                   for country in d_country.values()]
         policy_daily = pd.concat(pol_new).groupby('Date').mean()
     else:
         policy_daily = covid_data[first_day_2020:][covid_data.Code == d_country[country]]
-    policy_weekly = policy_daily.groupby(np.arange(len(policy_daily))//7).mean()[:52]
-    policy_weekly.index = dates[dates.year == 2020]
-    x = pd.DataFrame(data=np.zeros(len(dates[dates.year != 2020])), index=dates[dates.year != 2020],
+    policy_weekly = policy_daily.groupby(np.arange(len(policy_daily))//7).mean()[:len(dates[dates.year >= 2020])]
+    policy_weekly.index = dates[dates.year >= 2020]
+    x = pd.DataFrame(data=np.zeros(len(dates[dates.year < 2020])), index=dates[dates.year < 2020],
                      columns=policy_weekly.columns)
     return pd.concat([x, policy_weekly])
 
