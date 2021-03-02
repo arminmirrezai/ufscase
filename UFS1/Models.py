@@ -67,7 +67,10 @@ class Arima:
         return dummies
 
     def get_covid_policy(self):
-        dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        if not self.df_test.empty:
+            dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        else:
+            dates = self.time_series(self.kw).index
         x = get_corona_policy(dates, self.df_train.country.unique()[0])
         self.x_train = x[x.index <= self.df_train.startDate.unique()[-1]]
         self.x_test = x[x.index > self.df_train.startDate.unique()[-1]]
@@ -135,7 +138,13 @@ class Arima:
         Get the hyperparameteres for the specific file if already ran (only for one period for now)
         :return: result of hyperparams
         """
-        path = getPath(self.kw,  f"Models/Final Sarimax/{self.df_train.country.unique()[0]}")
+        if 'method' in self.df_train.keys():
+            method = self.df_train['method'].unique()[0]
+            distance = self.df_train['distance'].unique()[0]
+            folder_name = f"Models/Final Sarimax/{method}/{distance}"
+        else:
+            folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
+        path = getPath(self.kw,  folder_name)
         res = dict()
         if os.path.exists(path):
             with open(path, 'r') as file:

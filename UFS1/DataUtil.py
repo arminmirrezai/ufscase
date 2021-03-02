@@ -57,6 +57,7 @@ def get_cluster_means(path_to_res: str, method: str, distance: str) -> pd.DataFr
     res_str = res_str.replace('])', ']')
     res_str = res_str.replace('.,', ',')
     res_str = res_str.replace('.]', ']')
+    res_str = res_str.replace('. ', ' ')
     res = json.loads(res_str)
     means = res['means'][0]
     keywords = res['keywords'][0]
