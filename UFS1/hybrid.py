@@ -9,6 +9,7 @@ from scipy import stats
 import ApiExtract
 from Models import Arima, Lstm
 import sys
+import DataUtil
 
 def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
 
@@ -101,11 +102,11 @@ def gridSearch(residuals):
 def main():
     train_data = dd.time_series(keyword, True)
     test_data = dd.time_series(keyword, False)
+
     for p in params_lstm[1]: 
         if (len(test_data) % p != 0): sys.exit("The length of the test data is not a multiple of the output nodes")
 
-    sarima = dd.fit(keyword)
-    residuals = np.array(sarima.resid()).reshape(-1,1)
+    residuals = np.array(dd.residuals).reshape(-1,1)
 
     optimal_params = gridSearch(residuals)
     sarima_forecast, lstm_forecast = getForecasts(residuals, optimal_params, test_data)
@@ -128,11 +129,12 @@ if __name__ == "__main__":
     start_year = 2016
     end_year = 2021
     country = 'ES'
-    keyword = 'jamon'
-    params_lstm = [[52], [2], [600, 800, 1000], [104, 208]]
+    keyword = 'Cluster1'
+    params_lstm = [[52], [1], [600, 800, 1000], [104, 208]]
 
-    df = cluster_df() if 'cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
-    dd = Arima(df, .9)
+    df = DataUtil.get_cluster_means('/Users/safouane/Desktop/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
+    dd = Arima(df, .88)
     dd.get_covid_policy()
+    dd.fit(keyword)
 
     main()
