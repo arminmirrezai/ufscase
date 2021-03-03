@@ -15,8 +15,6 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 import pandas as pd
 import numpy as np
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
-
 
 class Arima:
 
@@ -29,9 +27,9 @@ class Arima:
             self.df_train = df[df.startDate <= df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
             self.df_test = df[df.startDate > df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
         else:
-            self.df_train = df
-            # ts.index = self.df_test.startDate.unique() 
-            ts.index = pd.date_range(start='2020-07-12', end='2020-12-27', freq='W').strftime("%Y-%m-%d").tolist()
+            self.df_train = df           
+            self.df_test = pd.Series(np.ones(25), index=pd.date_range(start='2020-07-12', end='2020-12-27', freq='W'))
+        self.train_percentage=train_percentage
         self.x_train, self.x_test = None, None
         self.dd = Data(self.df_train)
         self.dmp = Decompose(self.df_train)
@@ -57,8 +55,10 @@ class Arima:
             ts = self.df_train[self.df_train.keyword == keyword]['interest']
             ts.index = self.df_train.startDate.unique()
         else:
-            ts = self.df_test[self.df_test.keyword == keyword]['interest']
-            ts.index = self.df_test.startDate.unique()
+            if self.train_percentage != 1:
+                ts = self.df_test[self.df_test.keyword == keyword]['interest']
+                ts.index = self.df_test.startDate.unique()
+            else: ts = self.df_test
         return ts
 
     def get_dummies(self, keyword, benchmark=3) -> pd.Series:
