@@ -116,7 +116,7 @@ def main():
 
 def cluster_df():
     cluster_mean = pd.read_csv('/Users/safouane/Desktop/cluster_means.csv')[keyword]
-    cluster_mean = pd.read_csv('C:/Users/Stagiair/Documents/Seminar/cluster_means.csv')[keyword]
+#     cluster_mean = pd.read_csv('C:/Users/Stagiair/Documents/Seminar/cluster_means.csv')[keyword]
     df = ApiExtract.extract(range(start_year, end_year), country)[:len(cluster_mean.index)]
     df['interest'] = cluster_mean
     df['keyword'] = keyword
