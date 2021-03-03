@@ -11,7 +11,7 @@ from Models import Arima, Lstm
 import sys
 import DataUtil
 
-def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
+def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast, residuals):
 
     plt.figure()
     plt.title("SARIMA model")
@@ -30,6 +30,7 @@ def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast):
     plt.title("lstm predicted residuals")
     plt.plot(resids, color='green', label='test residuals')
     plt.plot(lstm_forecast, 'r:', label='predicted residuals')
+    plt.plot(pd.DataFrame(residuals, index=trainData.index), color='black', label='train residuals')
     plt.legend(loc='upper left')
     plt.show()
 
@@ -110,10 +111,10 @@ def main():
 
     optimal_params = gridSearch(residuals)
     sarima_forecast, lstm_forecast = getForecasts(residuals, optimal_params, test_data)
-    
-    lstm_forecast.to_csv('C:/Users/Stagiair/Documents/Seminar/output.csv')
 
-    plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
+    lstm_forecast.to_csv('/Users/safouane/Desktop/cluster_forecasts/'+keyword+'.csv')
+
+    plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast, residuals)
 
 
 def cluster_df():
@@ -132,7 +133,7 @@ if __name__ == "__main__":
     start_year = 2016
     end_year = 2021
     country = 'ES'
-    keyword = 'Cluster1'
+    keyword = 'Cluster7'
     params_lstm = [[52], [1], [600, 800, 1000], [104, 208]]
 
     df = DataUtil.get_cluster_means('/Users/safouane/Desktop/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
