@@ -110,6 +110,8 @@ def main():
 
     optimal_params = gridSearch(residuals)
     sarima_forecast, lstm_forecast = getForecasts(residuals, optimal_params, test_data)
+    
+    lstm_forecast.to_csv()
 
     plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast)
 
