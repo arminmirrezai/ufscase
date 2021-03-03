@@ -15,6 +15,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 import pandas as pd
 import numpy as np
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 
 
 class Arima:
@@ -233,7 +234,7 @@ class Lstm:
         return mean_squared_error(self.test_resids, self.predict())
 
     def rmse(self):
-        return np.sqrt(self.mse)
+        return np.sqrt(self.mse())
 
     def mae(self):
         return mean_absolute_error(self.test_resids, self.predict())
