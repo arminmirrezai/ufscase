@@ -6,13 +6,15 @@ from Description import Data
 from Decompositions import Decompose
 from scipy.stats.distributions import chi2
 from statsmodels.stats.diagnostic import het_arch
-from DataUtil import *
 from csv import reader
+from DataUtil import get_corona_policy, getPath, saveResult
 from keras.preprocessing.sequence import TimeseriesGenerator
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-
+import pandas as pd
+import numpy as np
+import os
 
 class Arima:
 
@@ -20,13 +22,14 @@ class Arima:
     df_train: Type[pd.DataFrame]
     df_test: Type[pd.DataFrame]
 
-    def __init__(self, df, train_percentage=1.0):
+    def __init__(self, df, train_percentage=0.87):
         if train_percentage != 1.0:
             self.df_train = df[df.startDate <= df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
             self.df_test = df[df.startDate > df.startDate.unique()[int(train_percentage*len(df.startDate.unique()))]]
         else:
-            self.df_train = df
-            self.df_test = pd.DataFrame
+            self.df_train = df           
+            self.df_test = pd.Series(np.ones(25), index=pd.date_range(start='2020-07-12', end='2020-12-27', freq='W'))
+        self.train_percentage=train_percentage
         self.x_train, self.x_test = None, None
         self.dd = Data(self.df_train)
         self.dmp = Decompose(self.df_train)
@@ -47,17 +50,15 @@ class Arima:
     def log_likelihood(self):
         return len(self.model.params()) - self.aic/2
 
-    def save_stats(self, path: str):
-        with open(path, 'w') as file:
-            file.write(self.stats)
-
     def time_series(self, keyword, train=True) -> pd.Series:
         if train:
             ts = self.df_train[self.df_train.keyword == keyword]['interest']
             ts.index = self.df_train.startDate.unique()
         else:
-            ts = self.df_test[self.df_test.keyword == keyword]['interest']
-            ts.index = self.df_test.startDate.unique()
+            if self.train_percentage != 1:
+                ts = self.df_test[self.df_test.keyword == keyword]['interest']
+                ts.index = self.df_test.startDate.unique()
+            else: ts = self.df_test
         return ts
 
     def get_dummies(self, keyword, benchmark=3) -> pd.Series:
@@ -68,7 +69,10 @@ class Arima:
         return dummies
 
     def get_covid_policy(self):
-        dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        if not self.df_test.empty:
+            dates = self.time_series(self.kw).append(self.time_series(self.kw, False)).index
+        else:
+            dates = self.time_series(self.kw).index
         x = get_corona_policy(dates, self.df_train.country.unique()[0])
         self.x_train = x[x.index <= self.df_train.startDate.unique()[-1]]
         self.x_test = x[x.index > self.df_train.startDate.unique()[-1]]
@@ -97,6 +101,8 @@ class Arima:
         :param keyword: keyword
         :return: fitted model
         """
+        if robust:
+            raise NotImplementedError('Robust not implemented yet')
         self.kw = keyword
         stationary, has_trend = self.dd.statistics.stationary(keyword)
         ts = self.time_series(keyword)
@@ -113,10 +119,11 @@ class Arima:
         return self.model
 
     def _model(self, ts, dummies, stationary, trend, diff, method='lbfgs'):
+        # TODO implement robust and corona variable
         exog = np.array(dummies).reshape(-1, 1) if dummies is not None else None
         exog = self.x_train
         years = ts.index[-1].year - ts.index[0].year + 1
-        periods = 52 if (ts.index[1].month - ts.index[0].month) == 0 else 12
+        periods = 52 if (ts.index[2].month - ts.index[0].month) in {0, 1} else 12
         hyper_params = self.get_hyperparams()
         if len(hyper_params) == 0:
             sarimax = pm.auto_arima(y=ts, X=exog, seasonal=True, stationary=stationary, d=diff, max_p=10,
@@ -133,7 +140,13 @@ class Arima:
         Get the hyperparameteres for the specific file if already ran (only for one period for now)
         :return: result of hyperparams
         """
-        path = getPath(self.kw,  f"Models/Sarimax/{self.df_train.country.unique()[0]}")
+        if 'method' in self.df_train.keys():
+            method = self.df_train['method'].unique()[0]
+            distance = self.df_train['distance'].unique()[0]
+            folder_name = f"Models/Final Sarimax/{method}/{distance}"
+        else:
+            folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
+        path = getPath(self.kw,  folder_name)
         res = dict()
         if os.path.exists(path):
             with open(path, 'r') as file:
@@ -147,7 +160,12 @@ class Arima:
         """
         Save stats in the order file
         """
-        folder_name = f"Models/Sarimax/{self.df_train.country.unique()[0]}"
+        if 'method' in self.df_train.keys():
+            method = self.df_train['method'].unique()[0]
+            distance = self.df_train['distance'].unique()[0]
+            folder_name = f"Models/Final Sarimax/{method}/{distance}"
+        else:
+            folder_name = f"Models/Final Sarimax/{self.df_train.country.unique()[0]}"
         saveResult(self.kw, folder_name, txt=self.stats)
 
     def _write_stats(self, outliers):
@@ -213,15 +231,12 @@ class Lstm:
         self.hidden_nodes = int(2 * (look_back + output_nodes) / 3)
         self.model = Sequential()
 
-    @property
     def mse(self):
         return mean_squared_error(self.test_resids, self.predict())
 
-    @property
     def rmse(self):
         return np.sqrt(self.mse())
 
-    @property
     def mae(self):
         return mean_absolute_error(self.test_resids, self.predict())
 
@@ -240,7 +255,7 @@ class Lstm:
         first_eval_batch = self.train_resids[-self.look_back:]
         current_batch = first_eval_batch.reshape((1, self.look_back, 1))
 
-        for i in range(int(len(self.test_resids) / self.output_nodes)):
+        for _ in range(int(len(self.test_resids) / self.output_nodes)):
             pred = self.model.predict(current_batch)[0]
             current_batch = current_batch[:, self.output_nodes:, :]
             for p in pred:
