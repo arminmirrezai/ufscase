@@ -133,6 +133,7 @@ if __name__ == "__main__":
     params_lstm = [[52], [1], [600, 800, 1000], [104, 208]]
 
     df = DataUtil.get_cluster_means('/Users/safouane/Desktop/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
+#     df = DataUtil.get_cluster_means('C:/Users/Stagiair/Documents/Seminar/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
     dd = Arima(df, .88)
     dd.get_covid_policy()
     dd.fit(keyword)
