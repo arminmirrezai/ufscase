@@ -117,7 +117,7 @@ if __name__ == "__main__":
     keyword = 'Cluster4'
     params_lstm = [[52], [1], [600], [208]]
 
-    df = DataUtil.get_cluster_means('/Users/safouane/Desktop/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country) if safouane else DataUtil.get_cluster_means('C:/Users/Stagiair/Documents/Seminar/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)
+    df = (DataUtil.get_cluster_means('/Users/safouane/Desktop/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country)) if safouane else (DataUtil.get_cluster_means('C:/Users/Stagiair/Documents/Seminar/7clusters.csv', 'k_medoids', 'euclidean') if 'Cluster' in keyword else ApiExtract.extract(range(start_year, end_year), country))
     test_dates = pd.date_range(start='2020-07-12', periods=33, freq='W')
     dates = pd.date_range(start='2016-02-28', periods=261, freq='W')
     x=DataUtil.get_corona_policy(dates, 'All')
