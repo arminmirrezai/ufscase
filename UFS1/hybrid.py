@@ -11,7 +11,7 @@ from Models import Arima, Lstm
 import ApiExtract
 import DataUtil
 
-def plot_hybrid(trainData, testData, sarima_forecast, lstm_forecast, residuals):
+def plotHybrid(trainData, testData, sarima_forecast, lstm_forecast, residuals):
     sarima_resids = testData - sarima_forecast
     hybrid_resids = testData - sarima_forecast - lstm_forecast
 
@@ -105,7 +105,7 @@ def main():
     sarima_forecast, lstm_forecast = getForecasts(residuals, optimal_params, test_data)
 
     lstm_forecast.to_csv('/Users/safouane/Desktop/cluster_forecasts/'+keyword+'.csv')
-    plot_hybrid(train_data, test_data, sarima_forecast, lstm_forecast, residuals)
+    plotHybrid(train_data, test_data, sarima_forecast, lstm_forecast, residuals)
 
 if __name__ == "__main__":
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
