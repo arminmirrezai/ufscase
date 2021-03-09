@@ -34,7 +34,7 @@ class Clusters:
         """
         if sparsity_degree not in {'no', 'low', 'mid', 'high'}:
             raise ValueError("Degree not from set {'no', 'low', 'mid', 'high'}")
-        bounds = {'no': (-1.0, 0), 'low': (0, 0.3), 'mid': (0.3, 0.9), 'high':(0.9, 1.0)}
+        bounds = {'no': (-1.0, 0), 'low': (-0.1, 0.3), 'mid': (0.3, 0.9), 'high':(0.9, 1.0)}
         self.distances = self.Distances(self.get_sparsity_series(bounds[sparsity_degree][0], bounds[sparsity_degree][1])[0])
         self.ts_matrix, self.keywords = self.get_sparsity_series(bounds[sparsity_degree][0], bounds[sparsity_degree][1])
         
@@ -211,7 +211,7 @@ class Clusters:
         self.save_scores(method=inspect.currentframe().f_code.co_name, labels=cluster_labels)
         self.plot = self.Plot(series = self.ts_matrix, labels=cluster_labels, num_clusters=num_clusters)
         
-    def GAP(self, method, measure, nrefs=3, maxClusters=10):
+    def GAP(self, method, measure, nrefs=5, maxClusters=10):
         """
         Calculates optimal number of clusters using Gap Statistic from Tibshirani, Walther, Hastie
         :param nrefs: number of sample reference datasets to create
@@ -300,9 +300,10 @@ class Clusters:
             resultsdf = resultsdf.append({'clusterCount':k, 'gap':gap, 's_k': s_k}, ignore_index=True)
         
         # if method == 'k_medoids':
-        k_opt = np.nonzero(np.array(gaps[0:(maxClusters-2)]) >= np.array((gaps[1:(maxClusters-1)] - s_ks[1:(maxClusters-1)])))[0][0] + 1
-        # else:
-        #     k_opt = gaps.argmax() + 1
+        if np.nonzero(np.array(gaps[0:(maxClusters-2)]) >= np.array((gaps[1:(maxClusters-1)] - s_ks[1:(maxClusters-1)])))[0]:
+            k_opt = np.nonzero(np.array(gaps[0:(maxClusters-2)]) >= np.array((gaps[1:(maxClusters-1)] - s_ks[1:(maxClusters-1)])))[0][0] + 1
+        else:
+            k_opt = gaps.argmax() + 1
             
         return (k_opt, resultsdf) 
     
@@ -405,7 +406,7 @@ class Clusters:
                 plt.plot(mean_series, 'r')
                 plt.title('Method: ' + self.method + ', Measure: ' + self.measure + ', Num_clusters: ' + str(self.num_clusters) )
                 if save==True:
-                    plt.savefig('plots/clusters/'+ self.method + '/' + self.measure + '/clust'+str(i+1)+'.png')
+                    plt.savefig('plots/clusters/k='+ str(self.num_clusters) +'/'+ self.method + '/' + self.measure + '/clust'+str(i+1)+'.png')
                 else:
                     plt.show()
                 plt.close()
