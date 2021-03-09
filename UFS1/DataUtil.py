@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import os
 import json
+from numpy import array
 
 
 def get_corona_policy(dates: pd.DatetimeIndex, country: str):
@@ -46,21 +47,13 @@ def get_mean_dataframe(path_to_clusters: str) -> pd.DataFrame:
 
 
 def get_cluster_means(path_to_res: str, method: str, distance: str) -> pd.DataFrame:
-    df_mean = pd.read_csv(path_to_res)
-    if method not in df_mean[df_mean.keys()[0]].values.tolist():
-        raise ValueError(f"Method not in list {df_mean[df_mean.keys()[0]].values.tolist()}")
-    if distance not in df_mean.keys():
-        raise ValueError(f"Distance not in list {df_mean.keys()}")
-    res_str = df_mean[df_mean[df_mean.keys()[0]] == method][distance].values[0]
-    res_str = res_str.replace("'", '"')
-    res_str = res_str.replace('array(', '')
-    res_str = res_str.replace('])', ']')
-    res_str = res_str.replace('.,', ',')
-    res_str = res_str.replace('.]', ']')
-    res_str = res_str.replace('. ', ' ')
-    res = json.loads(res_str)
-    means = res['means'][0]
-    keywords = res['keywords'][0]
+    df_mean = pd.read_csv(path_to_res + '/' +method+ '_7clusters.csv')
+    # if method not in df_mean[df_mean.keys()[0]].values.tolist():
+    #     raise ValueError(f"Method not in list {df_mean[df_mean.keys()[0]].values.tolist()}")
+    # if distance not in df_mean.keys():
+    #     raise ValueError(f"Distance not in list {df_mean.keys()}")
+    means = eval(df_mean[distance][0])[0]
+    keywords = eval(df_mean[distance][1])[0]
     start_dates = [datetime.strptime('2016-02-28', '%Y-%m-%d') + timedelta(weeks=i) for i in range(len(means[0]))]
     dfs = []
     for i, cluster in enumerate(means, 1):
